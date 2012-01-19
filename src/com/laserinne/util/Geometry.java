@@ -12,7 +12,7 @@ public class Geometry {
 	 * @param thePoint the point to check against.
 	 * @return
 	 */
-	float distanceSegmentPoint(PVector theA, PVector theB, PVector thePoint) {
+	public static float distanceSegmentPoint(PVector theA, PVector theB, PVector thePoint) {
 
 		final float myDeltaX = theB.x - theA.x;
 		final float myDeltaY = theB.y - theA.y;
@@ -35,6 +35,20 @@ public class Geometry {
 		}
 
 		return myClosestPoint.dist(thePoint);
+	}
+	
+	
+	/**
+	 * Calculates the squared distance of two points in 2D
+	 * @param theA
+	 * @param theB
+	 * @return
+	 */
+	public static float distanceSquared(final PVector theA, final PVector theB) {
+		final float theDeltaX = (theA.x - theB.x);
+		final float theDeltaY = (theA.y - theB.y);
+
+		return theDeltaX * theDeltaX + theDeltaY * theDeltaY;
 	}
 
 }

@@ -219,4 +219,11 @@ public class Skier {
     public void setPosition(int x, int y) {
         this.position = new PVector(x, y);
     }
+    
+    
+    public PVector position() {
+    	return position;
+    }
+    	
+    
 }

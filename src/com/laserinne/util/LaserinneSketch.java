@@ -100,7 +100,7 @@ public abstract class LaserinneSketch extends PApplet {
     /**
      * Shake amount. Higher number will mean less exposure to the eye.
      */
-    public static final float SHAKE_AMOUNT = 1.5f;
+    public static final float SHAKE_AMOUNT = 0;
     
     public void setup() {
         size(TwoPlayerCompetition.WIDTH, TwoPlayerCompetition.HEIGHT, processing.opengl.PGraphicsOpenGL.OPENGL);
@@ -142,6 +142,8 @@ public abstract class LaserinneSketch extends PApplet {
         int fontAlign = font.align;
         font.setAlign(RFont.LEFT);
         drawText(new Integer(Math.round(frameRate)).toString());
+        
+        
         font.setAlign(fontAlign);
         popMatrix();
         
