@@ -30,7 +30,7 @@ import java.util.Comparator;
 import processing.core.PApplet;
 
 /**
- * @author Mikko Pallas and Jyrki Lilja
+ * @author Mikko Pallas and Jyrki Lilja and Benjamin and Andreas and and and
  */
 @SuppressWarnings("serial")
 public class LaserSledding extends com.laserinne.util.TwoPlayerCompetition {
