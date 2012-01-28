@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="lib/user/oscP5/oscP5.jar"/>
 	<classpathentry kind="lib" path="lib/user/motion/motion.jar"/>
 	<classpathentry kind="lib" path="lib/user/controlP5/controlP5.jar"/>
+	<classpathentry kind="lib" path="lib/user/physics/physics.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
