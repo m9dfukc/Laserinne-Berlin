@@ -24,206 +24,135 @@
 package com.laserinne.util;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import processing.core.PVector;
 
 public class Skier {
-  private int id;
+	private int _myId;
 
-  private ArrayList<PVector> historyList;
+	private ArrayList<PVector> _myHistoryList;
+	private PVector[] _myHistory = new PVector[100];
+	private int _myHistoryPointer  = 0;
 
-  private PVector[] history = new PVector[100];
+	private PVector _myPosition;
+	private PVector _myPreviousPosition;
+	private PVector _myDirection;
 
-  private int historyPointer  = 0;
+	private float _myDeltaX;
+	private float _myDeltaY;
 
-  private PVector position;
-  private PVector previousPosition;
+	private float _myAge;
 
-  private float dx;
-  private float dy;
+	private float _myWidth;
+	private float _myHeight;
 
-  private float age;
 
-  private float w;
-  private float h;
 
-  private int c;
+	private float _myLastTimestamp;
+	private long _myLastUpdate;
 
-  public PVector direction;
+	public static final float DIRECTION_LEARNING_RATE = 0.001f;
 
 
+	public Skier( int theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
 
+		_myHistoryList = new ArrayList<PVector>();
+		_myPosition = new PVector();
 
-  private float lastTimestamp;
-  private long lastUpdate;
-  
-  private static int width;
-  private static int height;
+		_myPreviousPosition = new PVector(0, 0);
+		_myPosition = new PVector(0, 0);
+		_myDirection = new PVector(0, 0);		
 
+		updateValues(theId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp);
+	}
 
 
+	public void updateValues( int theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp) {
+		_myId = theId;
 
-  public Skier( int theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
-    setId(theId); 
+		_myHistory[_myHistoryPointer] = new PVector(_myPosition.x, _myPosition.y);
+		_myHistoryPointer++;
 
+		if (_myHistoryPointer >= _myHistory.length ) {
+			_myHistoryPointer = 0;
+		}
 
-    historyList = new ArrayList<PVector>();
-    position = new PVector();
+		_myPosition.x = theX;
+		_myPosition.y = theY;
 
+		_myDeltaX = theDeltaX;
+		_myDeltaY = theDeltaY;
 
-    direction = new PVector(0, 0);
-    previousPosition = new PVector();
+		_myWidth = theWidth;
+		_myHeight = theHeight;
 
-    position.x = mapX(theX);
-    position.y = mapY(theY);
+		_myAge = theAge;
 
-    previousPosition.x = mapX(theX);
-    previousPosition.y = mapY(theY);
+		_myLastTimestamp = theTimestamp;
+		_myLastUpdate = System.currentTimeMillis();
+	}
 
-    dx = mapX(theDeltaX);
-    dy = mapY(theDeltaY);
 
-    w= mapX(theWidth);
-    h= mapY(theHeight);
+	public void update() {
 
-    age= theAge;
+		_myHistoryList.clear();
 
-    setLastTimestamp(theTimestamp);
-    lastUpdate = System.currentTimeMillis();
+		for (int i = 0; i < _myHistory.length; i++) {
+			int myPosition = i + _myHistoryPointer;
 
-    Random r = new Random();
-    c = 0xFF000000 | r.nextInt(256) << 16 | r.nextInt(256) << 8 | r.nextInt(256);
-  }
+			if ( myPosition >=  _myHistory.length) myPosition -= _myHistory.length;
 
+			if ( _myHistory[ myPosition ] != null) {
+				_myHistoryList.add( _myHistory[ myPosition ] );
+			}
+		}
 
-  public void updateValues( int theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
-    setId(theId); 
 
+		final PVector myDirection = new PVector(_myPreviousPosition.x, _myPreviousPosition.y );
+		myDirection.sub(_myPosition);
 
+		if ( myDirection.mag() > 0) {
+			_myDirection.x = ((1-DIRECTION_LEARNING_RATE) * _myDirection.x) + ( DIRECTION_LEARNING_RATE * myDirection.x);
+			_myDirection.y = ((1-DIRECTION_LEARNING_RATE) * _myDirection.y) + ( DIRECTION_LEARNING_RATE * myDirection.y);
+		}
 
 
-    history[historyPointer] = new PVector(position.x, position.y);
+		_myPreviousPosition.set(_myPosition);
+	}
 
-    historyPointer++;
 
-    if (historyPointer >= history.length ) historyPointer = 0;
+	public boolean isDead() {
+		if (System.currentTimeMillis() - _myLastUpdate > 200) {  // TODO: unhardcode
+			return true;
+		} 
 
-    position.x = mapX(theX);
-    position.y = mapX(theY);
+		return false;
+	}
 
-    dx = mapX(theDeltaX);
-    dy = mapY(theDeltaY);
+	
+	/**
+	 * @return a unique numeric id
+	 */
+	public int id() {
+		return _myId;
+	}
+	
 
-    w= mapX(theWidth);
-    h= mapY(theHeight);
 
-    age= theAge;
 
-    setLastTimestamp(theTimestamp);
-    lastUpdate = System.currentTimeMillis();
-  }
+	public float lastTimestamp() {
+		return _myLastTimestamp;
+	}
+	
 
+	public void position(float theX, int theY) {
+		this._myPosition = new PVector(theX, theY);
+	}
 
-  public void update() {
 
-    historyList.clear();
+	public PVector position() {
+		return _myPosition;
+	}
 
-    for (int i = 0; i < history.length; i++) {
-      int myPosition = i + historyPointer;
-
-      if ( myPosition >=  history.length) myPosition -= history.length;
-
-      if ( history[ myPosition ] != null) {
-        historyList.add( history[ myPosition ] );
-      }
-    }
-
-    float myLearningRate = 0.001f;
-    PVector myDirection = new PVector(previousPosition.x, previousPosition.y );
-    myDirection.sub(position);
-
-    if ( myDirection.mag() > 0) {
-
-      direction.x = ((1-myLearningRate) * direction.x) + ( myLearningRate * myDirection.x);
-      direction.y = ((1-myLearningRate) * direction.y) + ( myLearningRate * myDirection.y);
-    }
-
-
-    previousPosition.x = position.x;
-    previousPosition.y = position.y;
-  }
-
-
-
-
-
-
-
-  public boolean isDead() {
-    if (System.currentTimeMillis() - lastUpdate > 200) {
-      return true;
-    } 
-
-    return false;
-  }
-
-
-  private float mapX( float theValue ) {
-    return map(theValue, -0.5f, 0.5f, 0, width);
-  }
-
-
-  private float mapY( float theValue ) {
-    return map(theValue, -0.5f, 0.5f, 0, height);
-  }
-  
-  static private final float map(float value,
-      float istart, float istop,
-      float ostart, float ostop) {
-      return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
-  }
-    
-    public float getX() {
-        return position.x;
-    }
-    
-    public float getY() {
-        return position.y;
-    }
-    
-    public int getId() {
-        return id;
-    }
-    
-    private void setId(int id) {
-        this.id = id;
-    }
-    
-    public float getLastTimestamp() {
-        return lastTimestamp;
-    }
-    
-    private void setLastTimestamp(float lastTimestamp) {
-        this.lastTimestamp = lastTimestamp;
-    }
-    
-    public static final void width(int width) {
-        Skier.width = width;
-    }
-    
-    public static final void height(int height) {
-        Skier.height = height;
-    }
-    
-    public void setPosition(int x, int y) {
-        this.position = new PVector(x, y);
-    }
-    
-    
-    public PVector position() {
-    	return position;
-    }
-    	
-    
+
 }

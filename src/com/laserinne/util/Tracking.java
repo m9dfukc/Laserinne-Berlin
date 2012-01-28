@@ -28,105 +28,146 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import laserschein.Logger;
+
 import oscP5.OscMessage;
 import oscP5.OscP5;
+import processing.core.PApplet;
 
 public class Tracking {
-  private OscP5 oscP5;
+	private OscP5 _myOscP5;
 
-  private HashMap<Integer, Skier> _mySkierTable;
-  protected ArrayList<Skier> skiers;
+	private HashMap<Integer, Skier> _mySkierTable;
+	protected ArrayList<Skier> _mySkiers;
+	
+	
+	public static final float TRACKING_RANGE_LOWER = -0.5f;
+	public static final float TRACKING_RANGE_UPPER = 0.5f;
 
-  public Tracking() {   
-    this( "239.0.0.1", 9999 );
-  }
-
-
-  /* Construct with custom port */
-  public Tracking( String theAddress, int thePort) {
-    oscP5 = new OscP5(this, theAddress, thePort);
-    oscP5.plug(this, "trackingMessage", "/tracking/");
-
-    _mySkierTable = new HashMap<Integer, Skier>();
-    skiers = new ArrayList<Skier>();
-  }
+	
+	/**
+	 * Defaults to 239.0.0.1:9999
+	 */
+	public Tracking() {   
+		this( "239.0.0.1", 9999 );
+	}
 
 
-  /* Update new tracking data every frame */
-  public void update() {
-    skiers.clear();
+	public Tracking(String theAddress, int thePort) {
+		_myOscP5 = new OscP5(this, theAddress, thePort);
 
-    synchronized(_mySkierTable) {
+		_myOscP5.plug(this, "trackingMessage", "/tracking/");
 
-      ArrayList<Integer> myKeysToRemove = new ArrayList<Integer>();
-
-      Collection<Skier> mySkiers = _mySkierTable.values();
-      Iterator<Skier> myIterator = mySkiers.iterator();
-
-      while (myIterator.hasNext () ) {
-        Skier mySkier = myIterator.next();
-
-        mySkier.update();
-
-        if ( mySkier.isDead() ) {
-          System.out.println("## removing skier " + mySkier.getId() );
-          myIterator.remove();
-        } 
-        else {
-          skiers.add( mySkier );
-        }
-      }
-    }
-  }
+		_mySkierTable = new HashMap<Integer, Skier>();
+		_mySkiers = new ArrayList<Skier>();
+	}
 
 
-  /* receive new tracking message */
-  public void trackingMessage(float theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
+	
+	/**
+	 * Update this every frame. To be able to access the tracked skiers
+	 */
+	public void update() {
+		final ArrayList<Skier> myList = new ArrayList<Skier>();
 
-    synchronized( _mySkierTable ) {
-      int myId = Math.round(theId);
-      //println(myId);
+		synchronized(_mySkierTable) {
+			Collection<Skier> mySkiers = _mySkierTable.values();
+			Iterator<Skier> myIterator = mySkiers.iterator();
 
-      if ( _mySkierTable.containsKey( myId ) ) {
-        Skier mySkier =  _mySkierTable.get( myId);
+			while (myIterator.hasNext () ) {
+				Skier mySkier = myIterator.next();
 
-        //println(myId + "  " + theTimestamp);
+				mySkier.update();
 
-        if ( mySkier.getLastTimestamp() < theTimestamp ) {
-
-          mySkier.updateValues(  myId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp);
-        } 
-        else {
-          //println(myId + "  " + theTimestamp);
-          //println("old");
-        }
-      } 
-      else {
-
-        Skier mySkier = new Skier(  myId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp); 
-        _mySkierTable.put( new Integer(myId), mySkier );
-        System.out.println("## adding skier " + mySkier.getId() );
-      }
-    }
-  }
-
-
-  /* clear all tracked data */
-  private void clear() {
-    synchronized(_mySkierTable) {
-      _mySkierTable.clear();
-    }
-  }
+				if ( mySkier.isDead() ) {
+					Logger.printInfo("Removing skier " + mySkier.id() );
+					myIterator.remove();
+				} else {
+					myList.add( mySkier );
+				}
+			}
+		}
+		
+		synchronized(_mySkiers) {
+			_mySkiers = myList;
+		}
+	}
 
 
-  /* catch unknown data events */
-  private void oscEvent(OscMessage theOscMessage) {
-    if (!theOscMessage.isPlugged() ) {
-      /* print the address pattern and the typetag of the received OscMessage */
-      System.out.print("### received an osc message that i dont know.");
-      System.out.print(" addrpattern: "+theOscMessage.addrPattern());
-      System.out.println(" typetag: "+theOscMessage.typetag());
-    }
-  }
+	
+	
+	/**
+	 * Returns a copy of the list of all active skiers.
+	 * This list is not going to change. So get a new one each frame
+	 * 
+	 * @return 
+	 */
+	public ArrayList<Skier> skiers() {
+		synchronized (_mySkiers) {
+			final ArrayList<Skier> myList = new ArrayList<Skier>(_mySkiers);
+			return myList;
+		}
+	}
+
+	
+	
+	/**
+	 * Plug method for OscP5 to catch tracking messages 
+	 * 
+	 * @param theId
+	 * @param theX
+	 * @param theY
+	 * @param theWidth
+	 * @param theHeight
+	 * @param theDeltaX
+	 * @param theDeltaY
+	 * @param theAge
+	 * @param theTimestamp
+	 */
+	@SuppressWarnings("unused")
+	private void trackingMessage(float theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
+
+		Logger.printDebug("Received a tracking message.");
+
+		synchronized( _mySkierTable ) {
+			int myId = Math.round(theId);
+
+			if(_mySkierTable.containsKey(myId)) {
+				final Skier mySkier =  _mySkierTable.get(myId);
+
+				/* Check if the message we got is newer than our last state */
+				if ( mySkier.lastTimestamp() < theTimestamp ) {
+					mySkier.updateValues(myId, mapValue(theX), mapValue(theY), mapValue(theWidth), mapValue(theHeight), mapValue(theDeltaX), mapValue(theDeltaY), theAge, theTimestamp);
+				} else {
+				}
+			} 
+			else {
+				Skier mySkier = new Skier(myId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp); 
+				_mySkierTable.put(myId, mySkier);
+				Logger.printInfo("Adding skier " + mySkier.id() );
+			}
+		}
+	}
+	
+	
+	
+	private float mapValue(float theValue) {
+		return PApplet.map(theValue, TRACKING_RANGE_LOWER, TRACKING_RANGE_UPPER, -1, 1);
+	}
+
+
+
+	/**
+	 * Plug method for OscP5 to catch unknown messages 
+	 * 
+	 * @param theOscMessage
+	 */
+	@SuppressWarnings("unused")
+	private void oscEvent(OscMessage theOscMessage) {
+		if (!theOscMessage.isPlugged() ) {
+			/* print the address pattern and the typetag of the received OscMessage */
+			Logger.printDebug("Received an OSC message that I don't know: addrpattern: "+theOscMessage.addrPattern() + " typetag: "+theOscMessage.typetag() );
+		}
+	}
 }
 
