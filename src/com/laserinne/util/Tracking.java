@@ -39,11 +39,14 @@ public class Tracking {
 
 	private HashMap<Integer, Skier> _mySkierTable;
 	protected ArrayList<Skier> _mySkiers;
-	
+	protected ArrayList<Skier> _myNewlyTrackedSkiers;
+	protected ArrayList<Skier> _myNewSkiers;
+	protected ArrayList<Skier> _myDeadSkiers;
 	
 	public static final float TRACKING_RANGE_LOWER = -0.5f;
 	public static final float TRACKING_RANGE_UPPER = 0.5f;
 
+	
 	
 	/**
 	 * Defaults to 239.0.0.1:9999
@@ -60,6 +63,9 @@ public class Tracking {
 
 		_mySkierTable = new HashMap<Integer, Skier>();
 		_mySkiers = new ArrayList<Skier>();
+		_myNewlyTrackedSkiers = new ArrayList<Skier>();
+		_myNewSkiers = new ArrayList<Skier>();
+		_myDeadSkiers = new ArrayList<Skier>();
 	}
 
 
@@ -68,32 +74,69 @@ public class Tracking {
 	 * Update this every frame. To be able to access the tracked skiers
 	 */
 	public void update() {
-		final ArrayList<Skier> myList = new ArrayList<Skier>();
+
+		_mySkiers.clear();
+		_myNewSkiers.clear();
+		_myDeadSkiers.clear();
+		
+		synchronized (_myNewlyTrackedSkiers) {
+			_myNewSkiers.addAll(_myNewlyTrackedSkiers);
+			_myNewlyTrackedSkiers.clear();
+		}
+		
 
 		synchronized(_mySkierTable) {
 			Collection<Skier> mySkiers = _mySkierTable.values();
 			Iterator<Skier> myIterator = mySkiers.iterator();
 
-			while (myIterator.hasNext () ) {
-				Skier mySkier = myIterator.next();
+			while (myIterator.hasNext()) {
+				final Skier mySkier = myIterator.next();
 
 				mySkier.update();
 
 				if ( mySkier.isDead() ) {
 					Logger.printInfo("Removing skier " + mySkier.id() );
+					_myDeadSkiers.add(mySkier);
 					myIterator.remove();
 				} else {
-					myList.add( mySkier );
+					_mySkiers.add( mySkier );
 				}
 			}
-		}
-		
-		synchronized(_mySkiers) {
-			_mySkiers = myList;
-		}
+		}		
 	}
 
 
+	
+	
+	
+	/**
+	 * Returns a copy of the list of all skiers that have died for this update cycle.
+	 * This list is not going to change. So get a new one each frame
+	 * 
+	 * @return 
+	 */
+	public ArrayList<Skier> deadSkiers() {
+		synchronized (_myDeadSkiers) {
+			final ArrayList<Skier> myList = new ArrayList<Skier>(_myDeadSkiers);
+			return myList;
+		}
+	}
+	
+	
+	
+	/**
+	 * Returns a copy of the list of all skiers that have appeared for this update cycle.
+	 * This list is not going to change. So get a new one each frame
+	 * 
+	 * @return 
+	 */
+	public ArrayList<Skier> newSkiers() {
+		synchronized (_myNewSkiers) {
+			final ArrayList<Skier> myList = new ArrayList<Skier>(_myNewSkiers);
+			return myList;
+		}
+	}
+	
 	
 	
 	/**
@@ -132,19 +175,25 @@ public class Tracking {
 		synchronized( _mySkierTable ) {
 			int myId = Math.round(theId);
 
+			/* We know this guy already */
 			if(_mySkierTable.containsKey(myId)) {
-				final Skier mySkier =  _mySkierTable.get(myId);
+				final Skier myKnownSkier =  _mySkierTable.get(myId);
 
 				/* Check if the message we got is newer than our last state */
-				if ( mySkier.lastTimestamp() < theTimestamp ) {
-					mySkier.updateValues(myId, mapValue(theX), mapValue(theY), mapValue(theWidth), mapValue(theHeight), mapValue(theDeltaX), mapValue(theDeltaY), theAge, theTimestamp);
+				if ( myKnownSkier.lastTimestamp() < theTimestamp ) {
+					myKnownSkier.updateValues(mapValue(theX), mapValue(theY), mapValue(theWidth), mapValue(theHeight), mapValue(theDeltaX), mapValue(theDeltaY), theAge, theTimestamp);
 				} else {
 				}
-			} 
-			else {
-				Skier mySkier = new Skier(myId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp); 
-				_mySkierTable.put(myId, mySkier);
-				Logger.printInfo("Adding skier " + mySkier.id() );
+			} else {
+				final Skier myNewSkier = new Skier(myId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp); 
+				_mySkierTable.put(myId, myNewSkier);
+			
+				Logger.printInfo("Adding skier " + myNewSkier.id() );
+				
+				
+				synchronized (_myNewlyTrackedSkiers) {
+					_myNewlyTrackedSkiers.add(myNewSkier);
+				}
 			}
 		}
 	}

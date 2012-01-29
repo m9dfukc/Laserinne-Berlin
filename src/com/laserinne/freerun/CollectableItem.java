@@ -42,7 +42,7 @@ public class CollectableItem {
 	
 	
 	public boolean collidesWith(Skier theSkier) {
-		final float myDistanceSquared = Geometry.distanceSquared(theSkier.position(), _myPosition);
+		final float myDistanceSquared = Geometry.distanceSquared(theSkier.centroid(), _myPosition);
 		
 		return myDistanceSquared < _myRadius * _myRadius;
 	}

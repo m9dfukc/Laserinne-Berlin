@@ -56,8 +56,8 @@ public abstract class LaserinneSketch extends PApplet {
 	/**
 	 * Sketch width and height.
 	 */
-	protected static final int WIDTH = 480;
-	protected static final int HEIGHT = 480;
+	protected static final int WIDTH = 600;
+	protected static final int HEIGHT = 600;
 
 	/**
 	 * Laser color: ARGB(FF, 00, FF, 00) means full intensity green.
@@ -74,7 +74,7 @@ public abstract class LaserinneSketch extends PApplet {
 	public static final int TEXT_SCANSPEED = 60000;
 
 
-
+	@Override
 	public void setup() {
 		size(WIDTH, HEIGHT, OPENGL);
 		frameRate(-1); // Use maximum frame rate.
@@ -89,14 +89,17 @@ public abstract class LaserinneSketch extends PApplet {
 		_myTracking = new Tracking("239.0.0.1", 9999);
 
 		postSetup(); // Hook!
-		
+
 	}
 
 
-
+	
+	@Override
 	public void draw() {
-		if(_myTracking != null) _myTracking.update();
+		_myTracking.update();
 
+		fireEvents();
+		
 		update(); // Hook!
 
 		background(0);
@@ -107,7 +110,8 @@ public abstract class LaserinneSketch extends PApplet {
 		strokeWeight(1/(float)width*2);
 		stroke(50);
 		line(-1, 0, 1, 0);
-		line(0, 1, 0, -1);
+		line(0, 0.5f, 0, -1);
+		
 
 		pushMatrix();
 		drawOnScreen();	// Hook!
@@ -117,6 +121,18 @@ public abstract class LaserinneSketch extends PApplet {
 		drawWithLaser(); // Hook!
 		endRaw();       
 	}
+
+
+	private void fireEvents() {
+		for(final Skier mySkier:_myTracking.newSkiers()) {
+			onNewSkier(mySkier);
+		}
+		
+		for(final Skier mySkier:_myTracking.deadSkiers()) {
+			onDeadSkier(mySkier);
+		}		
+	}
+
 
 
 	/**
@@ -142,6 +158,25 @@ public abstract class LaserinneSketch extends PApplet {
 	 */
 	protected abstract void drawOnScreen();
 
+	
+	/**
+	 * This fires when a new skier is detected.
+	 * 
+	 * @param theSkier
+	 */
+	protected abstract void onNewSkier(final Skier theSkier);
+	
+	
+	
+	/**
+	 * This fires when a skier dies
+	 *  
+	 * @param theSkier
+	 */
+	protected abstract void onDeadSkier(final Skier theSkier);
+
+	
+	
 
 	public Tracking tracking() {
 		return _myTracking;

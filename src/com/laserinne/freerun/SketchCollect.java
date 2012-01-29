@@ -1,11 +1,9 @@
 package com.laserinne.freerun;
 
-import java.util.ArrayList;
 
 import laserschein.Logger;
 import laserschein.Logger.LogLevel;
 import processing.core.PApplet;
-import processing.core.PVector;
 
 import com.laserinne.util.LaserinneSketch;
 import com.laserinne.util.Skier;
@@ -39,12 +37,22 @@ public class SketchCollect extends LaserinneSketch {
 	
 	@Override
 	protected void drawWithLaser() {
-		
 		for(final Skier mySkier:tracking().skiers()) {
-			
-			stroke(255);
-			ellipse(mySkier.position().x, mySkier.position().y, 0.1f, 0.1f);
+			mySkier.drawDebug(g);
 		}
+	}
+
+
+	@Override
+	protected void onNewSkier(Skier theSkier) {
+		println("I has new skier " + theSkier.id()); // TODO: remove debug code
+	}
+
+
+	@Override
+	protected void onDeadSkier(Skier theSkier) {
+		println("I has dead skier " + theSkier.id()); // TODO: remove debug code 
+		
 	}
 
 }
