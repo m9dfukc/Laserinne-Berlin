@@ -153,6 +153,7 @@ public class Tracking {
 	public ArrayList<Skier> skiers() {
 		synchronized (_mySkiers) {
 			final ArrayList<Skier> myList = new ArrayList<Skier>(_mySkiers);
+			
 			return myList;
 		}
 	}
