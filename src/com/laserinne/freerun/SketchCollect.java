@@ -20,7 +20,7 @@ public class SketchCollect extends LaserinneSketch {
 	protected void postSetup() {
 		//Logger.setAll(true);
     	Logger.set(LogLevel.DEBUG, false);
-    	Logger.set(LogLevel.INFO, false);
+    	//Logger.set(LogLevel.INFO, false);
 
 	}
 		
@@ -33,15 +33,16 @@ public class SketchCollect extends LaserinneSketch {
 	
 	@Override
 	protected void drawOnScreen() {
-		rect(0, 0, width * 0.5f, height * 0.5f);
+		
+		for(final Skier mySkier:tracking().skiers()) {
+			mySkier.drawDebug(g);
+		}
 	}
 	
 	
 	@Override
 	protected void drawWithLaser() {
-		for(final Skier mySkier:tracking().skiers()) {
-			mySkier.drawDebug(g);
-		}
+
 	}
 
 
