@@ -11,7 +11,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/base/opengl/opengl.jar"/>
-	<classpathentry kind="lib" path="lib/user/blobDetection/blobDetection.jar"/>
 	<classpathentry kind="lib" path="lib/user/geomerative/geomerative.jar"/>
 	<classpathentry kind="lib" path="lib/user/Laserschein/Laserschein.jar"/>
 	<classpathentry kind="lib" path="lib/user/oscP5/oscP5.jar"/>

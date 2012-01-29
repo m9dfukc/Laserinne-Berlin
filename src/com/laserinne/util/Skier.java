@@ -170,16 +170,19 @@ public class Skier {
 	
 	
 	public void drawDebug(PGraphics theG) {
-		
 		theG.stroke(255);
 		theG.rectMode(PGraphics.CENTER);
 		theG.rect(_myPosition.x, _myPosition.y, _myWidth, _myHeight);
+		theG.rect(_myPosition.x, _myPosition.y, 0.005f, 0.005f);
 		
 		
 		final PVector myBase = base();
 		
 		theG.stroke(255, 0, 0);
 		theG.line(myBase.x - 0.05f, myBase.y, myBase.x + 0.05f, myBase.y);
+		
+		
+		
 		
 		
 	}
