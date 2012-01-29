@@ -16,7 +16,7 @@ import com.laserinne.util.ToxiUtil;
 @SuppressWarnings("serial")
 public class SketchConnect extends LaserinneSketch {
 
-	private static final int DELAUNAY_ROOT_SIZE = 10000;
+	private static final int DELAUNAY_ROOT_SIZE = 4000;
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{com.laserinne.connecting.SketchConnect.class.getCanonicalName()});
@@ -38,17 +38,18 @@ public class SketchConnect extends LaserinneSketch {
 		
 		final Voronoi myVoronoi = new Voronoi(DELAUNAY_ROOT_SIZE);
 
-		ArrayList<Skier> mySkiers = tracking().skiers();
+		ArrayList<Skier> mySkiers = tracking().skiersConfident();
 
 		for(final Skier mySkier:mySkiers) {
-			final Vec2D myPosition = ToxiUtil.toVec2D(mySkier.centroid());
-			myPosition.x = PApplet.map(myPosition.x, -1, 1, 0, 1000);
-			myPosition.y = PApplet.map(myPosition.y, -1, 1, 0, 1000);
+			final Vec2D myPosition = ToxiUtil.toVec2D(mySkier.base());
+			myPosition.x = map(myPosition.x, -1, 1, 0, 1000);
+			myPosition.y = map(myPosition.y, -1, 1, 0, 1000);
 
 			myVoronoi.addPoint(myPosition);
 		}
 
 		_myEdges = findUniqueEdges(myVoronoi.getTriangles());
+		//assignEdgePairs(_myEdges);
 
 
 		/* Two skiers make no triangles */
@@ -101,16 +102,16 @@ public class SketchConnect extends LaserinneSketch {
 
 		/* Find duplicate Edges */
 		for(Triangle2D myTri:theTriangles) {
-			if(abs(myTri.a.x) == DELAUNAY_ROOT_SIZE || abs(myTri.a.y) == DELAUNAY_ROOT_SIZE) {	
+			if(abs(myTri.a.x) == DELAUNAY_ROOT_SIZE || abs(myTri.a.y) == DELAUNAY_ROOT_SIZE) {	// kill the root
 				continue;
 			}
 
 			//if(myTri.isClockwise()) myTri = myTri.flipVertexOrder();
 			final ArrayList<Edge<Vec2D>> myTriangleEdges = new ArrayList<Edge<Vec2D>>();
 
-			myTriangleEdges.add(new Edge<Vec2D>(myTri.a, myTri.b));
-			myTriangleEdges.add(new Edge<Vec2D>(myTri.b, myTri.c));
-			myTriangleEdges.add(new Edge<Vec2D>(myTri.c, myTri.a));
+			myTriangleEdges.add(new Edge<Vec2D>(myTri.a.copy(), myTri.b.copy()));
+			myTriangleEdges.add(new Edge<Vec2D>(myTri.b.copy(), myTri.c.copy()));
+			myTriangleEdges.add(new Edge<Vec2D>(myTri.c.copy(), myTri.a.copy()));
 
 			for(Edge<Vec2D> myNewEdge:myTriangleEdges) {
 				boolean myDidExist = false;

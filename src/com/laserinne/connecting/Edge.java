@@ -4,11 +4,6 @@ public class Edge<T> {
 
 	public T a, b;
 
-	public Edge() {
-		a = null;
-		b = null;
-	}
-
 	public Edge(T theA, T theB) {
 		this.a = theA;
 		this.b = theB;
