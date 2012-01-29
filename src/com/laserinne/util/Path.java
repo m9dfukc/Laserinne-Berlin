@@ -59,12 +59,14 @@ public class Path {
 		theG.noFill();
 		theG.vertex(_points.get(0).x, _points.get(0).y);
 		for(int i=1; i<_points.size(); i++) {
-			theG.stroke(0, 0, 255);
-			theG.ellipse(_points.get(i).x, _points.get(i).y, 6f, 6f);
-			theG.stroke(255, 0, 0);
 			theG.curveVertex(_points.get(i).x, _points.get(i).y);
 		}
 		theG.endShape();
+		
+		theG.stroke(0, 0, 255);
+		for(int i=1; i<_points.size(); i++) {
+			theG.ellipse(_points.get(i).x, _points.get(i).y, 0.01f, 0.01f);
+		}
 	}
 	
 	private void generatePoints() {
@@ -73,7 +75,7 @@ public class Path {
 		float stepHeight = 2f / (_resolution * 1f);
 		for(int i=0; i<_resolution; i++) {
 			float tmpX = (float) (i * stepWidth / 5.f * generator.nextDouble());  
-			float tmpY = (float) (i * stepHeight); //  (float)(generator.nextDouble() * stepHeight / 10.f);
+			float tmpY = (float) (i * stepHeight) - 1f; //  (float)(generator.nextDouble() * stepHeight / 10.f);
 			_points.add(new PVector(tmpX, tmpY));
 		}
 	}

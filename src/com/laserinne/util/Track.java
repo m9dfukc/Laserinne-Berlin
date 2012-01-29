@@ -2,6 +2,8 @@ package com.laserinne.util;
 
 import java.util.ArrayList;
 
+import laserschein.Logger;
+
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -14,7 +16,7 @@ public class Track extends Path {
 	ArrayList<PVector> _pointsRight = new ArrayList<PVector>();
 	
 	public Track(float trackWidth) {
-		super(10);
+		super(9);
 		_trackWidth = trackWidth;
 		generateOutline();
 	}
@@ -28,8 +30,7 @@ public class Track extends Path {
 			} else {
 				angle = Geometry.angle(_points.get(i), _points.get(i-1)) - 180f;
 			}
-			float distance = Geometry.transform((float)i, _trackWidth, angle);
-			PApplet.println(angle);
+			float distance = _trackWidth; //Geometry.transform((float)i, _trackWidth, angle);
 			PVector pointLeft  = Geometry.coordinates(_points.get(i).x, _points.get(i).y, distance, angle + 90f);
 			PVector pointRight = Geometry.coordinates(_points.get(i).x, _points.get(i).y, distance, angle - 90f);
 			_pointsLeft.add(pointLeft);
