@@ -48,6 +48,8 @@ public class Tracking {
 	
 	public static final int SKIER_DEATH_TIMEOUT = 100;
 
+	private static final int AGE_OF_CONFIDENCE = 10;
+
 	
 	
 	/**
@@ -97,7 +99,7 @@ public class Tracking {
 				mySkier.update();
 
 				if ( mySkier.isDead() ) {
-					Logger.printInfo("Removing skier " + mySkier.id() );
+					Logger.printInfo("Removing skier " + mySkier.id() + "(Age: " + mySkier.age() + ")");
 					
 					Logger.printDebug("Skier " + mySkier.id() + "  had an update rate of " + mySkier.calculateTrackingRate() + " Hz");
 					
@@ -157,6 +159,29 @@ public class Tracking {
 			return myList;
 		}
 	}
+	
+	
+	
+	
+	/**
+	 * Returns a copy of the list of all active skiers with a minumum age
+	 * This list is not going to change. So get a new one each frame
+	 * 
+	 * @return 
+	 */
+	public ArrayList<Skier> skiersConfident() {
+		synchronized (_mySkiers) {
+			final ArrayList<Skier> myList = new ArrayList<Skier>();
+			
+			for(final Skier mySkier:_mySkiers) {
+				if(mySkier.age() > AGE_OF_CONFIDENCE) {
+					myList.add(mySkier);
+				}
+			}
+			
+			return myList;
+		}
+	}
 
 	
 	
@@ -170,8 +195,8 @@ public class Tracking {
 	 * @param theHeight
 	 * @param theDeltaX
 	 * @param theDeltaY
-	 * @param theAge
-	 * @param theTimestamp
+	 * @param theAge (in frames)
+	 * @param theTimestamp (in seconds (float))
 	 */
 	@SuppressWarnings("unused")
 	private void trackingMessage(float theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
