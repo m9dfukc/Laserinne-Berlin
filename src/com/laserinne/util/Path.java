@@ -23,60 +23,58 @@
 
 package com.laserinne.util;
 
-import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PVector;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Path {
-	PApplet parent;
-	ArrayList<PVector> points = new ArrayList<PVector>();
-	int width;
-	int height;
-	int resolution;
+	int _resolution;
+	ArrayList<PVector> _points = new ArrayList<PVector>();
 	
-	public Path(PApplet p, int w, int h) {
-		parent = p;
-		width = w;
-		height = h;
-		resolution = 10;
+	public Path() {
+		this(10);
+	}
+	
+	public Path(int resolution) {
+		_resolution = resolution;
 		generatePoints();
 	}
 	
 	public void setPathResolution(int r) {
-		if( r > 2 && r < 50 && r != resolution) {
-			resolution = r;
+		if( r > 2 && r < 50 && r != _resolution) {
+			_resolution = r;
 			generatePoints();
 		}
 	}
 	
 	public ArrayList<PVector> getPath() {
-		return points;
+		return _points;
 	}
 	
-	public void draw() {
-		parent.stroke(255, 0, 0);
-		parent.beginShape();
-		parent.noFill();
-		parent.vertex(points.get(0).x, points.get(0).y);
-		for(int i=1; i<points.size(); i++) {
-			parent.stroke(0, 0, 255);
-			parent.ellipse(points.get(i).x, points.get(i).y, 6f, 6f);
-			parent.stroke(255, 0, 0);
-			parent.curveVertex(points.get(i).x, points.get(i).y);
+	public void draw(final PGraphics theG) {
+		theG.stroke(255, 0, 0);
+		theG.beginShape();
+		theG.noFill();
+		theG.vertex(_points.get(0).x, _points.get(0).y);
+		for(int i=1; i<_points.size(); i++) {
+			theG.stroke(0, 0, 255);
+			theG.ellipse(_points.get(i).x, _points.get(i).y, 6f, 6f);
+			theG.stroke(255, 0, 0);
+			theG.curveVertex(_points.get(i).x, _points.get(i).y);
 		}
-		parent.endShape();
+		theG.endShape();
 	}
 	
 	private void generatePoints() {
 		Random generator = new Random();
-		float stepWidth = (width * 1.f) / (resolution * 1.f); 
-		float stepHeight = (height * 1.f) / (resolution * 1.f);
-		for(int i=0; i<resolution; i++) {
-			float tmpX = (float) (i * stepWidth / 5.f * generator.nextDouble()) + (float) (width / 2.f);  
+		float stepWidth = 2f / (_resolution * 1f); 
+		float stepHeight = 2f / (_resolution * 1f);
+		for(int i=0; i<_resolution; i++) {
+			float tmpX = (float) (i * stepWidth / 5.f * generator.nextDouble());  
 			float tmpY = (float) (i * stepHeight); //  (float)(generator.nextDouble() * stepHeight / 10.f);
-			points.add(new PVector(tmpX, tmpY));
+			_points.add(new PVector(tmpX, tmpY));
 		}
 	}
     
