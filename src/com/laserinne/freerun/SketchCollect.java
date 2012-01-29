@@ -20,6 +20,8 @@ public class SketchCollect extends LaserinneSketch {
 	protected void postSetup() {
 		//Logger.setAll(true);
     	Logger.set(LogLevel.DEBUG, false);
+    	Logger.set(LogLevel.INFO, false);
+
 	}
 		
 

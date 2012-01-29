@@ -45,6 +45,8 @@ public class Tracking {
 	
 	public static final float TRACKING_RANGE_LOWER = -0.5f;
 	public static final float TRACKING_RANGE_UPPER = 0.5f;
+	
+	public static final int SKIER_DEATH_TIMEOUT = 100;
 
 	
 	
@@ -96,6 +98,9 @@ public class Tracking {
 
 				if ( mySkier.isDead() ) {
 					Logger.printInfo("Removing skier " + mySkier.id() );
+					
+					Logger.printDebug("Skier " + mySkier.id() + "  had an update rate of " + mySkier.calculateTrackingRate() + " Hz");
+					
 					_myDeadSkiers.add(mySkier);
 					myIterator.remove();
 				} else {
@@ -183,6 +188,7 @@ public class Tracking {
 				if ( myKnownSkier.lastTimestamp() < theTimestamp ) {
 					myKnownSkier.updateValues(mapValue(theX), mapValue(theY), mapValue(theWidth), mapValue(theHeight), mapValue(theDeltaX), mapValue(theDeltaY), theAge, theTimestamp);
 				} else {
+					Logger.printWarning("Timestamp mixup. Skier has: " + myKnownSkier.lastTimestamp() + " | Received:" +theTimestamp);
 				}
 			} else {
 				final Skier myNewSkier = new Skier(myId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp); 

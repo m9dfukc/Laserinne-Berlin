@@ -103,7 +103,14 @@ public abstract class LaserinneSketch extends PApplet {
 		update(); // Hook!
 
 		background(0);
-
+		
+		fill(255);
+		stroke(255);
+		textSize(12);
+		text(frameRate, 100, 100);
+		noFill();
+		
+		
 		/* Init [-1, 1] coordinate system */
 		translate(width * 0.5f, height * 0.5f);
 		scale(width * 0.5f);
@@ -115,6 +122,8 @@ public abstract class LaserinneSketch extends PApplet {
 
 		pushMatrix();
 		drawOnScreen();	// Hook!
+	
+		
 		popMatrix();
 
 		beginRaw(_myLaser.renderer());

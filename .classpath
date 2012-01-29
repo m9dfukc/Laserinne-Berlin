@@ -18,5 +18,8 @@
 	<classpathentry kind="lib" path="lib/user/motion/motion.jar"/>
 	<classpathentry kind="lib" path="lib/user/controlP5/controlP5.jar"/>
 	<classpathentry kind="lib" path="lib/user/physics/physics.jar"/>
+	<classpathentry kind="lib" path="lib/user/toxiclibs/toxiclibs_p5.jar"/>
+	<classpathentry kind="lib" path="lib/user/toxiclibs/toxiclibscore.jar"/>
+	<classpathentry kind="lib" path="lib/user/toxiclibs/verletphysics.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
