@@ -25,6 +25,8 @@ package com.laserinne.util;
 
 import java.util.ArrayList;
 
+import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PVector;
 
 public class Skier {
@@ -38,6 +40,7 @@ public class Skier {
 	private PVector _myPreviousPosition;
 	private PVector _myDirection;
 
+	
 	private float _myDeltaX;
 	private float _myDeltaY;
 
@@ -45,6 +48,8 @@ public class Skier {
 
 	private float _myWidth;
 	private float _myHeight;
+	
+	
 
 
 
@@ -61,14 +66,15 @@ public class Skier {
 
 		_myPreviousPosition = new PVector(0, 0);
 		_myPosition = new PVector(0, 0);
-		_myDirection = new PVector(0, 0);		
+		_myDirection = new PVector(0, 0);
+		
+		_myId = theId;
 
-		updateValues(theId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp);
+		updateValues(theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp);
 	}
 
 
-	public void updateValues( int theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp) {
-		_myId = theId;
+	public void updateValues(float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp) {
 
 		_myHistory[_myHistoryPointer] = new PVector(_myPosition.x, _myPosition.y);
 		_myHistoryPointer++;
@@ -138,20 +144,39 @@ public class Skier {
 	}
 	
 
-
-
 	public float lastTimestamp() {
 		return _myLastTimestamp;
 	}
-	
-
-	public void position(float theX, int theY) {
-		this._myPosition = new PVector(theX, theY);
-	}
 
 
-	public PVector position() {
+
+	public PVector centroid() {
 		return _myPosition;
+	}
+	
+	
+	public PVector base() {
+		final float myX = _myPosition.x;
+		final float myY = _myPosition.y - _myHeight * 0.5f;
+
+		return new PVector(myX, myY);
+	}
+	
+	
+	
+	public void drawDebug(PGraphics theG) {
+		
+		theG.stroke(255);
+		theG.rectMode(PGraphics.CENTER);
+		theG.rect(_myPosition.x, _myPosition.y, _myWidth, _myHeight);
+		
+		
+		final PVector myBase = base();
+		
+		theG.stroke(255, 0, 0);
+		theG.line(myBase.x - 0.05f, myBase.y, myBase.x + 0.05f, myBase.y);
+		
+		
 	}
 
 
