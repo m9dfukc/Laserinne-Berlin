@@ -157,7 +157,7 @@ public class Skier {
 	
 	public PVector base() {
 		final float myX = _myPosition.x;
-		final float myY = _myPosition.y - _myHeight * 0.5f;
+		final float myY = _myPosition.y + _myHeight * 0.5f;
 
 		return new PVector(myX, myY);
 	}
