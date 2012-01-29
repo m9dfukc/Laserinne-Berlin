@@ -16,8 +16,8 @@ public class Track extends Path {
 	ArrayList<PVector> _pointsRight = new ArrayList<PVector>();
 	
 	public Track(float trackWidth) {
-		super(9);
-		_trackWidth = trackWidth;
+		super(7);
+		_trackWidth = PApplet.constrain(trackWidth, 0.001f, 0.30f);
 		generateOutline();
 	}
 	

@@ -23,6 +23,7 @@
 
 package com.laserinne.util;
 
+import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
@@ -74,8 +75,8 @@ public class Path {
 		float stepWidth = 2f / (_resolution * 1f); 
 		float stepHeight = 2f / (_resolution * 1f);
 		for(int i=0; i<_resolution; i++) {
-			float tmpX = (float) (i * stepWidth / 5.f * generator.nextDouble());  
-			float tmpY = (float) (i * stepHeight) - 1f; //  (float)(generator.nextDouble() * stepHeight / 10.f);
+			float tmpX = (float) (i * stepWidth * generator.nextDouble() * _resolution);  
+			float tmpY = (float) (i * stepHeight) - 1f + PApplet.map((float)generator.nextDouble(), 0f, 1f, -1f*stepHeight/4, stepHeight/4); //  (float)(generator.nextDouble() * stepHeight / 10.f);
 			_points.add(new PVector(tmpX, tmpY));
 		}
 	}
