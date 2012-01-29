@@ -48,15 +48,18 @@ public class Skier {
 
 	private float _myWidth;
 	private float _myHeight;
-	
-	
-
-
 
 	private float _myLastTimestamp;
+	
+	private long _myFirstUpdate;
 	private long _myLastUpdate;
+	
+	
+	private int _myNumberOfUpdates = 0;
 
 	public static final float DIRECTION_LEARNING_RATE = 0.001f;
+	public static final float SIZE_LEARNING_RATE = 0.1f;
+
 
 
 	public Skier( int theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
@@ -69,8 +72,13 @@ public class Skier {
 		_myDirection = new PVector(0, 0);
 		
 		_myId = theId;
+		
+		_myWidth = theWidth;
+		_myHeight = theHeight;
 
 		updateValues(theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp);
+		
+		_myFirstUpdate = System.currentTimeMillis();
 	}
 
 
@@ -89,13 +97,16 @@ public class Skier {
 		_myDeltaX = theDeltaX;
 		_myDeltaY = theDeltaY;
 
-		_myWidth = theWidth;
-		_myHeight = theHeight;
+		_myWidth = ((1-SIZE_LEARNING_RATE) * _myWidth) + ( SIZE_LEARNING_RATE * theWidth);
+		_myHeight = ((1-SIZE_LEARNING_RATE) * _myHeight) + ( SIZE_LEARNING_RATE * theHeight);
+;
 
 		_myAge = theAge;
 
 		_myLastTimestamp = theTimestamp;
 		_myLastUpdate = System.currentTimeMillis();
+		
+		_myNumberOfUpdates++;
 	}
 
 
@@ -113,7 +124,6 @@ public class Skier {
 			}
 		}
 
-
 		final PVector myDirection = new PVector(_myPreviousPosition.x, _myPreviousPosition.y );
 		myDirection.sub(_myPosition);
 
@@ -122,17 +132,12 @@ public class Skier {
 			_myDirection.y = ((1-DIRECTION_LEARNING_RATE) * _myDirection.y) + ( DIRECTION_LEARNING_RATE * myDirection.y);
 		}
 
-
 		_myPreviousPosition.set(_myPosition);
 	}
 
 
 	public boolean isDead() {
-		if (System.currentTimeMillis() - _myLastUpdate > 200) {  // TODO: unhardcode
-			return true;
-		} 
-
-		return false;
+		return System.currentTimeMillis() - _myLastUpdate > Tracking.SKIER_DEATH_TIMEOUT;			
 	}
 
 	
@@ -177,6 +182,13 @@ public class Skier {
 		theG.line(myBase.x - 0.05f, myBase.y, myBase.x + 0.05f, myBase.y);
 		
 		
+	}
+	
+	
+	
+	public float calculateTrackingRate() {
+		float myTimeThere = (Math.abs(_myFirstUpdate - _myLastUpdate) / 1000f);
+		return _myNumberOfUpdates / myTimeThere; 
 	}
 
 
