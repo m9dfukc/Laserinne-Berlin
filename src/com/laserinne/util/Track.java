@@ -1,77 +1,76 @@
-/*
- *                This file is part of Laserinne.
- * 
- *  Laser projections in public space, inspiration and
- *  information, exploring the aesthetic and interactive possibilities of
- *  laser-based displays.
- * 
- *  http://www.laserinne.com/
- * 
- * Laserinne is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Laserinne is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Laserinne. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.laserinne.util;
 
-import processing.core.PGraphics;
+import java.util.ArrayList;
+
+import processing.core.PApplet;
 import processing.core.PVector;
 
-public class Track {
-	
-	private int id;
 
+public class Track extends Path {
 	
-	private PVector[] trackPoints = new PVector[10];
-	private PGraphics pG;
+	float trackWidth;
+	ArrayList<PVector> pointsLeft = new ArrayList<PVector>();
+	ArrayList<PVector> pointsRight = new ArrayList<PVector>();
 	
-	private static int width;
-	private static int height;
+	public Track(PApplet p, int w, int h) {
+		super(p, w, h);
+		trackWidth = 30f;
+		generateOutline();
+	}
 	
-	public Track(PGraphics _pG) {
-		this.pG = _pG;
-		
-		for(int i=0; i < trackPoints.length; i++) {
-			
-			trackPoints[i] = new PVector();
+	public void generateOutline() {
+		for(int i=0; i<points.size(); i++) {
+			float angle;
+			if( i < points.size() - 1) {
+				angle = Geometry.angle(points.get(i), points.get(i+1));
+				
+			} else {
+				angle = Geometry.angle(points.get(i), points.get(i-1)) - 180f;
+			}
+			float distance = Geometry.transform((float)i, trackWidth, angle);
+			PApplet.println(angle);
+			PVector pointLeft  = Geometry.coordinates(points.get(i).x, points.get(i).y, distance, angle + 90f);
+			PVector pointRight = Geometry.coordinates(points.get(i).x, points.get(i).y, distance, angle - 90f);
+			pointsLeft.add(pointLeft);
+			pointsRight.add(pointRight);
 		}
 	}
 	
-	public void update() {
-		
+	public void setTrackWidth(float w) {
+		if( w > 0 && w < width / 2 ) trackWidth = w;
+	}
+	
+	public ArrayList<PVector> getOutlineLeft() {
+		return pointsLeft;
+	}
+	
+	public ArrayList<PVector> getOutlineRight() {
+		return pointsRight;
 	}
 	
 	public void draw() {
-	
-	}
-	
-	public void width() {
+		super.draw();
+		parent.stroke(0, 255, 0);
+		parent.noFill();
 		
-	}
-	
-	private void drawPath() {
+		parent.beginShape();
+		parent.vertex(pointsLeft.get(0).x, pointsLeft.get(0).y);
+		for(int i = 1; i < pointsLeft.size(); i++) {
+			parent.curveVertex(pointsLeft.get(i).x, pointsLeft.get(i).y);
+		}
+		parent.endShape();
 		
+		parent.beginShape();
+		parent.vertex(pointsRight.get(0).x, pointsRight.get(0).y);
+		for(int i = 1; i < pointsRight.size(); i++) {
+			parent.curveVertex(pointsRight.get(i).x, pointsRight.get(i).y);
+		}
+		/*
+		parent.vertex(pointsRight.get(pointsRight.size()-1).x, pointsRight.get(pointsRight.size()-1).y);
+		for(int i = pointsRight.size()-1; i==0; i--) {
+			parent.curveVertex(pointsRight.get(i).x, pointsRight.get(i).y);
+		}
+		*/
+		parent.endShape();
 	}
-	
-	private void drawSector() {
-		
-	}
-	
-    public static final void width(int width) {
-        Track.width = width;
-    } 
-	
-    public static final void height(int height) {
-        Track.height = height;
-    }
-    
 }
