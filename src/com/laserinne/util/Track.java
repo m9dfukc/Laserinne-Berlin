@@ -8,6 +8,9 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
+import toxi.geom.*;
+import toxi.physics2d.*;
+
 
 public class Track extends Path {
 	
@@ -16,12 +19,19 @@ public class Track extends Path {
 	ArrayList<PVector> _pointsRight = new ArrayList<PVector>();
 	
 	public Track(float trackWidth) {
-		super(7);
+		super(50);
 		_trackWidth = PApplet.constrain(trackWidth, 0.001f, 0.30f);
 		generateOutline();
 	}
 	
+	public void generate() {
+		generatePoints();
+		generateOutline();
+	}
+	
 	public void generateOutline() {
+		_pointsLeft.clear();
+		_pointsRight.clear();
 		for(int i=0; i<_points.size(); i++) {
 			float angle;
 			if( i < _points.size() - 1) {
@@ -50,8 +60,7 @@ public class Track extends Path {
 		return _pointsRight;
 	}
 	
-	public void draw(final PGraphics theG) {
-		super.draw(theG);
+	public void drawWithLaser(final PGraphics theG) {
 		theG.stroke(0, 255, 0);
 		theG.noFill();
 		

@@ -27,6 +27,8 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
+import toxi.math.noise.PerlinNoise;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -54,7 +56,7 @@ public class Path {
 		return _points;
 	}
 	
-	public void draw(final PGraphics theG) {
+	public void drawOnScreen(final PGraphics theG) {
 		theG.stroke(255, 0, 0);
 		theG.beginShape();
 		theG.noFill();
@@ -70,15 +72,27 @@ public class Path {
 		}
 	}
 	
-	private void generatePoints() {
-		Random generator = new Random();
-		float stepWidth = 2f / (_resolution * 1f); 
-		float stepHeight = 2f / (_resolution * 1f);
+	public void generatePoints() {
+		PerlinNoise generator = new PerlinNoise();
+		long seed = System.currentTimeMillis();
+		_points.clear();
+		generator.noiseSeed(seed);
+		float stepY = 2.0f /  (_resolution * 1f);
 		for(int i=0; i<_resolution; i++) {
-			float tmpX = (float) (i * stepWidth * generator.nextDouble() * _resolution);  
+			float tmpX = generator.noise(stepY*i*2) * ((float)i / _resolution) + PApplet.sin((float)i / _resolution * 5) * 0.25f;
+			float tmpY = stepY*i - 1;
+			_points.add(new PVector(tmpX, tmpY));
+		}
+		
+		
+		/*
+		float stepWidth = .5f / (_resolution * 1f); 
+		float stepHeight = 2.5f / (_resolution * 1f);
+		for(int i=0; i<_resolution; i++) {
+			float tmpX = (float) PApplet.map((float) generator.nextDouble(), 0f, 1f, -1f * stepWidth, stepWidth) * (i + 2) / 2 ;  
 			float tmpY = (float) (i * stepHeight) - 1f + PApplet.map((float)generator.nextDouble(), 0f, 1f, -1f*stepHeight/4, stepHeight/4); //  (float)(generator.nextDouble() * stepHeight / 10.f);
 			_points.add(new PVector(tmpX, tmpY));
 		}
+		*/
 	}
-    
 }

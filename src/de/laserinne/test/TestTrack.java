@@ -21,6 +21,12 @@ public class TestTrack extends LaserinneSketch {
         track = new Track(.07f);
         //Logger.setAll(false);
 	}
+	
+	@Override
+	public void mouseClicked() {
+		//if (e.getButton() == e.BUTTON1) 
+		track.generate();
+	}
 
 	@Override
 	protected void update() {
@@ -30,13 +36,12 @@ public class TestTrack extends LaserinneSketch {
 
 	@Override
 	protected void drawWithLaser() {
-		// TODO Auto-generated method stub
-		
+		track.drawWithLaser(g);
 	}
 
 	@Override
 	protected void drawOnScreen() {
-		track.draw(g);
+		track.drawOnScreen(g);
 	}
 
 	@Override
