@@ -7,122 +7,147 @@ import laserschein.Logger;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
+import toxi.geom.Vec2D;
+import toxi.physics2d.ParticleString2D;
+import toxi.physics2d.VerletMinDistanceSpring2D;
 import toxi.physics2d.VerletParticle2D;
 import toxi.physics2d.VerletPhysics2D;
 import toxi.physics2d.VerletConstrainedSpring2D;
+import toxi.physics2d.VerletSpring2D;
+import toxi.physics2d.behaviors.AttractionBehavior;
 
 class RailPhysics {
 
-	float totalLength;
-	int numPoints;
 	float strength;
 	float radius;
+	
 	VerletPhysics2D physics;
-	ArrayList<PVector> points;
+	AttractionBehavior skierAttractor;
+	Vec2D skier;
+	
+	ParticleString2D stringCenter;
+	ParticleString2D stringLeft;
+	ParticleString2D stringRight;
+	
+	ArrayList<VerletParticle2D> particlesCenter = new ArrayList<VerletParticle2D>();
+	ArrayList<VerletParticle2D> particlesLeft = new ArrayList<VerletParticle2D>();
+	ArrayList<VerletParticle2D> particlesRight = new ArrayList<VerletParticle2D>();
+	
+	ArrayList<PVector> pointsCenter;
+	ArrayList<PVector> pointsLeft;
+	ArrayList<PVector> pointsRight;
 
-	VerletParticle2D tail;
-
-	PVector offset = new PVector();
-	boolean dragged = false;
-
+	private boolean mouseDown;
+	
 	@SuppressWarnings("serial")
-	public RailPhysics(VerletPhysics2D physics, ArrayList<PVector> points, float s) {
+	public RailPhysics(VerletPhysics2D physics, ArrayList<PVector> center, ArrayList<PVector> left, ArrayList<PVector> right, float s) {
 
 		this.physics = physics;
-		this.points = points;
+		pointsCenter = center;
+		pointsLeft = left;
+		pointsRight = right;
 
 		strength = s;
 		radius = 0.09f;
-
-		// Here is the real work, go through and add particles to the chain
-		// itself
-		for (int i = 0; i < points.size(); i++) {
-			// Make a new particle with an initial starting location
-			VerletParticle2D particle = new VerletParticle2D(0f, points.get(i).y);
-			physics.addParticle(particle);
-
-			// Connect the particles with a Spring (except for the head)
-			if (i > 0) {
-				VerletParticle2D previous = physics.particles.get(i - 1);
-				
-				VerletConstrainedSpring2D spring = new VerletConstrainedSpring2D(particle, previous, 0.001f, strength);
-				physics.addSpring(spring);
-				if (i == points.size()-1) physics.particles.get(i).lock();
-			}
+		
+		mouseDown = false;
+		
+		for (int i = 0; i < center.size(); i++) {
+			VerletParticle2D particleCenter = new VerletParticle2D(pointsCenter.get(i).x, pointsCenter.get(i).y);
+			VerletParticle2D particleLeft = new VerletParticle2D(pointsLeft.get(i).x, pointsLeft.get(i).y);
+			VerletParticle2D particleRight = new VerletParticle2D(pointsRight.get(i).x, pointsRight.get(i).y);
+			
+			particleCenter.lock();
+			
+			VerletConstrainedSpring2D  springLeft = 
+				new VerletConstrainedSpring2D (
+					particleCenter, 
+					particleLeft, 
+					PApplet.dist(particleCenter.x, particleCenter.y, particleLeft.x, particleLeft.y), 
+					0.001f, 
+					PApplet.dist(particleCenter.x, particleCenter.y, particleLeft.x, particleLeft.y) * 3.25f
+				);
+			VerletConstrainedSpring2D  springRight = 
+				new VerletConstrainedSpring2D (
+						particleCenter, 
+						particleRight, 
+						PApplet.dist(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y), 
+						0.001f,
+						PApplet.dist(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y) * 3.25f
+					);
+			springLeft.lockA(true);
+			springRight.lockA(true);
+			
+			particlesCenter.add(particleCenter);
+			particlesLeft.add(particleLeft);
+			particlesRight.add(particleRight);
+			
+			physics.addSpring(springLeft);
+			physics.addSpring(springRight);
 		}
+		stringCenter = new ParticleString2D(physics, particlesCenter, strength);
+		stringLeft = new ParticleString2D(physics, particlesLeft, strength);
+		stringRight = new ParticleString2D(physics, particlesRight, strength);
+		
+		stringLeft.getHead().lock();
+		stringLeft.getTail().lock();
+		stringRight.getHead().lock();
+		stringRight.getTail().lock();
 
-		// Keep the top fixed
-		VerletParticle2D head = physics.particles.get(0);
-		head.lock();
-
-		// Store reference to the tail
-		tail = physics.particles.get(points.size() - 1);
-		tail.lock();
 	}
 
-	// Check if a point is within the ball at the end of the chain
-	// If so, set dragged = true;
-	void contains(float x, float y) {
-		boolean found = false;
-		for (int i = 1; i < points.size()-1; i++) {
-			VerletParticle2D body = physics.particles.get(i);
-			body.unlock();
-			if(!found) body.lock();
-			float d = PApplet.dist(x, y, points.get(i).x, points.get(i).y);
-			if (d < radius) {
-				offset.x = body.x - x ;
-				offset.y = body.y - y ;
-				dragged = true;
-				tail = body;
-				found = true;
-				//break;
-			}
+	void updateSkier(Vec2D skier) {
+		this.skier = skier;	
+		if( mouseDown ) {
+			skierAttractor = new AttractionBehavior(skier, 0.01f, -.09f);
+			physics.addBehavior(skierAttractor);
+			physics.update();
+			physics.removeBehavior(skierAttractor);
 		}
 	}
 
-	// Release the ball
-	void release() {
-		tail.unlock();
-		dragged = false;
+	void onNewSkier(Vec2D skier) {
+		mouseDown = true;
 	}
-
-	// Update tail location if being dragged
-	void updateTail(float x, float y, final PGraphics theG) {
-		for (int i = 0; i < points.size(); i++) {
-			//physics.particles.get(i).set(points.get(i).x, points.get(i).y);
-		}
-		if (dragged) {
-			tail.set(x + offset.x, y + offset.y);
-		}
-		theG.fill(255);
-		theG.ellipse(x, y, radius, radius);
+	
+	void onDeadSkier() {
+		mouseDown = false;
 	}
 
 	// Draw the chain
 	void drawOnScreen(final PGraphics theG) {
-		// Draw line connecting all points
-		/*
-		for (int i = 0; i < physics.particles.size() - 1; i++) {
-			VerletParticle2D p1 = physics.particles.get(i);
-			VerletParticle2D p2 = physics.particles.get(i + 1);
-			theG.stroke(255);
-			//Logger.printInfo("x "+p1.x+" y "+p1.y+" x2 "+p2.x+" y2 "+p2.y);
-			theG.line(p1.x, p1.y, p2.x, p2.y);
-		}
-		 */
+		
 		theG.noFill();
+		theG.stroke(255);
+		
 		theG.beginShape();
-		VerletParticle2D particle = physics.particles.get(0);
-		theG.vertex(particle.x+ points.get(0).x, particle.y+ points.get(0).y);
-		for(int i = 1; i < physics.particles.size(); i++) {
-			particle = physics.particles.get(i);
-			theG.curveVertex(particle.x + points.get(i).x, particle.y + points.get(i).y);
+		theG.vertex(particlesLeft.get(0).x, particlesLeft.get(0).y);
+		for(int i = 1; i < particlesLeft.size(); i++) {
+			VerletParticle2D particle = particlesLeft.get(i);
+			theG.curveVertex(particle.x, particle.y);
 		}
 		theG.endShape();
 		
-		// Draw a ball at the tail
-		theG.stroke(0);
-		theG.fill(255,0,0);
-		theG.ellipse(tail.x, tail.y, radius * 0.5f, radius * 0.5f);
+		theG.beginShape();
+		theG.vertex(particlesRight.get(0).x, particlesRight.get(0).y);
+		for(int i = 1; i < particlesRight.size(); i++) {
+			VerletParticle2D particle = particlesRight.get(i);
+			theG.curveVertex(particle.x, particle.y);
+		}
+		theG.endShape();
+		
+		theG.stroke(255, 0, 0);
+		for(int i = 0; i < particlesCenter.size(); i++) {
+			VerletParticle2D particle = particlesCenter.get(i);
+			theG.ellipse(particle.x, particle.y, 0.002f, 0.002f);
+		}
+		
+		theG.stroke(0,0,255);
+		for(int i = 0; i < particlesCenter.size(); i++) {
+			VerletParticle2D particleLeft = particlesLeft.get(i);
+			VerletParticle2D particleRight = particlesRight.get(i);
+			theG.line(particleLeft.x, particleLeft.y, particleRight.x, particleRight.y);
+		}
+		
 	}
 }

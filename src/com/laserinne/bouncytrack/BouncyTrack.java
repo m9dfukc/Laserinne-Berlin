@@ -4,6 +4,7 @@ import laserschein.Logger;
 import laserschein.Logger.LogLevel;
 import processing.core.PApplet;
 import toxi.geom.Rect;
+import toxi.geom.Vec2D;
 import toxi.physics2d.VerletPhysics2D;
 
 import com.laserinne.util.LaserinneSketch;
@@ -27,7 +28,9 @@ public class BouncyTrack extends LaserinneSketch {
         track = new Track(.07f);
         physics = new VerletPhysics2D();
         physics.setWorldBounds(new Rect(-1f,-1f,2f,2f));
-        rail = new RailPhysics(physics, track.getOutlineLeft(), 0.005f);
+        
+        rail = new RailPhysics(physics, track.getPath(), track.getOutlineLeft(), track.getOutlineRight(), 0.005f);
+        
         Logger.set(LogLevel.PROCESS, false);
         Logger.set(LogLevel.DEBUG, false);
 	}
@@ -41,20 +44,21 @@ public class BouncyTrack extends LaserinneSketch {
 	
 	@Override
 	public void mouseClicked() {
-		//if (e.getButton() == e.BUTTON1) 
-		//
+	}
+	
+	@Override
+	public void mouseDragged() {
+		rail.updateSkier(new Vec2D(mX, mY));
 	}
 	
 	@Override
 	public void mousePressed() {
-	  // Check to see if we're grabbing the chain
-		rail.contains(mX, mY);
+		rail.onNewSkier(new Vec2D(mX, mY));
 	}
 
 	@Override
 	public void mouseReleased() {
-	  // Release the chain
-		rail.release();
+	  rail.onDeadSkier();
 	}
 
 
@@ -70,9 +74,7 @@ public class BouncyTrack extends LaserinneSketch {
 
 	@Override
 	protected void drawOnScreen() {
-		//track.drawOnScreen(g);
 		physics.update();
-		rail.updateTail(mX, mY, g);
 		rail.drawOnScreen(g);
 	}
 
