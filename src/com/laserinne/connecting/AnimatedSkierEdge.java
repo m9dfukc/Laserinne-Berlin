@@ -3,7 +3,10 @@ package com.laserinne.connecting;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
+import com.laserinne.util.Geometry;
 import com.laserinne.util.Skier;
+
+import de.looksgood.ani.Ani;
 
 public class AnimatedSkierEdge {
 
@@ -14,6 +17,12 @@ public class AnimatedSkierEdge {
 	
 	private float _myProgress = 0;
 	
+	private static float DURATION = 0.7f;
+	private static float SPARE_BORDER = 0.05f;
+	
+	
+	private Ani _myAnimation;
+	
 	public enum State {
 		CONNECTING, CONNECTED, DISCONNECTING, DISCONNECTED;
 	}
@@ -23,6 +32,9 @@ public class AnimatedSkierEdge {
 		_mySkierA = theSkierA;
 		_mySkierB = theSkierB;
 		_myState = State.CONNECTING;
+		
+		_myAnimation = new Ani(this, DURATION, "_myProgress", 1, Ani.QUAD_IN_OUT);
+		_myAnimation.start();
 	}
 	
 	
@@ -51,15 +63,24 @@ public class AnimatedSkierEdge {
 
 
 	public void deactivate() {
-		if(_myState != State.DISCONNECTED) {
+		if(_myState != State.DISCONNECTED && _myState != State.DISCONNECTING) {
 			_myState = State.DISCONNECTING;
+			_myAnimation.setBegin(_myProgress);
+			_myAnimation.setEnd(0);
+			_myAnimation.start();
 		}
 	}
 	
 	
 	public void activate() {
-		if(_myState != State.CONNECTED) {
+		if(_myState != State.CONNECTED && _myState != State.CONNECTING) {
 			_myState = State.CONNECTING;
+			_myAnimation.setBegin(_myProgress);
+			_myAnimation.setEnd(1);
+			_myAnimation.start();
+
+			
+
 		}
 		
 	}
@@ -74,12 +95,22 @@ public class AnimatedSkierEdge {
 		final PVector myA = _mySkierA.base();
 		final PVector myB = _mySkierB.base();
 		
-		theG.line(myA.x, myA.y, myB.x, myB.y);
+		
+		final PVector myInbetween = Geometry.lerp(myB, myA, _myProgress);
+		
+		theG.line(myB.x, myB.y, myInbetween.x, myInbetween.y);
 		
 	}
 	
 	
 	public void update() {
-		
+		if(_myAnimation.isEnded()) {
+			if(_myState == State.CONNECTING) {
+				_myState = State.CONNECTED;
+			} else if(_myState == State.DISCONNECTING) {
+				_myState = State.DISCONNECTED;
+			}
+		}
+
 	}
 }

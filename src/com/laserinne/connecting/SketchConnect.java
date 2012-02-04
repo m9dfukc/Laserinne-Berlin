@@ -14,6 +14,8 @@ import com.laserinne.util.LaserinneSketch;
 import com.laserinne.util.Skier;
 import com.laserinne.util.ToxiUtil;
 
+import de.looksgood.ani.Ani;
+
 @SuppressWarnings("serial")
 public class SketchConnect extends LaserinneSketch {
 
@@ -31,6 +33,7 @@ public class SketchConnect extends LaserinneSketch {
 	@Override
 	protected void postSetup() {
 		_mySkierEdges = new ArrayList<AnimatedSkierEdge>();
+		Ani.init(this);
 
 	}
 
