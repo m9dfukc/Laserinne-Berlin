@@ -46,12 +46,15 @@ public abstract class LaserinneSketch extends PApplet {
 	 */
 	private Laserschein _myLaser;
 
-
 	/**
 	 * Tracking gives us all skiers in the slope.
 	 */
 	private Tracking _myTracking;
 
+	/**
+	 * millis in last Frame. 
+	 */
+	private float _lastMillis;
 
 	/**
 	 * Sketch width and height.
@@ -72,13 +75,29 @@ public abstract class LaserinneSketch extends PApplet {
 	 * Laser scan speed used when displaying text.
 	 */
 	public static final int TEXT_SCANSPEED = 60000;
+	
+	/**
+	 * Scaled mouseX.
+	 */
+	public float mX;
+	
+	/**
+	 * Scaled mouseY.
+	 */
+	public float mY;
+	
+	/**
+	 * Time in millis/1000 since last Frame.
+	 */
+	public float delta;
 
-
+	
 	@Override
 	public void setup() {
 		size(WIDTH, HEIGHT, OPENGL);
 		frameRate(-1); // Use maximum frame rate.
-
+		_lastMillis = millis() / 1000f;
+		
 		_myLaser = new Laserschein(this, Laserschein.EASYLASEUSB2);               
 
 		smooth();
@@ -97,7 +116,12 @@ public abstract class LaserinneSketch extends PApplet {
 	@Override
 	public void draw() {
 		_myTracking.update();
-
+		
+		mX = map(mouseX, 0, width, -1.f, 1.f);
+		mY = map(mouseY, 0, height, -1.f, 1.f);
+		delta = millis()/1000f - _lastMillis;
+		_lastMillis = millis()/1000f;
+		
 		fireEvents();
 		
 		update(); // Hook!
@@ -184,14 +208,11 @@ public abstract class LaserinneSketch extends PApplet {
 	 * @param theSkier
 	 */
 	protected abstract void onDeadSkier(final Skier theSkier);
-
-	
 	
 
 	public Tracking tracking() {
 		return _myTracking;
 	}
-
 
 	public void keyPressed() {
 		if (key == 's') {
