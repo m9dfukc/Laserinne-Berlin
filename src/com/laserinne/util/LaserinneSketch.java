@@ -131,7 +131,8 @@ public abstract class LaserinneSketch extends PApplet {
 		fill(255);
 		stroke(255);
 		textSize(12);
-		text(frameRate, 100, 100);
+		text(frameRate, 20, 30);
+		text("Skiers: " + tracking().skiers().size(), 100, 30);
 		noFill();
 		
 		

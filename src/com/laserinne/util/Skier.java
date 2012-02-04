@@ -195,4 +195,12 @@ public class Skier {
 	}
 
 
+	/**
+	 * @return The age of the skier (in tracking frames)
+	 */
+	public int age() {
+		return (int)_myAge;
+	}
+
+
 }
