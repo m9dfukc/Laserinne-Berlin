@@ -79,6 +79,7 @@ public class Skier {
 		updateValues(theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp);
 		
 		_myFirstUpdate = System.currentTimeMillis();
+		_myLastUpdate = System.currentTimeMillis();
 	}
 
 
@@ -99,7 +100,6 @@ public class Skier {
 
 		_myWidth = ((1-SIZE_LEARNING_RATE) * _myWidth) + ( SIZE_LEARNING_RATE * theWidth);
 		_myHeight = ((1-SIZE_LEARNING_RATE) * _myHeight) + ( SIZE_LEARNING_RATE * theHeight);
-;
 
 		_myAge = theAge;
 

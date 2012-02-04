@@ -1,10 +1,10 @@
 package com.laserinne.connecting;
 
-public class Edge<T> {
+public class Edge<Type> {
 
-	public T a, b;
+	public Type a, b;
 
-	public Edge(T theA, T theB) {
+	public Edge(Type theA, Type theB) {
 		this.a = theA;
 		this.b = theB;
 	}
@@ -14,8 +14,8 @@ public class Edge<T> {
 	 * Reverses the Edge order in place
 	 */
 	public void reverse() {
-		T myTmpA = a;
-		T myTmpB = b;
+		Type myTmpA = a;
+		Type myTmpB = b;
 
 		a = myTmpB;
 		b = myTmpA;

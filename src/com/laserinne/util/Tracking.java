@@ -221,8 +221,7 @@ public class Tracking {
 				_mySkierTable.put(myId, myNewSkier);
 			
 				Logger.printInfo("Adding skier " + myNewSkier.id() );
-				
-				
+								
 				synchronized (_myNewlyTrackedSkiers) {
 					_myNewlyTrackedSkiers.add(myNewSkier);
 				}

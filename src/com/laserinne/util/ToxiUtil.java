@@ -25,4 +25,15 @@ public class ToxiUtil {
 		return new Vec3D(thePVec.x, thePVec.y, thePVec.z);
 	}
 	
+	/**
+	 * Checks if a PVector and a toxi Vec2D are almost equal (with tolerance)
+	 * 
+	 * @param theP
+	 * @param theV
+	 * @return
+	 */
+	public static boolean almost(final PVector theP, final Vec2D theV, final float theT) {
+		return Math.abs(theP.x - theV.x) * Math.abs(theP.y - theV.y) < theT * theT;
+	}
+	
 }

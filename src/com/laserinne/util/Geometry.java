@@ -5,6 +5,10 @@ import processing.core.PVector;
 
 public class Geometry {
 	
+
+	
+	
+	
 	/**
 	 * Calculates the distance of a point to a given line segment in 2D
 	 * 
