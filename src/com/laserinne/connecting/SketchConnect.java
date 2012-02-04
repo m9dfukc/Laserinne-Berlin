@@ -10,6 +10,8 @@ import toxi.geom.Triangle2D;
 import toxi.geom.Vec2D;
 import toxi.geom.mesh2d.Voronoi;
 
+import com.laserinne.decoration.DecoratorManager;
+import com.laserinne.decoration.SkierCircleDecorator;
 import com.laserinne.util.LaserinneSketch;
 import com.laserinne.util.Skier;
 import com.laserinne.util.ToxiUtil;
@@ -23,6 +25,7 @@ public class SketchConnect extends LaserinneSketch {
 	private static final float ALMOST = 1/4000.0f;
 
 	private ArrayList<AnimatedSkierEdge> _mySkierEdges;
+	private DecoratorManager _myDecoratorManager;
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{com.laserinne.connecting.SketchConnect.class.getCanonicalName()});
@@ -33,13 +36,18 @@ public class SketchConnect extends LaserinneSketch {
 	@Override
 	protected void postSetup() {
 		_mySkierEdges = new ArrayList<AnimatedSkierEdge>();
+		_myDecoratorManager = new DecoratorManager();
+		
 		Ani.init(this);
-
+		
+		
 	}
 
 	@Override
 	protected void update() {
 
+		
+		
 		ArrayList<Edge<Vec2D>> myEdges = new ArrayList<Edge<Vec2D>>();
 		
 		final Voronoi myVoronoi = new Voronoi(DELAUNAY_ROOT_SIZE);
@@ -66,21 +74,23 @@ public class SketchConnect extends LaserinneSketch {
 		ArrayList<AnimatedSkierEdge> myNewEdges = assignSkiersToEdges(mySkiers, myEdges);
 		
 		matchWithExistingEdges(myNewEdges);
-		purgeDeadAndUpdateEdges();
+		purgeDeadEdges();
+		
+		
+		
+		_myDecoratorManager.update();
 	}
 	
 	
-	private void purgeDeadAndUpdateEdges() {
+	private void purgeDeadEdges() {
 		/* Purge */
 		Iterator<AnimatedSkierEdge> myIterator = _mySkierEdges.iterator();
 
 		while(myIterator.hasNext()) {
 			final AnimatedSkierEdge myEdge = myIterator.next();
 			
-			if(myEdge.isDead()) {
+			if(myEdge.isFinished()) {
 				myIterator.remove();
-			} else {
-				myEdge.update();
 			}
 		}
 	}
@@ -103,8 +113,7 @@ public class SketchConnect extends LaserinneSketch {
 					break;
 				}
 			}
-			
-			
+						
 			if(myMatch != null) {
 				myExistingEdge.activate();
 			} else {
@@ -117,6 +126,7 @@ public class SketchConnect extends LaserinneSketch {
 		for(final AnimatedSkierEdge myNewEdge:theEdges) {
 			myNewEdge.activate();
 			_mySkierEdges.add(myNewEdge);
+			_myDecoratorManager.add(myNewEdge);
 			
 		}
 		
@@ -171,29 +181,22 @@ public class SketchConnect extends LaserinneSketch {
 
 	@Override
 	protected void drawWithLaser() {
-		for(final AnimatedSkierEdge myEdge:_mySkierEdges) {
-			myEdge.draw(g);
-		}
+		_myDecoratorManager.draw(g);
 	}
 
 	
 
 	@Override
 	protected void drawOnScreen() {
-
-
 		for(Skier mySkier:tracking().skiers()) {
 			mySkier.drawDebug(g);
 		}
-
-
-
 	}
 
 	@Override
 	protected void onNewSkier(Skier theSkier) {
-		// TODO Auto-generated method stub
-
+		final SkierCircleDecorator myDecorator = new SkierCircleDecorator(theSkier, 0.1f);
+		_myDecoratorManager.add(myDecorator);
 	}
 
 	@Override

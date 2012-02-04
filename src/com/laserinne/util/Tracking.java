@@ -214,7 +214,7 @@ public class Tracking {
 				if ( myKnownSkier.lastTimestamp() < theTimestamp ) {
 					myKnownSkier.updateValues(mapValue(theX), mapValue(theY), mapValue(theWidth), mapValue(theHeight), mapValue(theDeltaX), mapValue(theDeltaY), theAge, theTimestamp);
 				} else {
-					Logger.printWarning("Timestamp mixup. Skier has: " + myKnownSkier.lastTimestamp() + " | Received:" +theTimestamp);
+					Logger.printWarning("Timestamp mixup. Skier has: " + myKnownSkier.lastTimestamp() + " | Received:" + theTimestamp);
 				}
 			} else {
 				final Skier myNewSkier = new Skier(myId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp); 

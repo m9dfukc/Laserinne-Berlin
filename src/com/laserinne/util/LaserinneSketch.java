@@ -23,6 +23,8 @@
 
 package com.laserinne.util;
 
+import java.util.LinkedList;
+
 import laserschein.Laserschein;
 import processing.core.PApplet;
 
@@ -91,7 +93,12 @@ public abstract class LaserinneSketch extends PApplet {
 	 */
 	public float delta;
 
+	/**
+	 * If additional stuff should be drawn on screen. Or is it just the stuff for the laser.
+	 */
+	public boolean drawOnScreen = true;
 	
+
 	@Override
 	public void setup() {
 		size(WIDTH, HEIGHT, OPENGL);
@@ -108,7 +115,6 @@ public abstract class LaserinneSketch extends PApplet {
 		_myTracking = new Tracking("239.0.0.1", 9999);
 
 		postSetup(); // Hook!
-
 	}
 
 
@@ -124,6 +130,7 @@ public abstract class LaserinneSketch extends PApplet {
 		
 		fireEvents();
 		
+		
 		update(); // Hook!
 
 		background(0);
@@ -133,6 +140,11 @@ public abstract class LaserinneSketch extends PApplet {
 		textSize(12);
 		text(frameRate, 20, 30);
 		text("Skiers: " + tracking().skiers().size(), 100, 30);
+		
+		if(!drawOnScreen) {
+			text("Not drawing on screen.", 330, 30);
+		}
+		
 		noFill();
 		
 		
@@ -145,13 +157,14 @@ public abstract class LaserinneSketch extends PApplet {
 		line(0, 0.5f, 0, -1);
 		
 
-		pushMatrix();
-		drawOnScreen();	// Hook!
-	
+		if(drawOnScreen) {
+			pushMatrix();
+			drawOnScreen();	// Hook!
+			popMatrix();	
+		}
 		
-		popMatrix();
-
 		beginRaw(_myLaser.renderer());
+		stroke(255);
 		drawWithLaser(); // Hook!
 		endRaw();       
 	}
@@ -210,9 +223,18 @@ public abstract class LaserinneSketch extends PApplet {
 	protected abstract void onDeadSkier(final Skier theSkier);
 	
 
+	/**
+	 * Get a reference to the tracker. Get your freshly tracked skiers there.
+	 * ( tracking().skiers() )
+	 * @return
+	 */
 	public Tracking tracking() {
 		return _myTracking;
 	}
+	
+	
+
+	
 
 	public void keyPressed() {
 		if (key == 's') {
@@ -222,6 +244,12 @@ public abstract class LaserinneSketch extends PApplet {
 			} else {
 				_myLaser.showControlWindow();
 			}
+		}
+		
+		
+		
+		if(key == 'd') {
+			drawOnScreen  = !drawOnScreen;
 		}
 	}
 }
