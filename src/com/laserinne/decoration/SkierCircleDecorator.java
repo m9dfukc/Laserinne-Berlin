@@ -1,6 +1,6 @@
 package com.laserinne.decoration;
 
-import com.laserinne.util.Skier;
+import com.laserinne.base.Skier;
 
 import processing.core.PGraphics;
 import processing.core.PVector;

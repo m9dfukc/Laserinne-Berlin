@@ -10,10 +10,10 @@ import toxi.geom.Triangle2D;
 import toxi.geom.Vec2D;
 import toxi.geom.mesh2d.Voronoi;
 
+import com.laserinne.base.LaserinneSketch;
+import com.laserinne.base.Skier;
 import com.laserinne.decoration.DecoratorManager;
 import com.laserinne.decoration.SkierCircleDecorator;
-import com.laserinne.util.LaserinneSketch;
-import com.laserinne.util.Skier;
 import com.laserinne.util.ToxiUtil;
 
 import de.looksgood.ani.Ani;

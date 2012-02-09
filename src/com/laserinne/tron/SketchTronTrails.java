@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 import laserschein.Logger;
 
+import com.laserinne.base.LaserinneSketch;
+import com.laserinne.base.Skier;
 import com.laserinne.decoration.DecoratorManager;
 import com.laserinne.decoration.SkierCircleDecorator;
-import com.laserinne.util.LaserinneSketch;
-import com.laserinne.util.Skier;
 
 import de.looksgood.ani.Ani;
 

@@ -5,8 +5,8 @@ import laserschein.Logger;
 import laserschein.Logger.LogLevel;
 import processing.core.PApplet;
 
-import com.laserinne.util.LaserinneSketch;
-import com.laserinne.util.Skier;
+import com.laserinne.base.LaserinneSketch;
+import com.laserinne.base.Skier;
 
 @SuppressWarnings("serial")
 public class SketchCollect extends LaserinneSketch {

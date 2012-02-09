@@ -1,6 +1,6 @@
 package com.laserinne.wave;
 
-import com.laserinne.util.LaserinneSketch;
+import com.laserinne.base.LaserinneSketch;
 
 public class SketchWave extends LaserinneSketch{
 

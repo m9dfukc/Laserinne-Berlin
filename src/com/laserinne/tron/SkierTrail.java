@@ -7,9 +7,9 @@ import laserschein.Logger;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
+import com.laserinne.base.Skier;
 import com.laserinne.decoration.Decoratable;
 import com.laserinne.util.Geometry;
-import com.laserinne.util.Skier;
 
 public class SkierTrail implements Decoratable {
 	private Skier _mySkier;

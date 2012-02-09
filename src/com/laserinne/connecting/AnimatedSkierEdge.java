@@ -3,9 +3,9 @@ package com.laserinne.connecting;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
+import com.laserinne.base.Skier;
 import com.laserinne.decoration.Decorator;
 import com.laserinne.util.Geometry;
-import com.laserinne.util.Skier;
 
 import de.looksgood.ani.Ani;
 

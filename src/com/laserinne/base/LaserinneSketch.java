@@ -21,7 +21,7 @@
  * along with Laserinne. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.laserinne.util;
+package com.laserinne.base;
 
 import java.util.LinkedList;
 

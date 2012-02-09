@@ -2,9 +2,9 @@ package de.laserinne.test;
 import laserschein.Logger;
 import processing.core.PApplet;
 
+import com.laserinne.base.LaserinneSketch;
+import com.laserinne.base.Skier;
 import com.laserinne.bouncytrack.Track;
-import com.laserinne.util.LaserinneSketch;
-import com.laserinne.util.Skier;
 
 @SuppressWarnings("serial")
 public class TestTrack extends LaserinneSketch {

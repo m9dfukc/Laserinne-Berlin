@@ -1,7 +1,7 @@
 package com.laserinne.freerun;
 
+import com.laserinne.base.Skier;
 import com.laserinne.util.Geometry;
-import com.laserinne.util.Skier;
 
 import processing.core.PConstants;
 import processing.core.PGraphics;

@@ -3,7 +3,6 @@ package com.laserinne.tron;
 import processing.core.PGraphics;
 
 import com.laserinne.decoration.Decorator;
-import com.laserinne.util.Skier;
 
 public class TrailDecorator extends Decorator{
 

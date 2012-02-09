@@ -9,8 +9,8 @@ import toxi.geom.Rect;
 import toxi.geom.Vec2D;
 import toxi.physics2d.VerletPhysics2D;
 
-import com.laserinne.util.LaserinneSketch;
-import com.laserinne.util.Skier;
+import com.laserinne.base.LaserinneSketch;
+import com.laserinne.base.Skier;
 
 @SuppressWarnings("serial")
 public class BouncyTrack extends LaserinneSketch {

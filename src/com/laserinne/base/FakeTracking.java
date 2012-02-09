@@ -1,4 +1,4 @@
-package com.laserinne.util;
+package com.laserinne.base;
 
 import java.util.ArrayList;
 
