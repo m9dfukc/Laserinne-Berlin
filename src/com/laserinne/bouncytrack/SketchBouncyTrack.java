@@ -11,14 +11,14 @@ import com.laserinne.base.LaserinneSketch;
 import com.laserinne.base.Skier;
 
 @SuppressWarnings("serial")
-public class BouncyTrack extends LaserinneSketch {
+public class SketchBouncyTrack extends LaserinneSketch {
      
 	private Track track; 
 	VerletPhysics2D physics;
 	private RailPhysics rail;
 	
     public static void main(String args[]) {
-        PApplet.main(new String[] { BouncyTrack.class.getCanonicalName() });
+        PApplet.main(new String[] { SketchBouncyTrack.class.getCanonicalName() });
     }
 
 	@Override
