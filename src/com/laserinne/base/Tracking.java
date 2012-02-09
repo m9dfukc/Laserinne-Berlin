@@ -231,12 +231,18 @@ public class Tracking {
 	
 	
 	
+	/**
+	 * The tracking has a different value range. So things get mapped here
+	 * 
+	 * @param theValue
+	 * @return
+	 */
 	private float mapValue(float theValue) {
 		return PApplet.map(theValue, TRACKING_RANGE_LOWER, TRACKING_RANGE_UPPER, -1, 1);
 	}
 
-
-
+	
+	
 	/**
 	 * Plug method for OscP5 to catch unknown messages 
 	 * 
@@ -249,5 +255,9 @@ public class Tracking {
 			Logger.printDebug("Received an OSC message that I don't know: addrpattern: "+theOscMessage.addrPattern() + " typetag: "+theOscMessage.typetag() );
 		}
 	}
+	
+	
+	
+	
 }
 

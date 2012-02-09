@@ -72,8 +72,7 @@ public class AnimatedSkierEdge extends Decorator {
 			_myAnimation.setBegin(_myProgress);
 			_myAnimation.setEnd(1);
 			_myAnimation.start();
-		}
-		
+		}		
 	}
 
 	

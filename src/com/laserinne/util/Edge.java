@@ -1,4 +1,4 @@
-package com.laserinne.connecting;
+package com.laserinne.util;
 
 public class Edge<Type> {
 

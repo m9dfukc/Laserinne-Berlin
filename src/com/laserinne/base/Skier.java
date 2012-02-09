@@ -24,6 +24,7 @@
 package com.laserinne.base;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import com.laserinne.decoration.Decoratable;
 
@@ -202,9 +203,5 @@ public class Skier implements Decoratable {
 	public int age() {
 		return (int)_myAge;
 	}
-
-
-
-
-
+	
 }

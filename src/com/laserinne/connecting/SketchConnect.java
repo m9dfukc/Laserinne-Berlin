@@ -14,6 +14,7 @@ import com.laserinne.base.LaserinneSketch;
 import com.laserinne.base.Skier;
 import com.laserinne.decoration.DecoratorManager;
 import com.laserinne.decoration.SkierCircleDecorator;
+import com.laserinne.util.Edge;
 import com.laserinne.util.ToxiUtil;
 
 import de.looksgood.ani.Ani;

@@ -59,8 +59,8 @@ public abstract class LaserinneSketch extends PApplet {
 	/**
 	 * Sketch width and height.
 	 */
-	protected static final int WIDTH = 600;
-	protected static final int HEIGHT = 600;
+	protected static final int WIDTH = 700;
+	protected static final int HEIGHT = 700;
 
 	/**
 	 * Scaled mouseX.
@@ -97,6 +97,7 @@ public abstract class LaserinneSketch extends PApplet {
 		_myLaser = new Laserschein(this, Laserschein.EASYLASEUSB2);               
 
 		smooth();
+		hint(ENABLE_OPENGL_4X_SMOOTH);
 		colorMode(RGB);
 		stroke(255,0,0);
 		noFill();
@@ -128,7 +129,7 @@ public abstract class LaserinneSketch extends PApplet {
 		
 		update(); // Hook!
 
-		background(0);
+		background(60, 57, 55);
 		
 		fill(255);
 		stroke(255);
