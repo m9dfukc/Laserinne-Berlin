@@ -25,11 +25,12 @@ package com.laserinne.util;
 
 import java.util.ArrayList;
 
-import processing.core.PApplet;
+import com.laserinne.decoration.Decoratable;
+
 import processing.core.PGraphics;
 import processing.core.PVector;
 
-public class Skier {
+public class Skier implements Decoratable {
 	private int _myId;
 
 	private ArrayList<PVector> _myHistoryList;
@@ -57,6 +58,7 @@ public class Skier {
 	
 	private int _myNumberOfUpdates = 0;
 
+
 	public static final float DIRECTION_LEARNING_RATE = 0.001f;
 	public static final float SIZE_LEARNING_RATE = 0.1f;
 
@@ -79,6 +81,7 @@ public class Skier {
 		updateValues(theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp);
 		
 		_myFirstUpdate = System.currentTimeMillis();
+		_myLastUpdate = System.currentTimeMillis();
 	}
 
 
@@ -99,7 +102,6 @@ public class Skier {
 
 		_myWidth = ((1-SIZE_LEARNING_RATE) * _myWidth) + ( SIZE_LEARNING_RATE * theWidth);
 		_myHeight = ((1-SIZE_LEARNING_RATE) * _myHeight) + ( SIZE_LEARNING_RATE * theHeight);
-;
 
 		_myAge = theAge;
 
@@ -139,7 +141,7 @@ public class Skier {
 	public boolean isDead() {
 		return System.currentTimeMillis() - _myLastUpdate > Tracking.SKIER_DEATH_TIMEOUT;			
 	}
-
+	
 	
 	/**
 	 * @return a unique numeric id
@@ -175,16 +177,10 @@ public class Skier {
 		theG.rect(_myPosition.x, _myPosition.y, _myWidth, _myHeight);
 		theG.rect(_myPosition.x, _myPosition.y, 0.005f, 0.005f);
 		
-		
 		final PVector myBase = base();
 		
 		theG.stroke(255, 0, 0);
 		theG.line(myBase.x - 0.05f, myBase.y, myBase.x + 0.05f, myBase.y);
-		
-		
-		
-		
-		
 	}
 	
 	
@@ -201,6 +197,9 @@ public class Skier {
 	public int age() {
 		return (int)_myAge;
 	}
+
+
+
 
 
 }

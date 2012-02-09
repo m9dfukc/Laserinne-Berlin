@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="lib/user/toxiclibs/toxiclibs_p5.jar"/>
 	<classpathentry kind="lib" path="lib/user/toxiclibs/toxiclibscore.jar"/>
 	<classpathentry kind="lib" path="lib/user/toxiclibs/verletphysics.jar"/>
+	<classpathentry kind="lib" path="lib/user/ani/Ani.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

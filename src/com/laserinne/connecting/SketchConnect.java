@@ -1,6 +1,7 @@
 package com.laserinne.connecting;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import processing.core.PApplet;
@@ -9,32 +10,45 @@ import toxi.geom.Triangle2D;
 import toxi.geom.Vec2D;
 import toxi.geom.mesh2d.Voronoi;
 
+import com.laserinne.decoration.DecoratorManager;
+import com.laserinne.decoration.SkierCircleDecorator;
 import com.laserinne.util.LaserinneSketch;
 import com.laserinne.util.Skier;
 import com.laserinne.util.ToxiUtil;
+
+import de.looksgood.ani.Ani;
 
 @SuppressWarnings("serial")
 public class SketchConnect extends LaserinneSketch {
 
 	private static final int DELAUNAY_ROOT_SIZE = 4000;
+	private static final float ALMOST = 1/4000.0f;
+
+	private ArrayList<AnimatedSkierEdge> _mySkierEdges;
+	private DecoratorManager _myDecoratorManager;
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{com.laserinne.connecting.SketchConnect.class.getCanonicalName()});
 	}
 
 
-	ArrayList<Edge<Vec2D>> _myEdges;
 
 	@Override
 	protected void postSetup() {
+		_mySkierEdges = new ArrayList<AnimatedSkierEdge>();
+		_myDecoratorManager = new DecoratorManager();
 		
-
+		Ani.init(this);
+		
+		
 	}
 
 	@Override
 	protected void update() {
 
-		_myEdges = new ArrayList<Edge<Vec2D>>();
+		
+		
+		ArrayList<Edge<Vec2D>> myEdges = new ArrayList<Edge<Vec2D>>();
 		
 		final Voronoi myVoronoi = new Voronoi(DELAUNAY_ROOT_SIZE);
 
@@ -48,45 +62,150 @@ public class SketchConnect extends LaserinneSketch {
 			myVoronoi.addPoint(myPosition);
 		}
 
-		_myEdges = findUniqueEdges(myVoronoi.getTriangles());
-		//assignEdgePairs(_myEdges);
-
+		myEdges = findUniqueEdges(myVoronoi.getTriangles());
 
 		/* Two skiers make no triangles */
 		if(mySkiers.size()  == 2) {  
-			final Vec2D myPosA = ToxiUtil.toVec2D(mySkiers.get(0).centroid()); 
-			final Vec2D myPosB = ToxiUtil.toVec2D(mySkiers.get(1).centroid()); 
-			_myEdges.add(new Edge<Vec2D>(myPosA, myPosB));
+			final Skier mySkierA = mySkiers.get(0);
+			final Skier mySkierB = mySkiers.get(1);
+
+			final Vec2D myPosA = ToxiUtil.toVec2D(mySkierA.centroid()); 
+			final Vec2D myPosB = ToxiUtil.toVec2D(mySkierB.centroid()); 
+			
+			if(mySkierA.id() < mySkierB.id()){
+				myEdges.add(new Edge<Vec2D>(myPosA, myPosB));
+			} else {
+				myEdges.add(new Edge<Vec2D>(myPosB, myPosA));
+			}
+
 		}
+		
+		ArrayList<AnimatedSkierEdge> myNewEdges = assignSkiersToEdges(mySkiers, myEdges);
+		
+		matchWithExistingEdges(myNewEdges);
+		purgeDeadEdges();
+		
+		
+		
+		_myDecoratorManager.update();
+	}
+	
+	
+	private void purgeDeadEdges() {
+		/* Purge */
+		Iterator<AnimatedSkierEdge> myIterator = _mySkierEdges.iterator();
+
+		while(myIterator.hasNext()) {
+			final AnimatedSkierEdge myEdge = myIterator.next();
+			
+			if(myEdge.isFinished()) {
+				myIterator.remove();
+			}
+		}
+	}
+
+	
+	private void matchWithExistingEdges(ArrayList<AnimatedSkierEdge> theEdges) {
+
+		for(final AnimatedSkierEdge myExistingEdge:_mySkierEdges) {
+			
+			AnimatedSkierEdge myMatch = null;
+			
+			Iterator<AnimatedSkierEdge> myIterator = theEdges.iterator();
+		
+			while(myIterator.hasNext()) {
+				AnimatedSkierEdge myNewEdge = myIterator.next();
+				
+				if(myExistingEdge.equals(myNewEdge)) {
+					myMatch = myNewEdge;
+					myIterator.remove();
+					break;
+				}
+			}
+						
+			if(myMatch != null) {
+				myExistingEdge.activate();
+			} else {
+				myExistingEdge.deactivate();
+			}
+		}
+		
+		
+		/* Handle new edges that are left over */
+		for(final AnimatedSkierEdge myNewEdge:theEdges) {
+			myNewEdge.activate();
+			_mySkierEdges.add(myNewEdge);
+			_myDecoratorManager.add(myNewEdge);
+			
+		}
+		
+		
 		
 	}
 
+
+
+	private ArrayList<AnimatedSkierEdge> assignSkiersToEdges(ArrayList<Skier> theSkiers, ArrayList<Edge<Vec2D>> theEdges) {
+		final ArrayList<AnimatedSkierEdge> mySkierEdges = new ArrayList<AnimatedSkierEdge>();
+		
+		for(final Edge<Vec2D> myEdge:theEdges) {
+			final Vec2D myA = myEdge.a;
+			final Vec2D myB = myEdge.b;
+			
+			Skier mySkierA = null;
+			Skier mySkierB = null;
+			
+			for(final Skier mySkier:theSkiers) {
+				if(ToxiUtil.almost(mySkier.base(), myA, ALMOST )) {
+					mySkierA = mySkier;
+				}
+				
+				if(ToxiUtil.almost(mySkier.base(), myB, ALMOST )) {
+					mySkierB = mySkier;
+				}
+				
+				if(mySkierA != null && mySkierB != null) {
+					break;
+				}
+			}
+			
+			
+			if(mySkierA != null && mySkierB != null) {
+				AnimatedSkierEdge myAnimation;
+				
+				if(mySkierA.id() < mySkierB.id()) {
+					myAnimation = new AnimatedSkierEdge(mySkierA, mySkierB);
+				} else {
+					myAnimation = new AnimatedSkierEdge(mySkierB, mySkierA);
+				}
+				
+				mySkierEdges.add(myAnimation);	
+			}
+		}
+		
+		return mySkierEdges;
+	}
+
+
+
 	@Override
 	protected void drawWithLaser() {
-		for (Edge<Vec2D> myEdge : _myEdges) {
-			stroke(255, 128);
-			line(myEdge.a.x, myEdge.a.y, myEdge.b.x, myEdge.b.y);
-		}
+		_myDecoratorManager.draw(g);
 	}
 
 	
 
 	@Override
 	protected void drawOnScreen() {
-
-
 		for(Skier mySkier:tracking().skiers()) {
 			mySkier.drawDebug(g);
 		}
-
-
-
 	}
 
 	@Override
 	protected void onNewSkier(Skier theSkier) {
-		// TODO Auto-generated method stub
-
+		final SkierCircleDecorator myDecorator = new SkierCircleDecorator(theSkier, 0.1f);
+		_myDecoratorManager.add(myDecorator);
 	}
 
 	@Override

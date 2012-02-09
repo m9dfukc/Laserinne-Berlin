@@ -198,8 +198,7 @@ public class Tracking {
 	 * @param theAge (in frames)
 	 * @param theTimestamp (in seconds (float))
 	 */
-	@SuppressWarnings("unused")
-	private void trackingMessage(float theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
+	public void trackingMessage(float theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
 
 		Logger.printDebug("Received a tracking message.");
 
@@ -214,15 +213,14 @@ public class Tracking {
 				if ( myKnownSkier.lastTimestamp() < theTimestamp ) {
 					myKnownSkier.updateValues(mapValue(theX), mapValue(theY), mapValue(theWidth), mapValue(theHeight), mapValue(theDeltaX), mapValue(theDeltaY), theAge, theTimestamp);
 				} else {
-					Logger.printWarning("Timestamp mixup. Skier has: " + myKnownSkier.lastTimestamp() + " | Received:" +theTimestamp);
+					Logger.printWarning("Timestamp mixup. Skier has: " + myKnownSkier.lastTimestamp() + " | Received:" + theTimestamp);
 				}
 			} else {
-				final Skier myNewSkier = new Skier(myId, theX, theY, theWidth, theHeight, theDeltaX, theDeltaY, theAge, theTimestamp); 
+				final Skier myNewSkier = new Skier(myId, mapValue(theX), mapValue(theY), mapValue(theWidth), mapValue(theHeight), mapValue(theDeltaX), mapValue(theDeltaY), theAge, theTimestamp); 
 				_mySkierTable.put(myId, myNewSkier);
 			
 				Logger.printInfo("Adding skier " + myNewSkier.id() );
-				
-				
+								
 				synchronized (_myNewlyTrackedSkiers) {
 					_myNewlyTrackedSkiers.add(myNewSkier);
 				}

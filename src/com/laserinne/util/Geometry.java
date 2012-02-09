@@ -1,9 +1,14 @@
 package com.laserinne.util;
 
+import laserschein.LaserPoint;
 import processing.core.PApplet;
 import processing.core.PVector;
 
 public class Geometry {
+	
+
+	
+	
 	
 	/**
 	 * Calculates the distance of a point to a given line segment in 2D
@@ -101,12 +106,33 @@ public class Geometry {
 	 * @param x0
 	 * @param y0
 	 * @param distance
-	 * @param angle
+	 * @param angle (in degrees!)
 	 * @return 
 	 */
 	public static float angle(PVector p1, PVector p2) {
 		float a = PApplet.degrees( PApplet.atan2(p2.y-p1.y, p2.x-p1.x) );
 		return a;
+	}
+	
+	
+	
+	/**
+	 * Interpolates between two vectors
+	 * 
+	 * A progress of 0 is fully the first vector. 1 means the other.
+	 * 
+	 * @param theA
+	 * @param theB
+	 * @param theProgress
+	 * @return
+	 */
+	public static PVector lerp(final PVector theA, final PVector theB, float theProgress) {
+		final PVector myResult = new PVector();
+
+		myResult.x = theA.x + (theB.x - theA.x) * theProgress;
+		myResult.y = theA.y + (theB.y - theA.y) * theProgress;
+				
+		return myResult;
 	}
 	
 
