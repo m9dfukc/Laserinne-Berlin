@@ -60,6 +60,7 @@ public class Tracking {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	public Tracking(String theAddress, int thePort) {
 		_myOscP5 = new OscP5(this, theAddress, thePort);
 

@@ -1,5 +1,7 @@
 package com.laserinne.bouncytrack;
 
+import java.awt.event.KeyEvent;
+
 import laserschein.Logger;
 import laserschein.Logger.LogLevel;
 import processing.core.PApplet;
@@ -9,7 +11,6 @@ import toxi.physics2d.VerletPhysics2D;
 
 import com.laserinne.util.LaserinneSketch;
 import com.laserinne.util.Skier;
-import com.laserinne.util.Track;
 
 @SuppressWarnings("serial")
 public class BouncyTrack extends LaserinneSketch {
@@ -89,4 +90,7 @@ public class BouncyTrack extends LaserinneSketch {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+
 }

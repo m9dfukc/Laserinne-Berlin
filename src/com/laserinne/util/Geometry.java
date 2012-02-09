@@ -1,15 +1,10 @@
 package com.laserinne.util;
 
-import laserschein.LaserPoint;
 import processing.core.PApplet;
 import processing.core.PVector;
 
 public class Geometry {
-	
-
-	
-	
-	
+		
 	/**
 	 * Calculates the distance of a point to a given line segment in 2D
 	 * 

@@ -1,6 +1,8 @@
-package com.laserinne.util;
+package com.laserinne.bouncytrack;
 
 import java.util.ArrayList;
+
+import com.laserinne.util.Geometry;
 
 import laserschein.Logger;
 

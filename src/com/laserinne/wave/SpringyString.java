@@ -53,7 +53,6 @@ class SpringyString {
 
 	    float myY = map(noise(millis() * 0.1 * 0.005), 0, 1, height/2 - height/2, height/2 + height/2); 
 
-
 	    float myVal = sin(millis()  * 0.0002);
 	    myY = map(myVal, -1, 1, height/2 - height/4, height/2 + height/4); 
 

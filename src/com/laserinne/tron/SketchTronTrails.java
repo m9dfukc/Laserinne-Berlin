@@ -9,7 +9,6 @@ import com.laserinne.decoration.DecoratorManager;
 import com.laserinne.decoration.SkierCircleDecorator;
 import com.laserinne.util.LaserinneSketch;
 import com.laserinne.util.Skier;
-import com.laserinne.util.SkierDecorator;
 
 import de.looksgood.ani.Ani;
 

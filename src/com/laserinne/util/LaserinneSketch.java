@@ -169,6 +169,7 @@ public abstract class LaserinneSketch extends PApplet {
 		
 		beginRaw(_myLaser.renderer());
 		stroke(255);
+		curveDetail(3);
 		drawWithLaser(); // Hook!
 		endRaw();       
 	}

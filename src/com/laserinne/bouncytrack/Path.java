@@ -21,7 +21,7 @@
  * along with Laserinne. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.laserinne.util;
+package com.laserinne.bouncytrack;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -30,7 +30,6 @@ import processing.core.PVector;
 import toxi.math.noise.PerlinNoise;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Path {
 	int _resolution;
@@ -79,7 +78,7 @@ public class Path {
 		generator.noiseSeed(seed);
 		float stepY = 2.0f /  (_resolution * 1f);
 		for(int i=0; i<_resolution; i++) {
-			float tmpX = generator.noise(stepY*i*2) * ((float)i / _resolution) + PApplet.sin((float)i / _resolution * 5) * 0.25f;
+			float tmpX = generator.noise(stepY*i*2) * ((float)i / _resolution) + PApplet.sin((float)i / _resolution * 15) * 0.25f;
 			float tmpY = stepY*i - 1;
 			_points.add(new PVector(tmpX, tmpY));
 		}
