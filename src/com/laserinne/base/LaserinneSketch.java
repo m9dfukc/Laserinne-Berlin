@@ -23,8 +23,6 @@
 
 package com.laserinne.base;
 
-import java.util.LinkedList;
-
 import laserschein.Laserschein;
 import processing.core.PApplet;
 
@@ -65,20 +63,6 @@ public abstract class LaserinneSketch extends PApplet {
 	protected static final int HEIGHT = 600;
 
 	/**
-	 * Laser color: ARGB(FF, 00, FF, 00) means full intensity green.
-	 */
-	public static final int LASER_COLOR = 0xFFFF0000;
-	/**
-	 * Screen color: ARGB(FF, 00, 00, FF) means full intensity blue.
-	 */
-	public static final int SCREEN_COLOR = 0xFF0000FF;
-
-	/**
-	 * Laser scan speed used when displaying text.
-	 */
-	public static final int TEXT_SCANSPEED = 60000;
-	
-	/**
 	 * Scaled mouseX.
 	 */
 	public float mX;
@@ -99,6 +83,9 @@ public abstract class LaserinneSketch extends PApplet {
 	public boolean drawOnScreen = true;
 	
 	
+	public boolean doFakeTracking = false;
+	
+	
 	FakeTracking _myFake;
 
 	@Override
@@ -111,7 +98,7 @@ public abstract class LaserinneSketch extends PApplet {
 
 		smooth();
 		colorMode(RGB);
-		stroke(LaserinneSketch.SCREEN_COLOR);
+		stroke(255,0,0);
 		noFill();
 
 		_myTracking = new Tracking("239.0.0.1", 9999);
@@ -129,7 +116,11 @@ public abstract class LaserinneSketch extends PApplet {
 		delta = millis()/1000f - _lastMillis;
 		_lastMillis = millis()/1000f;
 		
-		_myFake.update();
+		
+		if(doFakeTracking) {
+			_myFake.update();
+		}
+		
 		_myTracking.update();
 		
 		fireEvents();
@@ -147,6 +138,10 @@ public abstract class LaserinneSketch extends PApplet {
 		
 		if(!drawOnScreen) {
 			text("Not drawing on screen.", 330, 30);
+		}
+		
+		if(doFakeTracking) {
+			text("Fake tracking enabled.", 330, 60);
 		}
 		
 		noFill();
@@ -251,16 +246,10 @@ public abstract class LaserinneSketch extends PApplet {
 			}
 		}
 		
-		if (key == 'p') {
-			this.noLoop();
+		if(key == 'f') {
+			doFakeTracking = !doFakeTracking;
 		}
-		
-		if (key == 'a') {
-			this.loop();
-		}
-		
-		
-		
+	
 		
 		if(key == 'd') {
 			drawOnScreen  = !drawOnScreen;

@@ -1,7 +1,5 @@
 package com.laserinne.bouncytrack;
 
-import java.awt.event.KeyEvent;
-
 import laserschein.Logger;
 import laserschein.Logger.LogLevel;
 import processing.core.PApplet;

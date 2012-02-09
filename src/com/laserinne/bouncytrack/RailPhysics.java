@@ -2,18 +2,15 @@ package com.laserinne.bouncytrack;
 
 import java.util.ArrayList;
 
-import laserschein.Logger;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 import toxi.geom.Vec2D;
 import toxi.physics2d.ParticleString2D;
-import toxi.physics2d.VerletMinDistanceSpring2D;
 import toxi.physics2d.VerletParticle2D;
 import toxi.physics2d.VerletPhysics2D;
 import toxi.physics2d.VerletConstrainedSpring2D;
-import toxi.physics2d.VerletSpring2D;
 import toxi.physics2d.behaviors.AttractionBehavior;
 
 class RailPhysics {
@@ -39,7 +36,6 @@ class RailPhysics {
 
 	private boolean mouseDown;
 	
-	@SuppressWarnings("serial")
 	public RailPhysics(VerletPhysics2D physics, ArrayList<PVector> center, ArrayList<PVector> left, ArrayList<PVector> right, float s) {
 
 		this.physics = physics;

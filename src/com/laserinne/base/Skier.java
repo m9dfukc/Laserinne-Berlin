@@ -162,6 +162,11 @@ public class Skier implements Decoratable {
 	}
 	
 	
+	public PVector delta() {
+		return new PVector(_myDeltaX, _myDeltaY);
+	}
+	
+	
 	public PVector base() {
 		final float myX = _myPosition.x;
 		final float myY = _myPosition.y + _myHeight * 0.5f;

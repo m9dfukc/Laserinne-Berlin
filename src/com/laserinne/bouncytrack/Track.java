@@ -4,14 +4,9 @@ import java.util.ArrayList;
 
 import com.laserinne.util.Geometry;
 
-import laserschein.Logger;
-
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
-
-import toxi.geom.*;
-import toxi.physics2d.*;
 
 
 public class Track extends Path {

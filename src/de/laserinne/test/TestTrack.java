@@ -1,5 +1,4 @@
 package de.laserinne.test;
-import laserschein.Logger;
 import processing.core.PApplet;
 
 import com.laserinne.base.LaserinneSketch;
