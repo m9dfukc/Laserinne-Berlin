@@ -14,8 +14,7 @@ class SpringyString {
 	  public ArrayList<Spring> springs;
 	  ParticleSystem physics;
 
-	  public SpringyString(int theCount )
-	  {
+	  public SpringyString(int theCount) {
 	    particles = new ArrayList<Particle>();
 	    springs = new ArrayList<Spring>();
 	    
@@ -65,8 +64,8 @@ class SpringyString {
 
 
 	  void draw(final PGraphics theG) {
-	    stroke(40, 255, 40, 128);
-	    strokeWeight(1);
+		  theG.stroke(40, 255, 40, 128);
+		  theG.strokeWeight(1);
 	    drawLine();
 
 	    stroke(30, 255, 30, 20);

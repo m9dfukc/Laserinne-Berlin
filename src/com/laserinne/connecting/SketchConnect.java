@@ -66,9 +66,18 @@ public class SketchConnect extends LaserinneSketch {
 
 		/* Two skiers make no triangles */
 		if(mySkiers.size()  == 2) {  
-			final Vec2D myPosA = ToxiUtil.toVec2D(mySkiers.get(0).centroid()); 
-			final Vec2D myPosB = ToxiUtil.toVec2D(mySkiers.get(1).centroid()); 
-			myEdges.add(new Edge<Vec2D>(myPosA, myPosB));
+			final Skier mySkierA = mySkiers.get(0);
+			final Skier mySkierB = mySkiers.get(1);
+
+			final Vec2D myPosA = ToxiUtil.toVec2D(mySkierA.centroid()); 
+			final Vec2D myPosB = ToxiUtil.toVec2D(mySkierB.centroid()); 
+			
+			if(mySkierA.id() < mySkierB.id()){
+				myEdges.add(new Edge<Vec2D>(myPosA, myPosB));
+			} else {
+				myEdges.add(new Edge<Vec2D>(myPosB, myPosA));
+			}
+
 		}
 		
 		ArrayList<AnimatedSkierEdge> myNewEdges = assignSkiersToEdges(mySkiers, myEdges);

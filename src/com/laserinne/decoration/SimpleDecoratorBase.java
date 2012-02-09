@@ -2,14 +2,14 @@ package com.laserinne.decoration;
 
 import de.looksgood.ani.Ani;
 
-public abstract class SimpleDecorator extends Decorator{
+public abstract class SimpleDecoratorBase extends Decorator{
 	
 	private float _myProgress = 0;
 	private Ani _myAni;
 	
 	private final Decoratable _myDecoratable;
 	
-	public SimpleDecorator(Decoratable theDecoratable) {
+	public SimpleDecoratorBase(Decoratable theDecoratable) {
 		this.state(State.GENESIS);
 		_myDecoratable = theDecoratable;
 		_myAni = new Ani(this, 1, "_myProgress", 1);

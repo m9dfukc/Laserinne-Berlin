@@ -98,6 +98,8 @@ public abstract class LaserinneSketch extends PApplet {
 	 */
 	public boolean drawOnScreen = true;
 	
+	
+	FakeTracking _myFake;
 
 	@Override
 	public void setup() {
@@ -113,7 +115,8 @@ public abstract class LaserinneSketch extends PApplet {
 		noFill();
 
 		_myTracking = new Tracking("239.0.0.1", 9999);
-
+		_myFake = new FakeTracking(_myTracking);
+		
 		postSetup(); // Hook!
 	}
 
@@ -121,12 +124,13 @@ public abstract class LaserinneSketch extends PApplet {
 	
 	@Override
 	public void draw() {
-		_myTracking.update();
-		
 		mX = map(mouseX, 0, width, -1.f, 1.f);
 		mY = map(mouseY, 0, height, -1.f, 1.f);
 		delta = millis()/1000f - _lastMillis;
 		_lastMillis = millis()/1000f;
+		
+		_myFake.update();
+		_myTracking.update();
 		
 		fireEvents();
 		
@@ -245,6 +249,15 @@ public abstract class LaserinneSketch extends PApplet {
 				_myLaser.showControlWindow();
 			}
 		}
+		
+		if (key == 'p') {
+			this.noLoop();
+		}
+		
+		if (key == 'a') {
+			this.loop();
+		}
+		
 		
 		
 		

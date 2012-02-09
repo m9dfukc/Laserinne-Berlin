@@ -106,7 +106,7 @@ public class Geometry {
 	 * @param x0
 	 * @param y0
 	 * @param distance
-	 * @param angle
+	 * @param angle (in degrees!)
 	 * @return 
 	 */
 	public static float angle(PVector p1, PVector p2) {

@@ -5,7 +5,7 @@ import com.laserinne.util.Skier;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
-public class SkierCircleDecorator extends SimpleDecorator {
+public class SkierCircleDecorator extends SimpleDecoratorBase {
 
 	private Skier _mySkier;
 	private float _myRadius;
