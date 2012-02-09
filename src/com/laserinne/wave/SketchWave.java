@@ -1,13 +1,17 @@
 package com.laserinne.wave;
 
+import processing.core.PApplet;
+
 import com.laserinne.base.LaserinneSketch;
+import com.laserinne.base.Skier;
 
 public class SketchWave extends LaserinneSketch{
 
+	SpringyString _myString;
+	
 	@Override
 	protected void postSetup() {
-		// TODO Auto-generated method stub
-		
+		_myString = new SpringyString(100);
 	}
 
 	@Override
@@ -18,7 +22,7 @@ public class SketchWave extends LaserinneSketch{
 
 	@Override
 	protected void drawWithLaser() {
-		// TODO Auto-generated method stub
+		_myString.draw(g);
 		
 	}
 
@@ -26,6 +30,23 @@ public class SketchWave extends LaserinneSketch{
 	protected void drawOnScreen() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected void onNewSkier(Skier theSkier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onDeadSkier(Skier theSkier) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	public static void main(String[] args) {
+		PApplet.main(new String[]{SketchWave.class.getCanonicalName()});
 	}
 
 }
