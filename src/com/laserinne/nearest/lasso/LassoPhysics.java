@@ -1,6 +1,5 @@
 package com.laserinne.nearest.lasso;
 
-import netP5.Logger;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -9,7 +8,6 @@ import com.laserinne.util.Edge;
 
 import toxi.geom.Vec2D;
 import toxi.math.LinearInterpolation;
-import toxi.physics2d.ParticleString2D;
 import toxi.physics2d.VerletParticle2D;
 import toxi.physics2d.VerletPhysics2D;
 import toxi.physics2d.VerletSpring2D;

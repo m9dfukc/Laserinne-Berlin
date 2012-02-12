@@ -3,13 +3,13 @@ package com.laserinne.nearest.lasso;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import laserschein.Laser3D;
 import laserschein.Logger;
 
 import processing.core.PApplet;
 import processing.core.PVector;
 
 import toxi.geom.Rect;
-import toxi.geom.Vec2D;
 import toxi.physics2d.VerletPhysics2D;
 
 import com.laserinne.base.LaserinneSketch;
@@ -63,7 +63,7 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 	}
 
 	@Override
-	protected void drawWithLaser() {
+	protected void drawWithLaser(final Laser3D theLaser) {
 		
 	}
 
