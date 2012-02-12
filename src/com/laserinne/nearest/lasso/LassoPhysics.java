@@ -9,7 +9,6 @@ import com.laserinne.util.Edge;
 
 import toxi.geom.Vec2D;
 import toxi.math.LinearInterpolation;
-import toxi.physics2d.ParticleString2D;
 import toxi.physics2d.VerletParticle2D;
 import toxi.physics2d.VerletPhysics2D;
 import toxi.physics2d.VerletSpring2D;
@@ -23,6 +22,7 @@ public class LassoPhysics {
 	
 	VerletPhysics2D physics;
 	VerletParticle2D head, tail;
+	VerletSpring2D spring;
 	
 	public LassoPhysics(VerletPhysics2D p, float l, int n, float s) {
 		physics = p;
@@ -40,13 +40,18 @@ public class LassoPhysics {
 
 	        if(	i > 0 ) {
 	        	VerletParticle2D previous = physics.particles.get(i-1);
-	        	VerletSpring2D spring = new VerletSpring2D(particle,previous,len,strength);
+	        	spring = new VerletSpring2D(particle,previous,len,strength);
 	        	physics.addSpring(spring);
 	        }
 	    }
 	    
 	    head = physics.particles.get(0);
 	    tail = physics.particles.get(numPoints-1);
+	}
+	
+	public void updateSpring(float s, float l) {
+		spring.setStrength(s);
+		spring.setRestLength(l);
 	}
 	
 	public void update(Edge<Skier> skiers) {
@@ -81,6 +86,8 @@ public class LassoPhysics {
 	
 	public void draw(final PGraphics theG) {
 		if( bAlive ) {
+			theG.noFill();
+			theG.stroke(0, 255, 0);
 			theG.beginShape();
 			theG.vertex(physics.particles.get(0).x, physics.particles.get(0).y);
 			for(int i = 1; i < physics.particles.size(); i++) {
