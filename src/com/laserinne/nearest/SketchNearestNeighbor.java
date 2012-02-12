@@ -43,8 +43,8 @@ public class SketchNearestNeighbor extends LaserinneSketch {
 
 		
 		if(_myEdge == null && mySkiers.size() > 1) {    // We need two to party
-			Skier myA = mySkiers.get(mySkiers.size() - 1);
-			Skier myB = mySkiers.get(mySkiers.size() - 2);
+			Skier myA = mySkiers.get(0);
+			Skier myB = mySkiers.get(1);
 			
 			if(myA.centroid().y < _myConnectArea && myB.centroid().y < _myConnectArea) {
 				_myEdge = new Edge<Skier>(myA, myB);
