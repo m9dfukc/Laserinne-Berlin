@@ -19,6 +19,7 @@ class SpringyString {
 	private ArrayList<Spring> _mySprings;
 	private ParticleSystem _myPhysics;
 
+	
 	public SpringyString(int theCount) {
 		_myParticles = new ArrayList<Particle>();
 		_mySprings = new ArrayList<Spring>();
@@ -31,8 +32,8 @@ class SpringyString {
 
 		for (int i = 0; i < theCount; i++) {
 
-			float myX =  (float)i / (theCount - 1) * 2;
-			final Particle myParticle = _myPhysics.makeParticle( 50.0f, myX, 2 / 2f, 0 );
+			float myX =  (float)i / (theCount - 1) * 2 - 1;
+			final Particle myParticle = _myPhysics.makeParticle( 50.0f, myX, 0, 0 );
 			_myParticles.add(myParticle);
 
 			if (myPrev != null) {
@@ -49,7 +50,7 @@ class SpringyString {
 	}
 
 
-	void update() {
+	public void update(float theDelta) {
 		Particle mover = _myParticles.get(_myParticles.size() /3);
 		mover.makeFixed();
 
@@ -58,13 +59,16 @@ class SpringyString {
 		float myY = PApplet.map(myVal, -1, 1, -0.5f, 0.5f); 
 
 		mover.position().setY( myY);
+		
+		_myPhysics.tick();
 	}
 
 
-	void draw(final PGraphics theG) {
+	public void draw(final PGraphics theG) {
 		theG.noFill();
 		drawLine(theG);
 	}
+	
 
 	private void drawLine(PGraphics theG) {
 		theG.curveDetail(5);
@@ -82,7 +86,6 @@ class SpringyString {
 
 
 	boolean collidesWith(Skier theSkier) {
-
 		for(int i = 1; i < _myParticles.size(); i++){
 			Particle myLeft = _myParticles.get(i-1);
 			Particle myRight =  _myParticles.get(i);
@@ -90,15 +93,13 @@ class SpringyString {
 			PVector myLeftPos = new PVector(myLeft.position().x(), myRight.position().y());
 			PVector myRightPos =  new PVector(myRight.position().x(),myRight.position().y());
 
-
 			float myDistance = Geometry.distanceSegmentPoint(myLeftPos, myRightPos, theSkier.centroid());
-			if(myDistance <= theSkier.radius ) {
+			
+			if(myDistance <= theSkier.radius() ) {
 				return true;
 			}  
 
 		}
-
-
 
 		return false; 
 	}
