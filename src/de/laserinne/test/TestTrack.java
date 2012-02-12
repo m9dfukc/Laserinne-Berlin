@@ -1,4 +1,5 @@
 package de.laserinne.test;
+import laserschein.Laser3D;
 import processing.core.PApplet;
 
 import com.laserinne.base.LaserinneSketch;
@@ -34,7 +35,7 @@ public class TestTrack extends LaserinneSketch {
 	}
 
 	@Override
-	protected void drawWithLaser() {
+	protected void drawWithLaser(final Laser3D theLaser) {
 		track.drawWithLaser(g);
 	}
 

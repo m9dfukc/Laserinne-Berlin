@@ -3,6 +3,7 @@ package com.laserinne.tron;
 import java.util.Collection;
 import java.util.HashMap;
 
+import laserschein.Laser3D;
 import laserschein.Logger;
 
 import com.laserinne.base.LaserinneSketch;
@@ -44,7 +45,7 @@ public class SketchTronTrails extends LaserinneSketch {
 	}
 
 	@Override
-	protected void drawWithLaser() {
+	protected void drawWithLaser(final Laser3D theLaser) {
 		
 		
 	}

@@ -1,5 +1,6 @@
 package com.laserinne.bouncytrack;
 
+import laserschein.Laser3D;
 import laserschein.Logger;
 import laserschein.Logger.LogLevel;
 import processing.core.PApplet;
@@ -67,7 +68,7 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	}
 
 	@Override
-	protected void drawWithLaser() {
+	protected void drawWithLaser(final Laser3D theLaser) {
 		//track.drawWithLaser(g);
 	}
 

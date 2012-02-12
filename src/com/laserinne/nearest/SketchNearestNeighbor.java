@@ -3,6 +3,7 @@ package com.laserinne.nearest;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import laserschein.Laser3D;
 import laserschein.Logger;
 
 import processing.core.PApplet;
@@ -54,7 +55,7 @@ public class SketchNearestNeighbor extends LaserinneSketch {
 	}
 
 	@Override
-	protected void drawWithLaser() {
+	protected void drawWithLaser(final Laser3D theLaser) {
 		
 	}
 
