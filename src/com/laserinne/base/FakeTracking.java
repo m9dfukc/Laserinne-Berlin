@@ -17,33 +17,27 @@ public class FakeTracking {
 	}
 	
 	
-	public void update() {
-		
-		
+	public void update() {	
 		ArrayList<FakeSkier> myNewSkiers = new ArrayList<FakeSkier>();
 
-		float myTimestamp = (System.currentTimeMillis() - _myStartTime) / 1000f;
-
+		float myTimestamp = (System.currentTimeMillis() - _myStartTime) / 1000.0f;
 		
-		if(Math.random() > 0.995) {
-			FakeSkier myNewSkier = new FakeSkier(_myIdPointer++);
+		if(Math.random() > 0.995f) {
+			_myIdPointer++;
+			FakeSkier myNewSkier = new FakeSkier(_myIdPointer);
 			myNewSkiers.add(myNewSkier);
-		}
-		
-		
-		
+		}		
+
 		
 		for(FakeSkier mySkier:_mySkiers) {
 			mySkier.update();
 			
-			
 			if(!mySkier.isDead()){
-				_myTracking.trackingMessage(mySkier.id(), mySkier.position().x, mySkier.position().y, 0.1f, 0.1f, 0, 0, mySkier.age(), myTimestamp);
+				_myTracking.trackingMessage(mySkier.id(), mySkier.position().x, mySkier.position().y, 0.03f, 0.04f, 0, 0, mySkier.age(), myTimestamp);
 				myNewSkiers.add(mySkier);
 			}
 		}
 		
-		_mySkiers.clear();
-		_mySkiers.addAll(myNewSkiers);
+		_mySkiers = myNewSkiers;
 	}
 }

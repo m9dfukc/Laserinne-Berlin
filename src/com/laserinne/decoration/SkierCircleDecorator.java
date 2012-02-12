@@ -1,6 +1,7 @@
 package com.laserinne.decoration;
 
 import com.laserinne.base.Skier;
+import com.laserinne.util.Shapes;
 
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -25,8 +26,7 @@ public class SkierCircleDecorator extends SimpleDecoratorBase {
 		
 		float myRadius = this.progress() * _myRadius;
 		
-		theG.ellipseMode(PGraphics.CENTER);
-		theG.ellipse(myBase.x, myBase.y, myRadius, myRadius);	
+		Shapes.circle(theG, myBase.x, myBase.y, myRadius, 8);
 	}
 
 	
