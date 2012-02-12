@@ -64,7 +64,9 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
-		
+		stroke(255);
+		_lasso.draw(g);
+
 	}
 
 	@Override
@@ -85,7 +87,6 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 			//line(myPointA.x, myPointA.y, myPointB.x, myPointB.y);
 		}
 		
-		_lasso.draw(g);
 	}
 
 	@Override
