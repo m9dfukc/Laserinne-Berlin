@@ -24,7 +24,6 @@
 package com.laserinne.base;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import com.laserinne.decoration.Decoratable;
 
@@ -70,8 +69,9 @@ public class Skier implements Decoratable {
 		_myHistoryList = new ArrayList<PVector>();
 		_myPosition = new PVector();
 
-		_myPreviousPosition = new PVector(0, 0);
-		_myPosition = new PVector(0, 0);
+		_myPreviousPosition = new PVector(theX, theY);
+		
+		_myPosition = new PVector(theX, theY);
 		_myDirection = new PVector(0, 0);
 		
 		_myId = theId;
@@ -202,6 +202,15 @@ public class Skier implements Decoratable {
 	 */
 	public int age() {
 		return (int)_myAge;
+	}
+
+
+	/**
+	 * @return a rough radius estimate based on the skiers width and height
+	 */
+	public float radius() {
+		float myRadius = (_myWidth + _myHeight) * 0.5f;
+		return myRadius;
 	}
 	
 }
