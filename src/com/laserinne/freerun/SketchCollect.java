@@ -1,6 +1,7 @@
 package com.laserinne.freerun;
 
 
+import laserschein.Laser3D;
 import laserschein.Logger;
 import laserschein.Logger.LogLevel;
 import processing.core.PApplet;
@@ -41,7 +42,7 @@ public class SketchCollect extends LaserinneSketch {
 	
 	
 	@Override
-	protected void drawWithLaser() {
+	protected void drawWithLaser(final Laser3D theLaser) {
 
 	}
 

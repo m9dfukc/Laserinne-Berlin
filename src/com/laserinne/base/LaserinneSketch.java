@@ -23,6 +23,7 @@
 
 package com.laserinne.base;
 
+import laserschein.Laser3D;
 import laserschein.Laserschein;
 import processing.core.PApplet;
 
@@ -121,8 +122,10 @@ public abstract class LaserinneSketch extends PApplet {
 		mX = map(mouseX, 0, width, -1.f, 1.f);
 		mY = map(mouseY, 0, height, -1.f, 1.f);
 		
-		delta = (millis() - _myLastMillis) / 1000.0f;
-		_myLastMillis = millis();
+		
+		long myCurrentMillis = millis();
+		delta = (myCurrentMillis - _myLastMillis) / 1000.0f;
+		_myLastMillis = myCurrentMillis;
 		
 		
 		if(doFakeTracking) {
@@ -175,10 +178,12 @@ public abstract class LaserinneSketch extends PApplet {
 		
 		
 		/* HOOK */
+		final Laser3D myLaserRenderer = _myLaser.renderer();
 		beginRaw(_myLaser.renderer());
 		stroke(255);
+		noFill();
 		curveDetail(3);
-		drawWithLaser(); // Hook!
+		drawWithLaser(myLaserRenderer); // Hook!
 		endRaw();       
 	}
 
@@ -213,7 +218,7 @@ public abstract class LaserinneSketch extends PApplet {
 	/**
 	 * Use this method to draw stuff with laser.
 	 */
-	protected abstract void drawWithLaser();
+	protected abstract void drawWithLaser(final Laser3D theLaser);
 
 
 	/**

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import laserschein.Laser3D;
+
 import processing.core.PApplet;
 
 import toxi.geom.Triangle2D;
@@ -185,7 +187,7 @@ public class SketchConnect extends LaserinneSketch {
 
 
 	@Override
-	protected void drawWithLaser() {
+	protected void drawWithLaser(final Laser3D theLaser) {
 		_myDecoratorManager.draw(g);
 	}
 

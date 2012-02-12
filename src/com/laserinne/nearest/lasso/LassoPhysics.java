@@ -1,6 +1,5 @@
 package com.laserinne.nearest.lasso;
 
-import netP5.Logger;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
