@@ -62,7 +62,7 @@ public class SketchBouncyTrack extends LaserinneSketch {
 
 
 	@Override
-	protected void update() {
+	protected void update(final float theDelta) {
 		
 	}
 

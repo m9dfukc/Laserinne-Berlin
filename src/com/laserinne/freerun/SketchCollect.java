@@ -26,7 +26,7 @@ public class SketchCollect extends LaserinneSketch {
 		
 
 	@Override
-	protected void update() {
+	protected void update(final float theDelta) {
 	
 	}
 

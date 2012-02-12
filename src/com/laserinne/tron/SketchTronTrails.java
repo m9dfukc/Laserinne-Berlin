@@ -28,7 +28,7 @@ public class SketchTronTrails extends LaserinneSketch {
 	}
 
 	@Override
-	protected void update() {
+	protected void update(final float theDelta) {
 		_myDecoratorManager.update();
 		
 		Collection<SkierTrail> myTrails = _myTrails.values();

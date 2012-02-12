@@ -27,7 +27,7 @@ public class SketchNearestNeighbor extends LaserinneSketch {
 	}
 
 	@Override
-	protected void update() {
+	protected void update(final float theDelta) {
 		
 		/* Check if edge is still valid */
 		if(_myEdge != null && (_myEdge.a.isDead() || _myEdge.b.isDead() ) ) {
@@ -44,7 +44,6 @@ public class SketchNearestNeighbor extends LaserinneSketch {
 		if(_myEdge == null && mySkiers.size() > 1) {    // We need two to party
 			Skier myA = mySkiers.get(mySkiers.size() - 1);
 			Skier myB = mySkiers.get(mySkiers.size() - 2);
-			
 			
 			if(myA.centroid().y < _myConnectArea && myB.centroid().y < _myConnectArea) {
 				_myEdge = new Edge<Skier>(myA, myB);

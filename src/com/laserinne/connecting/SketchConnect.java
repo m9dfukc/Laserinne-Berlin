@@ -45,10 +45,8 @@ public class SketchConnect extends LaserinneSketch {
 	}
 
 	@Override
-	protected void update() {
+	protected void update(final float theDelta) {
 
-		
-		
 		ArrayList<Edge<Vec2D>> myEdges = new ArrayList<Edge<Vec2D>>();
 		
 		final Voronoi myVoronoi = new Voronoi(DELAUNAY_ROOT_SIZE);
@@ -86,14 +84,11 @@ public class SketchConnect extends LaserinneSketch {
 		matchWithExistingEdges(myNewEdges);
 		purgeDeadEdges();
 		
-		
-		
 		_myDecoratorManager.update();
 	}
 	
 	
 	private void purgeDeadEdges() {
-		/* Purge */
 		Iterator<AnimatedSkierEdge> myIterator = _mySkierEdges.iterator();
 
 		while(myIterator.hasNext()) {

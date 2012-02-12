@@ -54,7 +54,7 @@ public abstract class LaserinneSketch extends PApplet {
 	/**
 	 * millis in last Frame. 
 	 */
-	private float _lastMillis;
+	private long _myLastMillis;
 
 	/**
 	 * Sketch width and height.
@@ -84,15 +84,14 @@ public abstract class LaserinneSketch extends PApplet {
 	
 	
 	public boolean doFakeTracking = false;
-	
-	
 	FakeTracking _myFake;
+	
 
 	@Override
 	public void setup() {
 		size(WIDTH, HEIGHT, OPENGL);
 		frameRate(-1); // Use maximum frame rate.
-		_lastMillis = millis() / 1000f;
+		_myLastMillis = millis();
 		
 		_myLaser = new Laserschein(this, Laserschein.EASYLASEUSB2);               
 
@@ -105,17 +104,25 @@ public abstract class LaserinneSketch extends PApplet {
 		_myTracking = new Tracking("239.0.0.1", 9999);
 		_myFake = new FakeTracking(_myTracking);
 		
-		postSetup(); // Hook!
+		/* HOOK */
+		postSetup(); 
 	}
 
 
 	
+	/* (non-Javadoc)
+	 * @see processing.core.PApplet#draw()
+	 * 
+	 * This is the main loop. Do not override this. If you absolutely need to, call this!
+	 * 
+	 */
 	@Override
 	public void draw() {
 		mX = map(mouseX, 0, width, -1.f, 1.f);
 		mY = map(mouseY, 0, height, -1.f, 1.f);
-		delta = millis()/1000f - _lastMillis;
-		_lastMillis = millis()/1000f;
+		
+		delta = (millis() - _myLastMillis) / 1000.0f;
+		_myLastMillis = millis();
 		
 		
 		if(doFakeTracking) {
@@ -127,7 +134,9 @@ public abstract class LaserinneSketch extends PApplet {
 		fireEvents();
 		
 		
-		update(); // Hook!
+		/* HOOK */
+		update(delta);
+		
 
 		background(60, 57, 55);
 		
@@ -157,12 +166,15 @@ public abstract class LaserinneSketch extends PApplet {
 		line(0, 0.5f, 0, -1);
 		
 
+		/* HOOK */
 		if(drawOnScreen) {
 			pushMatrix();
-			drawOnScreen();	// Hook!
+			drawOnScreen();	
 			popMatrix();	
 		}
 		
+		
+		/* HOOK */
 		beginRaw(_myLaser.renderer());
 		stroke(255);
 		curveDetail(3);
@@ -171,6 +183,9 @@ public abstract class LaserinneSketch extends PApplet {
 	}
 
 
+	/**
+	 * Fires events on new and dead skiers to subclasses.
+	 */
 	private void fireEvents() {
 		for(final Skier mySkier:_myTracking.newSkiers()) {
 			onNewSkier(mySkier);
@@ -192,7 +207,7 @@ public abstract class LaserinneSketch extends PApplet {
 	/**
 	 * Use this method to update logic
 	 */
-	protected abstract void update();
+	protected abstract void update(final float theDelta);
 
 
 	/**
@@ -234,9 +249,7 @@ public abstract class LaserinneSketch extends PApplet {
 	}
 	
 	
-
 	
-
 	public void keyPressed() {
 		if (key == 's') {
 			// Toggle control window
