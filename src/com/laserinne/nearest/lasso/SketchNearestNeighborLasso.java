@@ -12,6 +12,8 @@ import processing.core.PVector;
 import toxi.geom.Rect;
 import toxi.physics2d.VerletPhysics2D;
 
+import controlP5.*;
+
 import com.laserinne.base.LaserinneSketch;
 import com.laserinne.base.Skier;
 import com.laserinne.util.Edge;
@@ -26,9 +28,23 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 	private float _myConnectArea = -0.3f;   // upper third is the are where things can connect
 	private VerletPhysics2D _physics;
 	private LassoPhysics _lasso;
+	private ControlWindow _controlWindow;
+	private ControlP5 _controlP5;
+	private Controller _springStrength;
+	private Controller _springLength;
 	
 	@Override
 	protected void postSetup() {
+		_controlP5 = new ControlP5(this);
+		_controlP5.setAutoDraw(false);
+		_controlWindow = _controlP5.addControlWindow("controlP5window", 100, 100, 240, 80);
+		_springStrength = _controlP5.addSlider("Strength", 0.0001f, 0.01f, 0.001f, 10, 10, 140, 15);
+		_springStrength.setDecimalPrecision(4);
+		_springStrength.moveTo(_controlWindow);
+		_springLength = _controlP5.addSlider("Length", 0.0001f, 0.09f, 0.02f, 10, 40, 140, 15);
+		_springLength.setDecimalPrecision(4);
+		_springLength.moveTo(_controlWindow);
+		
 		_myEdge = null;
 		_physics = new VerletPhysics2D();
 		_physics.setWorldBounds(new Rect(-1f,-1f,2f,2f));
@@ -59,14 +75,13 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 			}
 		}
 		_physics.update();
+		_lasso.updateSpring(_springStrength.value(), _springLength.value());
 		_lasso.update(_myEdge);
 	}
 
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
-		stroke(255);
 		_lasso.draw(g);
-
 	}
 
 	@Override
@@ -74,17 +89,15 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 		stroke(15, 193, 238);
 		line(-1, _myConnectArea, 1, _myConnectArea);
 		
-		
 		for(Skier mySkier:tracking().skiers()) {
 			mySkier.drawDebug(g);
 		}
-		
 		
 		if(_myEdge != null) {
 			PVector myPointA = _myEdge.a.base();
 			PVector myPointB = _myEdge.b.base();
 			
-			//line(myPointA.x, myPointA.y, myPointB.x, myPointB.y);
+			line(myPointA.x, myPointA.y, myPointB.x, myPointB.y);
 		}
 		
 	}
