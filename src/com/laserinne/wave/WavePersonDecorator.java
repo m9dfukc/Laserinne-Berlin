@@ -43,12 +43,17 @@ public class WavePersonDecorator extends SimpleDecoratorBase{
 		
 		final PVector myBase = _mySkier.base();
 		
-		float myRadius = this.progress() * _myRadius * _myPulse ;
+		float myRadius = this.progress() * _myRadius * _myPulse + (_myBoomProgress * _myRadius) ;
 		
-		float myAngle = (1 - _myBoomProgress) * (float)Math.PI * 2;
+		float myAngle = (1 - _myBoomProgress * 0.8f) * (float)Math.PI * 2;
 		
-		Shapes.arc(theG, myBase.x, myBase.y, myRadius, myAngle, 10);
 		
+		theG.pushMatrix();
+		theG.translate(myBase.x, myBase.y);
+		theG.rotate(-(float) ((Math.PI * 2) - myAngle) * 0.5f);
+
+		Shapes.arc(theG, 0, 0, myRadius, myAngle, 10);
+		theG.popMatrix();
 	}
 	
 	
