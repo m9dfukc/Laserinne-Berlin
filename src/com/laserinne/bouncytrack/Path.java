@@ -76,10 +76,10 @@ public class Path {
 		long seed = System.currentTimeMillis();
 		_points.clear();
 		generator.noiseSeed(seed);
-		float stepY = 2.0f /  (_resolution * 1f);
+		float stepY = 1.75f /  (_resolution * 1f);
 		for(int i=0; i<_resolution; i++) {
-			float tmpX = generator.noise(stepY*i*2) * ((float)i / _resolution) + PApplet.sin((float)i / _resolution * 15) * 0.25f;
-			float tmpY = stepY*i - 1;
+			float tmpX = generator.noise(stepY*i*2) * ((float)i / _resolution) + PApplet.sin((float)i / _resolution * 15 + PApplet.PI/2) * 0.25f;
+			float tmpY = stepY*i - 0.8f;
 			_points.add(new PVector(tmpX, tmpY));
 		}
 		

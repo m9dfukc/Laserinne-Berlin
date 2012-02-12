@@ -25,7 +25,7 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	@Override
 	protected void postSetup() {
 		this.background(255);
-        track = new Track(.07f);
+        track = new Track(.07f, 200);
         physics = new VerletPhysics2D();
         physics.setWorldBounds(new Rect(-1f,-1f,2f,2f));
         
@@ -39,6 +39,7 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	public void keyPressed() {
 		if( key == 'g' ) {
 			track.generate();
+			rail = new RailPhysics(physics, track.getPath(), track.getOutlineLeft(), track.getOutlineRight(), 0.005f);
 		}	
 	}
 	
@@ -81,13 +82,11 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	@Override
 	protected void onNewSkier(Skier theSkier) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected void onDeadSkier(Skier theSkier) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	
