@@ -35,15 +35,15 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 	
 	@Override
 	protected void postSetup() {
-		 _controlP5 = new ControlP5(this);
-		 _controlP5.setAutoDraw(false);
-		 _controlWindow = _controlP5.addControlWindow("controlP5window", 100, 100, 240, 80);
-		 _springStrength = _controlP5.addSlider("Strength", 0.0001f, 0.01f, 0.001f, 10, 10, 140, 15);
-		 _springStrength.setDecimalPrecision(4);
-		 _springStrength.moveTo(_controlWindow);
-		 _springLength = _controlP5.addSlider("Length", 0.0001f, 0.09f, 0.02f, 10, 40, 140, 15);
-		 _springLength.setDecimalPrecision(4);
-		 _springLength.moveTo(_controlWindow);
+		_controlP5 = new ControlP5(this);
+		_controlP5.setAutoDraw(false);
+		_controlWindow = _controlP5.addControlWindow("controlP5window", 100, 100, 240, 80);
+		_springStrength = _controlP5.addSlider("Strength", 0.0001f, 0.01f, 0.001f, 10, 10, 140, 15);
+		_springStrength.setDecimalPrecision(4);
+		_springStrength.moveTo(_controlWindow);
+		_springLength = _controlP5.addSlider("Length", 0.0001f, 0.09f, 0.02f, 10, 40, 140, 15);
+		_springLength.setDecimalPrecision(4);
+		_springLength.moveTo(_controlWindow);
 		
 		_myEdge = null;
 		_physics = new VerletPhysics2D();
