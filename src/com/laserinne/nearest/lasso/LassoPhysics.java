@@ -56,8 +56,6 @@ public class LassoPhysics {
 	public void update(Edge<Skier> skiers) {
 		if( skiers == null)	{
 			bAlive = false;
-			head.set(0f, -1f);
-			tail.set(0f, -1f);
 		} else {
 			if( !bAlive ) {
 				LinearInterpolation formAToB = new LinearInterpolation();

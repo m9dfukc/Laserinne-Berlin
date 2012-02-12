@@ -38,17 +38,17 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 		_controlP5 = new ControlP5(this);
 		_controlP5.setAutoDraw(false);
 		_controlWindow = _controlP5.addControlWindow("controlP5window", 100, 100, 240, 80);
-		_springStrength = _controlP5.addSlider("Strength", 0.0001f, 0.01f, 0.001f, 10, 10, 140, 15);
+		_springStrength = _controlP5.addSlider("Strength", 0.001f, 0.1f, 0.05f, 10, 10, 140, 15);
 		_springStrength.setDecimalPrecision(4);
 		_springStrength.moveTo(_controlWindow);
-		_springLength = _controlP5.addSlider("Length", 0.0001f, 0.09f, 0.02f, 10, 40, 140, 15);
-		_springLength.setDecimalPrecision(4);
+		_springLength = _controlP5.addSlider("Length", 0.001f, 1f, 0.03f, 10, 40, 140, 15);
+		_springLength.setDecimalPrecision(5);
 		_springLength.moveTo(_controlWindow);
 		
 		_myEdge = null;
 		_physics = new VerletPhysics2D();
 		_physics.setWorldBounds(new Rect(-1f,-1f,2f,2f));
-		_lasso = new LassoPhysics(_physics, 0.02f, 30, 0.001f);
+		_lasso = new LassoPhysics(_physics, 0.03f, 30, 0.005f);
 	}
 
 	@Override
@@ -66,8 +66,8 @@ public class SketchNearestNeighborLasso extends LaserinneSketch {
 		Collections.sort(mySkiers, new SkierYComparator()); 	// Sort by their y positions
 
 		if(_myEdge == null && mySkiers.size() > 1) {    // We need two to party
-			Skier myA = mySkiers.get(mySkiers.size() - 1);
-			Skier myB = mySkiers.get(mySkiers.size() - 2);
+			Skier myA = mySkiers.get(0);
+			Skier myB = mySkiers.get(1);
 			
 			if(myA.centroid().y < _myConnectArea && myB.centroid().y < _myConnectArea) {
 				_myEdge = new Edge<Skier>(myA, myB);
