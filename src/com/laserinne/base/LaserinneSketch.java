@@ -84,7 +84,7 @@ public abstract class LaserinneSketch extends PApplet {
 	public boolean drawOnScreen = true;
 	
 	
-	public boolean doFakeTracking = true;
+	public boolean doFakeTracking = false;
 	FakeTracking _myFake;
 	
 
