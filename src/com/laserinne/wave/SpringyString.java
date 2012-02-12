@@ -60,7 +60,7 @@ class SpringyString {
 
 		mover.position().setY( myY);
 		
-		_myPhysics.tick();
+		_myPhysics.tick(60 * theDelta * 0.5f);
 	}
 
 
@@ -93,12 +93,11 @@ class SpringyString {
 			PVector myLeftPos = new PVector(myLeft.position().x(), myRight.position().y());
 			PVector myRightPos =  new PVector(myRight.position().x(),myRight.position().y());
 
-			float myDistance = Geometry.distanceSegmentPoint(myLeftPos, myRightPos, theSkier.centroid());
+			float myDistance = Geometry.distanceSegmentPoint(myLeftPos, myRightPos, theSkier.base());
 			
 			if(myDistance <= theSkier.radius() ) {
 				return true;
 			}  
-
 		}
 
 		return false; 

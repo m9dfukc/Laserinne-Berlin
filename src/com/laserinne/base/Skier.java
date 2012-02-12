@@ -57,6 +57,7 @@ public class Skier implements Decoratable {
 	
 	
 	private int _myNumberOfUpdates = 0;
+	
 
 
 	public static final float DIRECTION_LEARNING_RATE = 0.001f;
@@ -209,8 +210,10 @@ public class Skier implements Decoratable {
 	 * @return a rough radius estimate based on the skiers width and height
 	 */
 	public float radius() {
-		float myRadius = (_myWidth + _myHeight) * 0.5f;
+		float myRadius = (_myWidth + _myHeight) * 0.5f * 0.5f;
 		return myRadius;
 	}
+	
+	
 	
 }

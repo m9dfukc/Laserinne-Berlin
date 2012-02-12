@@ -39,10 +39,7 @@ public class SketchConnect extends LaserinneSketch {
 	@Override
 	protected void postSetup() {
 		_mySkierEdges = new ArrayList<AnimatedSkierEdge>();
-		_myDecoratorManager = new DecoratorManager();
-		
-		Ani.init(this);
-		
+		_myDecoratorManager = new DecoratorManager();		
 		
 	}
 

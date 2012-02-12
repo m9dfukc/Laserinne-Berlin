@@ -23,6 +23,7 @@
 
 package com.laserinne.base;
 
+import de.looksgood.ani.Ani;
 import laserschein.Laser3D;
 import laserschein.Laserschein;
 import processing.core.PApplet;
@@ -104,6 +105,8 @@ public abstract class LaserinneSketch extends PApplet {
 
 		_myTracking = new Tracking("239.0.0.1", 9999);
 		_myFake = new FakeTracking(_myTracking);
+		
+		Ani.init(this);
 		
 		/* HOOK */
 		postSetup(); 

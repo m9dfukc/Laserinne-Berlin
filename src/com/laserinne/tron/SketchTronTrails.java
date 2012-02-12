@@ -21,7 +21,6 @@ public class SketchTronTrails extends LaserinneSketch {
 	
 	@Override
 	protected void postSetup() {
-		Ani.init(this);
 		_myDecoratorManager = new DecoratorManager();
 		_myTrails = new HashMap<Skier, SkierTrail>();
 		
