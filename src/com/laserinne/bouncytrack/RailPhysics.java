@@ -55,9 +55,9 @@ class RailPhysics {
 		
 		mouseDown = false;
 		
-		railLength = 10;
+		railLength = 20;
 		
-		generateBoundingOutlines(0.2f);
+		generateBoundingOutlines(0.13f);
 		
 		for (int i = 0; i < center.size(); i++) {
 			
@@ -156,7 +156,7 @@ class RailPhysics {
 		
 		theG.beginShape();
 		theG.vertex(particlesLeft.get(0).x, particlesLeft.get(0).y);
-		for(int i = 0; i < particlesLeft.size(); i++) {
+		for(int i = 0; i < particlesCenter.size(); i++) {
 			VerletParticle2D particle = particlesLeft.get(i);
 			theG.curveVertex(particle.x, particle.y);
 		}
@@ -164,16 +164,20 @@ class RailPhysics {
 		
 		theG.beginShape();
 		theG.vertex(particlesRight.get(0).x, particlesRight.get(0).y);
-		for(int i = 0; i < particlesRight.size(); i++) {
+		for(int i = 0; i < particlesCenter.size(); i++) {
 			VerletParticle2D particle = particlesRight.get(i);
 			theG.curveVertex(particle.x, particle.y);
 		}
 		theG.endShape();
 		
-		theG.stroke(255, 0, 0);
+		theG.stroke(90);
 		for(int i = 0; i < particlesCenter.size(); i++) {
-			VerletParticle2D particle = particlesCenter.get(i);
-			theG.ellipse(particle.x, particle.y, 0.002f, 0.002f);
+			VerletParticle2D particleLeft = particlesLeft.get(i);
+			VerletParticle2D particleRight = particlesRight.get(i);
+			VerletParticle2D particleBoundingLeft = particlesBoundingLeft.get(i);
+			VerletParticle2D particleBoundingRight = particlesBoundingRight.get(i);
+			theG.line(particleLeft.x, particleLeft.y, particleBoundingLeft.x, particleBoundingLeft.y);
+			theG.line(particleRight.x, particleRight.y, particleBoundingRight.x, particleBoundingRight.y);
 		}
 		
 		theG.stroke(0,0,255);
