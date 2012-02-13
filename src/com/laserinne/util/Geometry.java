@@ -111,18 +111,6 @@ public class Geometry {
 	}
 	
 	/**
-	 * Calculates the angle between two vectors
-	 * @param x0
-	 * @param y0
-	 * @param distance
-	 * @param angle (in degrees!)
-	 * @return 
-	 */
-	public static float angle(final Vec2D p1, final Vec2D p2) {
-		return p1.angleBetween(p2);
-	}
-	
-	/**
 	 * Interpolates between two vectors
 	 * 
 	 * A progress of 0 is fully the first vector. 1 means the other.

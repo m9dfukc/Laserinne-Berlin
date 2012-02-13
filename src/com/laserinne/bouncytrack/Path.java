@@ -35,7 +35,7 @@ public class Path {
 	
 	int resolution;
 	
-	ArrayList<Vec2D> points = new ArrayList<Vec2D>();
+	public ArrayList<Vec2D> pointsCenter = new ArrayList<Vec2D>();
 	
 	Path() {
 		this(100);
@@ -47,22 +47,22 @@ public class Path {
 	}
 	
 	ArrayList<Vec2D> getPath() {
-		return points;
+		return pointsCenter;
 	}
 	
 	void drawDebug(final PGraphics theG) {
 		theG.stroke(255, 0, 0);
 		theG.beginShape();
 		theG.noFill();
-		theG.vertex(points.get(0).x, points.get(0).y);
-		for(int i=1; i<points.size(); i++) {
-			theG.curveVertex(points.get(i).x, points.get(i).y);
+		theG.vertex(pointsCenter.get(0).x, pointsCenter.get(0).y);
+		for(int i=1; i<pointsCenter.size(); i++) {
+			theG.curveVertex(pointsCenter.get(i).x, pointsCenter.get(i).y);
 		}
 		theG.endShape();
 		
 		theG.stroke(0, 0, 255);
-		for(int i=1; i<points.size(); i++) {
-			theG.ellipse(points.get(i).x, points.get(i).y, 0.01f, 0.01f);
+		for(int i=1; i<pointsCenter.size(); i++) {
+			theG.ellipse(pointsCenter.get(i).x, pointsCenter.get(i).y, 0.01f, 0.01f);
 		}
 	}
 	
@@ -79,7 +79,7 @@ public class Path {
 			float mirrorFactor = bMirrored ? -1.0f : 1.0f;
 			float tmpX = generator.noise(stepY*i*2) * ((float)i / resolution) * spreadFactor1 * spreadFactor2 * mirrorFactor;
 			float tmpY = stepY*i - 0.8f;
-			points.add(new Vec2D(tmpX, tmpY));
+			pointsCenter.add(new Vec2D(tmpX, tmpY));
 		}
 	}
 }

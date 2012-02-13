@@ -31,31 +31,24 @@ class BouncyTrack extends Track {
 	ArrayList<VerletParticle2D> particlesBoundingLeft = new ArrayList<VerletParticle2D>();
 	ArrayList<VerletParticle2D> particlesBoundingRight = new ArrayList<VerletParticle2D>();
 	
-	ArrayList<Vec2D> pointsCenter;
-	ArrayList<Vec2D> pointsLeft;
-	ArrayList<Vec2D> pointsRight;
 	ArrayList<Vec2D> pointsBoundingLeft = new ArrayList<Vec2D>();
 	ArrayList<Vec2D> pointsBoundingRight = new ArrayList<Vec2D>();
 	
 	private VerletPhysics2D _physics;
 	private AttractionBehavior _skierAttractor;
 	
-	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth) {
-		this(physics, xPos, trackWidth, 0.004f);
+	BouncyTrack(VerletPhysics2D physics, float trackWidth) {
+		this(physics, trackWidth, 0.004f);
 	}
 	
-	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth, float spring) {
-		this(physics, xPos, trackWidth, spring, 200);
+	BouncyTrack(VerletPhysics2D physics, float trackWidth, float spring) {
+		this(physics, trackWidth, spring, 200);
 	}
 			
-	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth, float spring, int pathResolution) {
+	BouncyTrack(VerletPhysics2D physics, float trackWidth, float spring, int pathResolution) {
 		super(trackWidth, pathResolution);
 		_physics = physics;
 		
-		pointsCenter = super.points;
-		pointsLeft = super.pointsLeft;
-		pointsRight = super.pointsRight;
-
 		strength = spring;
 		railLength = 20;
 		
@@ -144,6 +137,7 @@ class BouncyTrack extends Track {
 	}
 
 	void drawDebug(final PGraphics theG) {
+		super.draw(theG);
 		
 		theG.noFill();
 		theG.stroke(255);
@@ -163,7 +157,7 @@ class BouncyTrack extends Track {
 			theG.curveVertex(particle.x, particle.y);
 		}
 		theG.endShape();
-		
+		/*
 		theG.stroke(90);
 		for(int i = 0; i < particlesCenter.size(); i++) {
 			VerletParticle2D particleLeft = particlesLeft.get(i);
@@ -173,7 +167,7 @@ class BouncyTrack extends Track {
 			theG.line(particleLeft.x, particleLeft.y, particleBoundingLeft.x, particleBoundingLeft.y);
 			theG.line(particleRight.x, particleRight.y, particleBoundingRight.x, particleBoundingRight.y);
 		}
-		
+		*/
 		theG.stroke(0,0,255);
 		for(int i = 0; i < particlesCenter.size(); i++) {
 			VerletParticle2D particleLeft = particlesLeft.get(i);
@@ -240,11 +234,11 @@ class BouncyTrack extends Track {
 		for(int i=0; i<pointsCenter.size(); i++) {
 			float angleLeft = 0f, angleRight = 0f;
 			if( i < pointsCenter.size() - 1) {
-				angleLeft = Geometry.angle(pointsLeft.get(i), pointsLeft.get(i+1));
-				angleRight = Geometry.angle(pointsRight.get(i), pointsRight.get(i+1));
+				angleLeft = Geometry.angle(ToxiUtil.toPVector(pointsLeft.get(i)), ToxiUtil.toPVector(pointsLeft.get(i+1)));
+				angleRight = Geometry.angle(ToxiUtil.toPVector(pointsRight.get(i)), ToxiUtil.toPVector(pointsRight.get(i+1)));
 			} else {
-				angleLeft = Geometry.angle(pointsLeft.get(i), pointsLeft.get(i-1)) - 180f;
-				angleRight = Geometry.angle(pointsRight.get(i), pointsRight.get(i-1)) - 180f;
+				angleLeft = Geometry.angle(ToxiUtil.toPVector(pointsLeft.get(i)), ToxiUtil.toPVector(pointsLeft.get(i-1))) - 180f;
+				angleRight = Geometry.angle(ToxiUtil.toPVector(pointsRight.get(i)), ToxiUtil.toPVector(pointsRight.get(i-1))) - 180f;
 			}
 			Vec2D pointLeft  = ToxiUtil.toVec2D(Geometry.coordinates(pointsLeft.get(i).x, pointsLeft.get(i).y, distance, angleLeft + 90f));
 			Vec2D pointRight = ToxiUtil.toVec2D(Geometry.coordinates(pointsRight.get(i).x, pointsRight.get(i).y, distance, angleRight - 90f));
