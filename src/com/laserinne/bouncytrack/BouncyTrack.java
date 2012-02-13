@@ -40,21 +40,21 @@ class BouncyTrack extends Track {
 	private VerletPhysics2D _physics;
 	private AttractionBehavior _skierAttractor;
 	
-	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth) {
-		this(physics, xPos, trackWidth, 0.004f);
+	BouncyTrack(VerletPhysics2D physics, float trackWidth) {
+		this(physics, trackWidth, 0.004f);
 	}
 	
-	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth, float spring) {
-		this(physics, xPos, trackWidth, spring, 200);
+	BouncyTrack(VerletPhysics2D physics, float trackWidth, float spring) {
+		this(physics, trackWidth, spring, 200);
 	}
 			
-	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth, float spring, int pathResolution) {
+	BouncyTrack(VerletPhysics2D physics, float trackWidth, float spring, int pathResolution) {
 		super(trackWidth, pathResolution);
 		_physics = physics;
 		
-		pointsCenter = super.points;
-		pointsLeft = super.pointsLeft;
-		pointsRight = super.pointsRight;
+		pointsCenter = super.getPath();
+		pointsLeft = super.getOutlineLeft();
+		pointsRight = super.getOutlineRight();
 
 		strength = spring;
 		railLength = 20;
@@ -106,6 +106,7 @@ class BouncyTrack extends Track {
 					PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y), 
 					0.0004f
 				);
+			
 			springCenterLeft.lockA(true);
 			springCenterRight.lockA(true);
 			
@@ -144,6 +145,7 @@ class BouncyTrack extends Track {
 	}
 
 	void drawDebug(final PGraphics theG) {
+		super.draw(theG);
 		
 		theG.noFill();
 		theG.stroke(255);
@@ -163,7 +165,7 @@ class BouncyTrack extends Track {
 			theG.curveVertex(particle.x, particle.y);
 		}
 		theG.endShape();
-		
+		/*
 		theG.stroke(90);
 		for(int i = 0; i < particlesCenter.size(); i++) {
 			VerletParticle2D particleLeft = particlesLeft.get(i);
@@ -173,7 +175,7 @@ class BouncyTrack extends Track {
 			theG.line(particleLeft.x, particleLeft.y, particleBoundingLeft.x, particleBoundingLeft.y);
 			theG.line(particleRight.x, particleRight.y, particleBoundingRight.x, particleBoundingRight.y);
 		}
-		
+		*/
 		theG.stroke(0,0,255);
 		for(int i = 0; i < particlesCenter.size(); i++) {
 			VerletParticle2D particleLeft = particlesLeft.get(i);
