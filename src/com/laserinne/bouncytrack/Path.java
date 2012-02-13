@@ -25,73 +25,61 @@ package com.laserinne.bouncytrack;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PVector;
 
+import toxi.geom.Vec2D;
 import toxi.math.noise.PerlinNoise;
 
 import java.util.ArrayList;
 
 public class Path {
-	int _resolution;
-	ArrayList<PVector> _points = new ArrayList<PVector>();
 	
-	public Path() {
-		this(10);
+	int resolution;
+	
+	ArrayList<Vec2D> points = new ArrayList<Vec2D>();
+	
+	Path() {
+		this(100);
 	}
 	
-	public Path(int resolution) {
-		_resolution = resolution;
+	Path(int r) {
+		resolution = r;
 		generatePoints();
 	}
 	
-	public void setPathResolution(int r) {
-		if( r > 2 && r < 50 && r != _resolution) {
-			_resolution = r;
-			generatePoints();
-		}
+	ArrayList<Vec2D> getPath() {
+		return points;
 	}
 	
-	public ArrayList<PVector> getPath() {
-		return _points;
-	}
-	
-	public void drawOnScreen(final PGraphics theG) {
+	void drawDebug(final PGraphics theG) {
 		theG.stroke(255, 0, 0);
 		theG.beginShape();
 		theG.noFill();
-		theG.vertex(_points.get(0).x, _points.get(0).y);
-		for(int i=1; i<_points.size(); i++) {
-			theG.curveVertex(_points.get(i).x, _points.get(i).y);
+		theG.vertex(points.get(0).x, points.get(0).y);
+		for(int i=1; i<points.size(); i++) {
+			theG.curveVertex(points.get(i).x, points.get(i).y);
 		}
 		theG.endShape();
 		
 		theG.stroke(0, 0, 255);
-		for(int i=1; i<_points.size(); i++) {
-			theG.ellipse(_points.get(i).x, _points.get(i).y, 0.01f, 0.01f);
+		for(int i=1; i<points.size(); i++) {
+			theG.ellipse(points.get(i).x, points.get(i).y, 0.01f, 0.01f);
 		}
 	}
 	
-	public void generatePoints() {
+	private void generatePoints() {
 		PerlinNoise generator = new PerlinNoise();
-		long seed = System.currentTimeMillis();
-		_points.clear();
+		long seed = System.currentTimeMillis() + (int)(Math.random() * 1000f);
+		boolean bMirrored = (seed%3 == 0);
 		generator.noiseSeed(seed);
-		float stepY = 2.0f /  (_resolution * 1f);
-		for(int i=0; i<_resolution; i++) {
-			float tmpX = generator.noise(stepY*i*2) * ((float)i / _resolution) + PApplet.sin((float)i / _resolution * 15) * 0.25f;
-			float tmpY = stepY*i - 1;
-			_points.add(new PVector(tmpX, tmpY));
+		float stepY = 1.75f /  (resolution * 1f);
+		float sinFactor = 20f * PApplet.map((float)Math.random(), 0.0f, 1.0f, 0.60f, 1.0f);
+		for(int i=0; i<resolution; i++) {
+			float spreadFactor1 = PApplet.sin((float)i / resolution * sinFactor + PApplet.PI/2f) * 0.65f;
+			float spreadFactor2 = PApplet.sin((float)i / resolution * PApplet.PI/1.5f);
+			float mirrorFactor = bMirrored ? -1.0f : 1.0f;
+			float tmpX = generator.noise(stepY*i*2) * ((float)i / resolution) * spreadFactor1 * spreadFactor2 * mirrorFactor;
+			float tmpY = stepY*i - 0.8f;
+			points.add(new Vec2D(tmpX, tmpY));
 		}
-		
-		
-		/*
-		float stepWidth = .5f / (_resolution * 1f); 
-		float stepHeight = 2.5f / (_resolution * 1f);
-		for(int i=0; i<_resolution; i++) {
-			float tmpX = (float) PApplet.map((float) generator.nextDouble(), 0f, 1f, -1f * stepWidth, stepWidth) * (i + 2) / 2 ;  
-			float tmpY = (float) (i * stepHeight) - 1f + PApplet.map((float)generator.nextDouble(), 0f, 1f, -1f*stepHeight/4, stepHeight/4); //  (float)(generator.nextDouble() * stepHeight / 10.f);
-			_points.add(new PVector(tmpX, tmpY));
-		}
-		*/
 	}
 }

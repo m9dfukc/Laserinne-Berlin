@@ -58,6 +58,8 @@ public class Skier implements Decoratable {
 	
 	private int _myNumberOfUpdates = 0;
 	
+	
+	private int _myScore;
 
 
 	public static final float DIRECTION_LEARNING_RATE = 0.001f;
@@ -84,6 +86,9 @@ public class Skier implements Decoratable {
 		
 		_myFirstUpdate = System.currentTimeMillis();
 		_myLastUpdate = System.currentTimeMillis();
+		
+		
+		_myScore = 0;
 	}
 
 
@@ -212,6 +217,22 @@ public class Skier implements Decoratable {
 	public float radius() {
 		float myRadius = (_myWidth + _myHeight) * 0.5f * 0.5f;
 		return myRadius;
+	}
+	
+	
+	
+	public int score() {
+		return _myScore;
+	}
+	
+	
+	public void score(int theScore) {
+		_myScore = theScore;
+	}
+	
+	
+	public void increaseScore() {
+		_myScore++;
 	}
 	
 	

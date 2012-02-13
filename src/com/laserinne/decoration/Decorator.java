@@ -19,7 +19,7 @@ public abstract class Decorator {
 	}
 	
 	public boolean isFinished() {
-		return _myState == State.FINISHED;
+		return _myState.equals(State.FINISHED);
 	}
 	
 	public abstract void draw(PGraphics theG);

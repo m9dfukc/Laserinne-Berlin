@@ -1,5 +1,6 @@
 package com.laserinne.tron;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -11,7 +12,6 @@ import com.laserinne.base.Skier;
 import com.laserinne.decoration.DecoratorManager;
 import com.laserinne.decoration.SkierCircleDecorator;
 
-import de.looksgood.ani.Ani;
 
 @SuppressWarnings("serial")
 public class SketchTronTrails extends LaserinneSketch {
@@ -31,10 +31,24 @@ public class SketchTronTrails extends LaserinneSketch {
 	protected void update(final float theDelta) {
 		_myDecoratorManager.update();
 		
+		ArrayList<Skier> mySkiers = tracking().skiers();
+		
 		Collection<SkierTrail> myTrails = _myTrails.values();
 		
 		for(SkierTrail myTrail:myTrails) {
+			
 			myTrail.update();
+			
+			myTrail.collides(false);
+			
+			for(Skier mySkier:mySkiers) {
+				if(myTrail.skier() != mySkier){
+					if(myTrail.collidesWith(mySkier)) {
+						myTrail.collides(true);
+					}
+				}
+				
+			}
 			
 			// TODO: check for collisions
 			// TODO: notify decorators on collision
@@ -46,7 +60,7 @@ public class SketchTronTrails extends LaserinneSketch {
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
 		
-		
+		_myDecoratorManager.draw(g);
 	}
 
 	@Override
@@ -71,13 +85,14 @@ public class SketchTronTrails extends LaserinneSketch {
 		TrailDecorator myTrailDecorator = new TrailDecorator(myTrail);
 		_myDecoratorManager.add(myTrailDecorator);
 		
-		SkierCircleDecorator mySkierDecorator = new SkierCircleDecorator(theSkier, 0.01f);
-		_myDecoratorManager.add(mySkierDecorator);
+		//SkierCircleDecorator mySkierDecorator = new SkierCircleDecorator(theSkier, 0.01f);
+		//_myDecoratorManager.add(mySkierDecorator);
 	}
 
 	
 	@Override
 	protected void onDeadSkier(Skier theSkier) {
+
 		_myTrails.remove(theSkier);
 	}
 

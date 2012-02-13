@@ -23,6 +23,8 @@
 
 package com.laserinne.base;
 
+import controlP5.ControlP5;
+import controlP5.ControlWindow;
 import de.looksgood.ani.Ani;
 import laserschein.Laser3D;
 import laserschein.Laserschein;
@@ -42,7 +44,17 @@ import processing.core.PApplet;
  */
 @SuppressWarnings("serial")
 public abstract class LaserinneSketch extends PApplet {
-
+	
+	/**
+	 * Holds an instance of ControlP5.
+	 */
+	public ControlP5 _controlP5;
+	
+	/**
+	 * Holds an instance of seperate ControlP5 window.
+	 */
+	public ControlWindow _controlWindow;
+	
 	/**
 	 * Holds an instance of Laserschein.
 	 */
@@ -93,7 +105,6 @@ public abstract class LaserinneSketch extends PApplet {
 	public void setup() {
 		size(WIDTH, HEIGHT, OPENGL);
 		frameRate(-1); // Use maximum frame rate.
-		_myLastMillis = millis();
 		
 		_myLaser = new Laserschein(this, Laserschein.EASYLASEUSB2);               
 
@@ -106,10 +117,15 @@ public abstract class LaserinneSketch extends PApplet {
 		_myTracking = new Tracking("239.0.0.1", 9999);
 		_myFake = new FakeTracking(_myTracking);
 		
+		_controlP5 = new ControlP5(this);
+		_controlWindow = _controlP5.addControlWindow("controlP5window", 10, 10, 300, 160);
+		
 		Ani.init(this);
 		
 		/* HOOK */
 		postSetup(); 
+		
+		_myLastMillis = millis(); // Goes last, so there is no jump
 	}
 
 
@@ -265,6 +281,14 @@ public abstract class LaserinneSketch extends PApplet {
 				_myLaser.hideControlWindow();
 			} else {
 				_myLaser.showControlWindow();
+			}
+		}
+		
+		if (key == 'c') {
+			if (_controlP5.window("controlP5window").isVisible()) {
+				_controlP5.window("controlP5window").hide();
+			} else {
+				_controlP5.window("controlP5window").show();
 			}
 		}
 		

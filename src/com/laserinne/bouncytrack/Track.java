@@ -3,75 +3,77 @@ package com.laserinne.bouncytrack;
 import java.util.ArrayList;
 
 import com.laserinne.util.Geometry;
+import com.laserinne.util.ToxiUtil;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PVector;
+import toxi.geom.Vec2D;
 
 
 public class Track extends Path {
 	
-	float _trackWidth;
-	ArrayList<PVector> _pointsLeft = new ArrayList<PVector>();
-	ArrayList<PVector> _pointsRight = new ArrayList<PVector>();
+	float trackWidth;
 	
-	public Track(float trackWidth) {
-		super(20);
-		_trackWidth = PApplet.constrain(trackWidth, 0.001f, 0.30f);
-		generateOutline();
+	ArrayList<Vec2D> pointsLeft = new ArrayList<Vec2D>();
+	ArrayList<Vec2D> pointsRight = new ArrayList<Vec2D>();
+	
+	public Track(float trackWidth, int pathResolution) {
+		super(pathResolution);
+		trackWidth = PApplet.constrain(trackWidth, 0.001f, 0.30f);
+		generateOutlines();
 	}
 	
-	public void generate() {
-		generatePoints();
-		generateOutline();
-	}
-	
-	public void generateOutline() {
-		_pointsLeft.clear();
-		_pointsRight.clear();
-		for(int i=0; i<_points.size(); i++) {
+	void generateOutlines() {
+		pointsLeft.clear();
+		pointsRight.clear();
+		for(int i=0; i<points.size(); i++) {
 			float angle;
-			if( i < _points.size() - 1) {
-				angle = Geometry.angle(_points.get(i), _points.get(i+1));
+			if( i < points.size() - 1) {
+				angle = Geometry.angle(points.get(i), points.get(i+1));
 				
 			} else {
-				angle = Geometry.angle(_points.get(i), _points.get(i-1)) - 180f;
+				angle = Geometry.angle(points.get(i), points.get(i-1)) - 180f;
 			}
-			float distance = _trackWidth; //Geometry.transform((float)i, _trackWidth, angle);
-			PVector pointLeft  = Geometry.coordinates(_points.get(i).x, _points.get(i).y, distance, angle + 90f);
-			PVector pointRight = Geometry.coordinates(_points.get(i).x, _points.get(i).y, distance, angle - 90f);
-			_pointsLeft.add(pointLeft);
-			_pointsRight.add(pointRight);
+			float distance = trackWidth; //Geometry.transform((float)i, _trackWidth, angle);
+			Vec2D pointLeft  = ToxiUtil.toVec2D(Geometry.coordinates(points.get(i).x, points.get(i).y, distance, angle + 90f));
+			Vec2D pointRight = ToxiUtil.toVec2D(Geometry.coordinates(points.get(i).x, points.get(i).y, distance, angle - 90f));
+			pointsLeft.add(pointLeft);
+			pointsRight.add(pointRight);
 		}
 	}
 	
-	public void setTrackWidth(float w) {
-		if( w > 0 && w < 1 ) _trackWidth = w;
+	ArrayList<Vec2D> getOutlineLeft() {
+		return pointsLeft;
 	}
 	
-	public ArrayList<PVector> getOutlineLeft() {
-		return _pointsLeft;
+	ArrayList<Vec2D> getOutlineRight() {
+		return pointsRight;
 	}
 	
-	public ArrayList<PVector> getOutlineRight() {
-		return _pointsRight;
-	}
-	
-	public void drawWithLaser(final PGraphics theG) {
+	void draw(final PGraphics theG) {
 		theG.stroke(0, 255, 0);
+		_draw(theG);
+	}
+	
+	void drawDebug(final PGraphics theG) {
+		theG.stroke(255, 0, 0);
+		_draw(theG);
+	}
+	
+	private void _draw(final PGraphics theG) {
 		theG.noFill();
 		
 		theG.beginShape();
-		theG.vertex(_pointsLeft.get(0).x, _pointsLeft.get(0).y);
-		for(int i = 1; i < _pointsLeft.size(); i++) {
-			theG.curveVertex(_pointsLeft.get(i).x, _pointsLeft.get(i).y);
+		theG.vertex(pointsLeft.get(0).x, pointsLeft.get(0).y);
+		for(int i = 1; i < pointsLeft.size(); i++) {
+			theG.curveVertex(pointsLeft.get(i).x, pointsLeft.get(i).y);
 		}
 		theG.endShape();
 		
 		theG.beginShape();
-		theG.vertex(_pointsRight.get(0).x, _pointsRight.get(0).y);
-		for(int i = 1; i < _pointsRight.size(); i++) {
-			theG.curveVertex(_pointsRight.get(i).x, _pointsRight.get(i).y);
+		theG.vertex(pointsRight.get(0).x, pointsRight.get(0).y);
+		for(int i = 1; i < pointsRight.size(); i++) {
+			theG.curveVertex(pointsRight.get(i).x, pointsRight.get(i).y);
 		}
 		theG.endShape();
 	}
