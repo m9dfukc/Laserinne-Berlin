@@ -41,6 +41,8 @@ public class SketchBouncyTrack extends LaserinneSketch {
 			track.generate();
 			rail = new RailPhysics(physics, track.getPath(), track.getOutlineLeft(), track.getOutlineRight(), 0.005f);
 		}	
+		
+		super.keyPressed();
 	}
 	
 	@Override
