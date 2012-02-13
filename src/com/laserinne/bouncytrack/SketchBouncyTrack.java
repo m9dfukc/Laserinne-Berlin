@@ -14,9 +14,11 @@ import com.laserinne.base.Skier;
 @SuppressWarnings("serial")
 public class SketchBouncyTrack extends LaserinneSketch {
      
-	private Track track; 
-	VerletPhysics2D physics;
-	private RailPhysics rail;
+	private VerletPhysics2D physics;
+	private Track track1; 
+	private Track track2;
+	private RailPhysics rail1;
+	private RailPhysics rail2;
 	
     public static void main(String args[]) {
         PApplet.main(new String[] { SketchBouncyTrack.class.getCanonicalName() });
@@ -25,11 +27,14 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	@Override
 	protected void postSetup() {
 		this.background(255);
-        track = new Track(.07f, 200);
+		track1 = new Track(-0.25f, .07f, 200);
+		track2 = new Track(0.25f, .07f, 200);
+		
         physics = new VerletPhysics2D();
         physics.setWorldBounds(new Rect(-1f,-1f,2f,2f));
         
-        rail = new RailPhysics(physics, track.getPath(), track.getOutlineLeft(), track.getOutlineRight(), 0.005f);
+        rail1 = new RailPhysics(physics, track1.getPath(), track1.getOutlineLeft(), track1.getOutlineRight(), 0.005f);
+        rail2 = new RailPhysics(physics, track2.getPath(), track2.getOutlineLeft(), track2.getOutlineRight(), 0.005f);
         
         Logger.set(LogLevel.PROCESS, false);
         Logger.set(LogLevel.DEBUG, false);
@@ -38,8 +43,11 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	@Override 
 	public void keyPressed() {
 		if( key == 'g' ) {
-			track.generate();
-			rail = new RailPhysics(physics, track.getPath(), track.getOutlineLeft(), track.getOutlineRight(), 0.005f);
+			physics.clear();
+			track1.generate();
+			rail1 = new RailPhysics(physics, track1.getPath(), track1.getOutlineLeft(), track1.getOutlineRight(), 0.005f);
+			track2.generate();
+			rail2 = new RailPhysics(physics, track2.getPath(), track2.getOutlineLeft(), track2.getOutlineRight(), 0.005f);
 		}	
 	}
 	
@@ -49,34 +57,38 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	
 	@Override
 	public void mouseDragged() {
-		rail.updateSkier(new Vec2D(mX, mY));
+		rail1.updateSkier(new Vec2D(mX, mY));
+		rail2.updateSkier(new Vec2D(mX, mY));
 	}
 	
 	@Override
 	public void mousePressed() {
-		rail.onNewSkier(new Vec2D(mX, mY));
+		rail1.onNewSkier(new Vec2D(mX, mY));
+		rail2.onNewSkier(new Vec2D(mX, mY));
 	}
 
 	@Override
 	public void mouseReleased() {
-	  rail.onDeadSkier();
+		rail1.onDeadSkier();
+		rail2.onDeadSkier();
 	}
 
 
 	@Override
 	protected void update(final float theDelta) {
-		
+		physics.update();
 	}
 
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
-		//track.drawWithLaser(g);
+		rail1.drawWithLaser(g);
+		rail2.drawWithLaser(g);
 	}
 
 	@Override
 	protected void drawOnScreen() {
-		physics.update();
-		rail.drawOnScreen(g);
+		rail1.drawOnScreen(g);
+		rail2.drawOnScreen(g);
 	}
 
 	@Override
