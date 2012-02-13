@@ -100,6 +100,8 @@ public abstract class LaserinneSketch extends PApplet {
 	
 	public boolean doFakeTracking = false;
 	FakeTracking _myFake;
+
+	private boolean _myDoDrawRect = false;
 	
 
 	@Override
@@ -107,13 +109,16 @@ public abstract class LaserinneSketch extends PApplet {
 		size(WIDTH, HEIGHT, OPENGL);
 		frameRate(-1); // Use maximum frame rate.
 		
-		_myLaser = new Laserschein(this, Laserschein.EASYLASEUSB2);               
+		_myLaser = new Laserschein(this, Laserschein.EASYLASEUSB2);
+		_myLaser.output().setScanSpeed(50000);
 
 		smooth();
 		hint(ENABLE_OPENGL_4X_SMOOTH);
 		colorMode(RGB);
 		stroke(255,0,0);
 		noFill();
+		
+		
 
 		_myTracking = new Tracking("239.0.0.1", 9999);
 		_myFake = new FakeTracking(_myTracking);
@@ -190,6 +195,9 @@ public abstract class LaserinneSketch extends PApplet {
 		line(0, 0.5f, 0, -1);
 		
 
+		
+		
+		
 		/* HOOK */
 		if(drawOnScreen) {
 			pushMatrix();
@@ -202,6 +210,11 @@ public abstract class LaserinneSketch extends PApplet {
 		final Laser3D myLaserRenderer = _myLaser.renderer();
 		beginRaw(_myLaser.renderer());
 		stroke(255);
+		
+		if(_myDoDrawRect ) {
+			rectMode(CORNER);
+			rect(-1,-1,2,2);
+		}
 		noFill();
 		curveDetail(3);
 		drawWithLaser(myLaserRenderer); // Hook!
@@ -305,6 +318,10 @@ public abstract class LaserinneSketch extends PApplet {
 			doFakeTracking = !doFakeTracking;
 		}
 	
+		if(key == 'c') {
+			_myDoDrawRect = !_myDoDrawRect;
+		}
+		
 		
 		if(key == 'd') {
 			drawOnScreen  = !drawOnScreen;

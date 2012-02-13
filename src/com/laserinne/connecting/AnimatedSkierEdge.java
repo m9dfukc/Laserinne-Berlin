@@ -16,7 +16,7 @@ public class AnimatedSkierEdge extends Decorator {
 	
 	private float _myProgress = 0;
 	
-	private static float DURATION = 0.7f;
+	private static float DURATION = 0.45f;
 	private static float SPARE_BORDER = 0.05f;
 		
 	private Ani _myAnimation;

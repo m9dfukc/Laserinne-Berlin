@@ -12,7 +12,11 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/base/opengl/opengl.jar"/>
 	<classpathentry kind="lib" path="lib/user/geomerative/geomerative.jar"/>
-	<classpathentry kind="lib" path="lib/user/Laserschein/Laserschein.jar"/>
+	<classpathentry kind="lib" path="lib/user/Laserschein/Laserschein.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Windows/System32"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/user/oscP5/oscP5.jar"/>
 	<classpathentry kind="lib" path="lib/user/motion/motion.jar"/>
 	<classpathentry kind="lib" path="lib/user/controlP5/controlP5.jar"/>

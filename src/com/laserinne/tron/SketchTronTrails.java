@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import processing.core.PApplet;
+
 import laserschein.Laser3D;
 import laserschein.Logger;
 
@@ -19,12 +21,16 @@ public class SketchTronTrails extends LaserinneSketch {
 	private DecoratorManager _myDecoratorManager;
 	private HashMap<Skier, SkierTrail> _myTrails;
 	
+	public static void main(String[] args) {
+		PApplet.main(new String[]{SketchTronTrails.class.getCanonicalName()});
+	}
+	
 	@Override
 	protected void postSetup() {
 		_myDecoratorManager = new DecoratorManager();
 		_myTrails = new HashMap<Skier, SkierTrail>();
 		
-		Logger.setAll(true);
+		//Logger.setAll(true);
 	}
 
 	@Override

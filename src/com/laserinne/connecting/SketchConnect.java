@@ -199,8 +199,8 @@ public class SketchConnect extends LaserinneSketch {
 
 	@Override
 	protected void onNewSkier(Skier theSkier) {
-		final SkierCircleDecorator myDecorator = new SkierCircleDecorator(theSkier, 0.1f);
-		_myDecoratorManager.add(myDecorator);
+		//final SkierCircleDecorator myDecorator = new SkierCircleDecorator(theSkier, 0.1f);
+		//_myDecoratorManager.add(myDecorator);
 	}
 
 	@Override

@@ -29,8 +29,8 @@ public class TrailDecorator extends Decorator{
 
 		theG.beginShape();
 		List<PVector> mySegments = _myTrail.segments();
-		theG.curveVertex(_myTrail.skier().centroid().x , _myTrail.skier().centroid().y );
-		theG.curveVertex(_myTrail.skier().centroid().x , _myTrail.skier().centroid().y );
+		theG.curveVertex(_myTrail.skier().base().x , _myTrail.skier().base().y );
+		theG.curveVertex(_myTrail.skier().base().x , _myTrail.skier().base().y );
 
 		int myMax = (int) Math.min(mySegments.size() - 1, SkierTrail.MAX_NUMBER - 1);
 		
