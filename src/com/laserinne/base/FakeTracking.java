@@ -22,7 +22,7 @@ public class FakeTracking {
 
 		float myTimestamp = (System.currentTimeMillis() - _myStartTime) / 1000.0f;
 		
-		if(Math.random() > 0.995f) {
+		if(Math.random() > 0.998f) {
 			_myIdPointer++;
 			FakeSkier myNewSkier = new FakeSkier(_myIdPointer);
 			myNewSkiers.add(myNewSkier);

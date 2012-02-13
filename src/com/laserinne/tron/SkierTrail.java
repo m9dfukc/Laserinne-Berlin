@@ -25,7 +25,7 @@ public class SkierTrail implements Decoratable {
 		_mySkier = theSkier;
 		_mySegments = new LinkedList<PVector>();
 		
-		_mySegments.addFirst(_mySkier.centroid().get());
+		_mySegments.addFirst(_mySkier.base().get());
 	}
 	
 	
@@ -39,7 +39,7 @@ public class SkierTrail implements Decoratable {
 		float myThresholdSq = CREATE_THRESHOLD * CREATE_THRESHOLD;
 		
 		if(	nextSegmentProgress() > 1) {
-			_mySegments.addFirst(_mySkier.centroid().get());     // copy, of course
+			_mySegments.addFirst(_mySkier.base().get());     // copy, of course
 
 		}
 
@@ -63,7 +63,7 @@ public class SkierTrail implements Decoratable {
 	public float nextSegmentProgress() {
 		PVector myHead = _mySegments.getFirst();
 	
-		float myDistance = myHead.dist(_mySkier.centroid());
+		float myDistance = myHead.dist(_mySkier.base());
 		return myDistance / CREATE_THRESHOLD;
 		
 	}
