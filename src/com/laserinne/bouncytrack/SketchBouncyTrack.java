@@ -27,8 +27,8 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	@Override
 	protected void postSetup() {
 		this.background(255);
-		track1 = new Track(-0.25f, .07f, 200);
-		track2 = new Track(0.25f, .07f, 200);
+		track1 = new Track(-0.35f, .07f, 200);
+		track2 = new Track(0.35f, .07f, 200);
 		
         physics = new VerletPhysics2D();
         physics.setWorldBounds(new Rect(-1f,-1f,2f,2f));
