@@ -19,7 +19,6 @@ import com.laserinne.decoration.SkierCircleDecorator;
 import com.laserinne.util.Edge;
 import com.laserinne.util.ToxiUtil;
 
-import de.looksgood.ani.Ani;
 
 @SuppressWarnings("serial")
 public class SketchConnect extends LaserinneSketch {
@@ -30,6 +29,7 @@ public class SketchConnect extends LaserinneSketch {
 	private ArrayList<AnimatedSkierEdge> _mySkierEdges;
 	private DecoratorManager _myDecoratorManager;
 
+	
 	public static void main(String[] args) {
 		PApplet.main(new String[]{com.laserinne.connecting.SketchConnect.class.getCanonicalName()});
 	}

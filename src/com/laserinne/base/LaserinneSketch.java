@@ -93,7 +93,6 @@ public abstract class LaserinneSketch extends PApplet {
 	public void setup() {
 		size(WIDTH, HEIGHT, OPENGL);
 		frameRate(-1); // Use maximum frame rate.
-		_myLastMillis = millis();
 		
 		_myLaser = new Laserschein(this, Laserschein.EASYLASEUSB2);               
 
@@ -110,6 +109,8 @@ public abstract class LaserinneSketch extends PApplet {
 		
 		/* HOOK */
 		postSetup(); 
+		
+		_myLastMillis = millis(); // Goes last, so there is no jump
 	}
 
 
