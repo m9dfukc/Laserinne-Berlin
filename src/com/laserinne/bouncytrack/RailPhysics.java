@@ -2,6 +2,8 @@ package com.laserinne.bouncytrack;
 
 import java.util.ArrayList;
 
+import com.laserinne.util.Geometry;
+
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -29,10 +31,14 @@ class RailPhysics {
 	ArrayList<VerletParticle2D> particlesCenter = new ArrayList<VerletParticle2D>();
 	ArrayList<VerletParticle2D> particlesLeft = new ArrayList<VerletParticle2D>();
 	ArrayList<VerletParticle2D> particlesRight = new ArrayList<VerletParticle2D>();
+	ArrayList<VerletParticle2D> particlesBoundingLeft = new ArrayList<VerletParticle2D>();
+	ArrayList<VerletParticle2D> particlesBoundingRight = new ArrayList<VerletParticle2D>();
 	
-	ArrayList<PVector> pointsCenter;
-	ArrayList<PVector> pointsLeft;
-	ArrayList<PVector> pointsRight;
+	ArrayList<PVector> pointsCenter = new ArrayList<PVector>();
+	ArrayList<PVector> pointsLeft = new ArrayList<PVector>();
+	ArrayList<PVector> pointsRight = new ArrayList<PVector>();
+	ArrayList<PVector> pointsBoundingLeft = new ArrayList<PVector>();
+	ArrayList<PVector> pointsBoundingRight = new ArrayList<PVector>();
 
 	private boolean mouseDown;
 	
@@ -48,38 +54,64 @@ class RailPhysics {
 		
 		mouseDown = false;
 		
+		generateBoundingOutlines(0.2f);
+		
 		for (int i = 0; i < center.size(); i++) {
+			
 			VerletParticle2D particleCenter = new VerletParticle2D(pointsCenter.get(i).x, pointsCenter.get(i).y);
 			VerletParticle2D particleLeft = new VerletParticle2D(pointsLeft.get(i).x, pointsLeft.get(i).y);
 			VerletParticle2D particleRight = new VerletParticle2D(pointsRight.get(i).x, pointsRight.get(i).y);
-			
+			VerletParticle2D particleBoundingLeft = new VerletParticle2D(pointsBoundingLeft.get(i).x, pointsBoundingLeft.get(i).y);
+			VerletParticle2D particleBoundingRight = new VerletParticle2D(pointsBoundingRight.get(i).x, pointsBoundingRight.get(i).y);
+		
 			particleCenter.lock();
+			particleBoundingLeft.lock();
+			particleBoundingRight.lock();
 			
-			VerletConstrainedSpring2D  springLeft = 
+			VerletConstrainedSpring2D springCenterLeft = 
 				new VerletConstrainedSpring2D (
 					particleCenter, 
 					particleLeft, 
 					PApplet.dist(particleCenter.x, particleCenter.y, particleLeft.x, particleLeft.y), 
-					0.001f, 
-					PApplet.dist(particleCenter.x, particleCenter.y, particleLeft.x, particleLeft.y) * 3.25f
+					0.0001f
 				);
-			VerletConstrainedSpring2D  springRight = 
+			VerletConstrainedSpring2D springCenterRight = 
 				new VerletConstrainedSpring2D (
 						particleCenter, 
 						particleRight, 
 						PApplet.dist(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y), 
-						0.001f,
-						PApplet.dist(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y) * 3.25f
+						0.0001f 
 					);
-			springLeft.lockA(true);
-			springRight.lockA(true);
+			VerletConstrainedSpring2D springBoundingLeft = 
+					new VerletConstrainedSpring2D (
+						particleLeft, 
+						particleBoundingLeft, 
+						PApplet.dist(particleBoundingLeft.x, particleBoundingLeft.y, particleLeft.x, particleLeft.y), 
+						0.08f,
+						PApplet.dist(particleBoundingLeft.x, particleBoundingLeft.y, particleLeft.x, particleLeft.y) * 1.15f
+					);
+			VerletConstrainedSpring2D springBoundingRight = 
+				new VerletConstrainedSpring2D (
+						particleRight, 
+						particleBoundingRight,
+						PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y), 
+						0.08f,
+						PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y) * 1.15f
+					);
+			springCenterLeft.lockA(true);
+			springCenterRight.lockA(true);
 			
 			particlesCenter.add(particleCenter);
 			particlesLeft.add(particleLeft);
 			particlesRight.add(particleRight);
+			particlesBoundingLeft.add(particleBoundingLeft);
+			particlesBoundingRight.add(particleBoundingRight);
 			
-			physics.addSpring(springLeft);
-			physics.addSpring(springRight);
+			physics.addSpring(springCenterLeft);
+			physics.addSpring(springCenterRight);
+			physics.addSpring(springBoundingLeft);
+			physics.addSpring(springBoundingRight);
+
 		}
 		stringCenter = new ParticleString2D(physics, particlesCenter, strength);
 		stringLeft = new ParticleString2D(physics, particlesLeft, strength);
@@ -95,7 +127,7 @@ class RailPhysics {
 	void updateSkier(Vec2D skier) {
 		this.skier = skier;	
 		if( mouseDown ) {
-			skierAttractor = new AttractionBehavior(skier, 0.01f, -.09f);
+			skierAttractor = new AttractionBehavior(skier, 0.08f, -.009f);
 			physics.addBehavior(skierAttractor);
 			physics.update();
 			physics.removeBehavior(skierAttractor);
@@ -145,5 +177,37 @@ class RailPhysics {
 			theG.line(particleLeft.x, particleLeft.y, particleRight.x, particleRight.y);
 		}
 		
+		theG.stroke(255,0,255);
+		for(int i = 0; i < particlesCenter.size(); i++) {
+			VerletParticle2D particleCenter = particlesCenter.get(i);
+			VerletParticle2D particleRight = particlesRight.get(i);
+			VerletParticle2D particleLeft = particlesLeft.get(i);
+			theG.line(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y);
+			theG.line(particleCenter.x, particleCenter.y, particleLeft.x, particleLeft.y);
+		}
+		
+		if( mouseDown ) {
+			theG.stroke(125,125,255);
+			//theG.ellipse(skierAttractor.getAttractor().x, skierAttractor.getAttractor().y, skierAttractor.getRadius(), skierAttractor.getRadius());
+		}
+		
+	}
+	
+	private void generateBoundingOutlines(float distance) {
+		pointsBoundingLeft.clear();
+		pointsBoundingRight.clear();
+		for(int i=0; i<pointsCenter.size(); i++) {
+			float angleLeft = 0f, angleRight = 0f;
+			if( i < pointsCenter.size() - 1) {
+				angleLeft = Geometry.angle(pointsLeft.get(i), pointsLeft.get(i+1));
+				
+			} else {
+				angleRight = Geometry.angle(pointsRight.get(i), pointsRight.get(i-1)) - 180f;
+			}
+			PVector pointLeft  = Geometry.coordinates(pointsLeft.get(i).x, pointsLeft.get(i).y, distance, angleLeft + 90f);
+			PVector pointRight = Geometry.coordinates(pointsRight.get(i).x, pointsRight.get(i).y, distance, angleRight - 90f);
+			pointsBoundingLeft.add(pointLeft);
+			pointsBoundingRight.add(pointRight);
+		}
 	}
 }
