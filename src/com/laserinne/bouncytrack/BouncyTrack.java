@@ -31,9 +31,6 @@ class BouncyTrack extends Track {
 	ArrayList<VerletParticle2D> particlesBoundingLeft = new ArrayList<VerletParticle2D>();
 	ArrayList<VerletParticle2D> particlesBoundingRight = new ArrayList<VerletParticle2D>();
 	
-	ArrayList<Vec2D> pointsCenter;
-	ArrayList<Vec2D> pointsLeft;
-	ArrayList<Vec2D> pointsRight;
 	ArrayList<Vec2D> pointsBoundingLeft = new ArrayList<Vec2D>();
 	ArrayList<Vec2D> pointsBoundingRight = new ArrayList<Vec2D>();
 	
@@ -52,10 +49,6 @@ class BouncyTrack extends Track {
 		super(trackWidth, pathResolution);
 		_physics = physics;
 		
-		pointsCenter = super.getPath();
-		pointsLeft = super.getOutlineLeft();
-		pointsRight = super.getOutlineRight();
-
 		strength = spring;
 		railLength = 20;
 		
@@ -106,7 +99,6 @@ class BouncyTrack extends Track {
 					PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y), 
 					0.0004f
 				);
-			
 			springCenterLeft.lockA(true);
 			springCenterRight.lockA(true);
 			
@@ -242,11 +234,11 @@ class BouncyTrack extends Track {
 		for(int i=0; i<pointsCenter.size(); i++) {
 			float angleLeft = 0f, angleRight = 0f;
 			if( i < pointsCenter.size() - 1) {
-				angleLeft = Geometry.angle(pointsLeft.get(i), pointsLeft.get(i+1));
-				angleRight = Geometry.angle(pointsRight.get(i), pointsRight.get(i+1));
+				angleLeft = Geometry.angle(ToxiUtil.toPVector(pointsLeft.get(i)), ToxiUtil.toPVector(pointsLeft.get(i+1)));
+				angleRight = Geometry.angle(ToxiUtil.toPVector(pointsRight.get(i)), ToxiUtil.toPVector(pointsRight.get(i+1)));
 			} else {
-				angleLeft = Geometry.angle(pointsLeft.get(i), pointsLeft.get(i-1)) - 180f;
-				angleRight = Geometry.angle(pointsRight.get(i), pointsRight.get(i-1)) - 180f;
+				angleLeft = Geometry.angle(ToxiUtil.toPVector(pointsLeft.get(i)), ToxiUtil.toPVector(pointsLeft.get(i-1))) - 180f;
+				angleRight = Geometry.angle(ToxiUtil.toPVector(pointsRight.get(i)), ToxiUtil.toPVector(pointsRight.get(i-1))) - 180f;
 			}
 			Vec2D pointLeft  = ToxiUtil.toVec2D(Geometry.coordinates(pointsLeft.get(i).x, pointsLeft.get(i).y, distance, angleLeft + 90f));
 			Vec2D pointRight = ToxiUtil.toVec2D(Geometry.coordinates(pointsRight.get(i).x, pointsRight.get(i).y, distance, angleRight - 90f));

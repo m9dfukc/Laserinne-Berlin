@@ -33,8 +33,8 @@ public class SketchBouncyTracks extends LaserinneSketch {
         
 		_skier1 = _skier2 = null;
 
-        _track1 = new BouncyTrack(_physics, .07f);
-        _track2 = new BouncyTrack(_physics, .07f);
+        _track1 = new BouncyTrack(_physics, 0.07f);
+        _track2 = new BouncyTrack(_physics, 0.07f);
         
         Logger.set(LogLevel.PROCESS, false);
         Logger.set(LogLevel.DEBUG, false);

@@ -12,32 +12,28 @@ import toxi.geom.Vec2D;
 
 public class Track extends Path {
 	
-	float trackWidth;
+	float width;
 	
-	private ArrayList<Vec2D> pointsLeft = new ArrayList<Vec2D>();
-	private ArrayList<Vec2D> pointsRight = new ArrayList<Vec2D>();
+	public ArrayList<Vec2D> pointsLeft = new ArrayList<Vec2D>();
+	public ArrayList<Vec2D> pointsRight = new ArrayList<Vec2D>();
 	
 	public Track(float trackWidth, int pathResolution) {
 		super(pathResolution);
-		trackWidth = PApplet.constrain(trackWidth, 0.001f, 0.30f);
+		
+		width = PApplet.constrain(trackWidth, 0.001f, 0.30f);
 		generateOutlines();
 	}
 	
 	void generateOutlines() {
-		pointsLeft.clear();
-		pointsRight.clear();
-		for(int i=0; i<points.size(); i++) {
+		for(int i=0; i<pointsCenter.size(); i++) {
 			float angle;
-			if( i < points.size() - 1) {
-				//angle = Geometry.angle(points.get(i), points.get(i+1));
-				angle = points.get(i).angleBetween(points.get(i+1));
+			if( i < pointsCenter.size() - 1) {
+				angle = Geometry.angle(ToxiUtil.toPVector(pointsCenter.get(i)), ToxiUtil.toPVector(pointsCenter.get(i+1)));
 			} else {
-				//angle = Geometry.angle(points.get(i), points.get(i-1)) - 180f;
-				angle = points.get(i).angleBetween(points.get(i-1)) - 180f;
+				angle = Geometry.angle(ToxiUtil.toPVector(pointsCenter.get(i)), ToxiUtil.toPVector(pointsCenter.get(i-1))) -180f;
 			}
-			float distance = trackWidth; //Geometry.transform((float)i, _trackWidth, angle);
-			Vec2D pointLeft  = ToxiUtil.toVec2D(Geometry.coordinates(points.get(i).x, points.get(i).y, distance, angle + 90f));
-			Vec2D pointRight = ToxiUtil.toVec2D(Geometry.coordinates(points.get(i).x, points.get(i).y, distance, angle - 90f));
+			Vec2D pointLeft  = ToxiUtil.toVec2D(Geometry.coordinates(pointsCenter.get(i).x, pointsCenter.get(i).y, width, angle + 90f));
+			Vec2D pointRight = ToxiUtil.toVec2D(Geometry.coordinates(pointsCenter.get(i).x, pointsCenter.get(i).y, width, angle - 90f));
 			pointsLeft.add(pointLeft);
 			pointsRight.add(pointRight);
 		}
