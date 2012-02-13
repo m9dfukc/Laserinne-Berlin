@@ -14,8 +14,8 @@ public class Track extends Path {
 	
 	float trackWidth;
 	
-	private ArrayList<Vec2D> pointsLeft = new ArrayList<Vec2D>();
-	private ArrayList<Vec2D> pointsRight = new ArrayList<Vec2D>();
+	ArrayList<Vec2D> pointsLeft = new ArrayList<Vec2D>();
+	ArrayList<Vec2D> pointsRight = new ArrayList<Vec2D>();
 	
 	public Track(float trackWidth, int pathResolution) {
 		super(pathResolution);
@@ -29,11 +29,10 @@ public class Track extends Path {
 		for(int i=0; i<points.size(); i++) {
 			float angle;
 			if( i < points.size() - 1) {
-				//angle = Geometry.angle(points.get(i), points.get(i+1));
-				angle = points.get(i).angleBetween(points.get(i+1));
+				angle = Geometry.angle(points.get(i), points.get(i+1));
+				
 			} else {
-				//angle = Geometry.angle(points.get(i), points.get(i-1)) - 180f;
-				angle = points.get(i).angleBetween(points.get(i-1)) - 180f;
+				angle = Geometry.angle(points.get(i), points.get(i-1)) - 180f;
 			}
 			float distance = trackWidth; //Geometry.transform((float)i, _trackWidth, angle);
 			Vec2D pointLeft  = ToxiUtil.toVec2D(Geometry.coordinates(points.get(i).x, points.get(i).y, distance, angle + 90f));

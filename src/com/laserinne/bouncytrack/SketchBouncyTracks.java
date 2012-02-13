@@ -19,8 +19,8 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	private VerletPhysics2D _physics;
 	private Skier _skier1;
 	private Skier _skier2;
-	private BouncyTrack _track1;
-	private BouncyTrack _track2;
+	private BouncyTrack _rail1;
+	private BouncyTrack _rail2;
 	
     public static void main(String args[]) {
         PApplet.main(new String[] { SketchBouncyTracks.class.getCanonicalName() });
@@ -33,8 +33,8 @@ public class SketchBouncyTracks extends LaserinneSketch {
         
 		_skier1 = _skier2 = null;
 
-        _track1 = new BouncyTrack(_physics, .07f);
-        _track2 = new BouncyTrack(_physics, .07f);
+        _rail1 = new BouncyTrack(_physics, 0.005f, -0.35f, .07f, 200);
+        _rail2 = new BouncyTrack(_physics, 0.005f,  0.35f, .07f, 200);
         
         Logger.set(LogLevel.PROCESS, false);
         Logger.set(LogLevel.DEBUG, false);
@@ -44,11 +44,16 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	public void keyPressed() {
 		if( key == 'g' ) {
 			_physics.clear();
-	        _track1 = new BouncyTrack(_physics, .07f);
-	        _track2 = new BouncyTrack(_physics, .07f);
+			_rail1 = new BouncyTrack(_physics, 0.005f, -0.35f, .07f, 200);
+	        _rail2 = new BouncyTrack(_physics, 0.005f,  0.35f, .07f, 200);
 		}	
 		
 		super.keyPressed();
+	}
+	
+	@Override
+	public void mouseDragged() {
+		
 	}
 	
 	@Override
@@ -57,34 +62,20 @@ public class SketchBouncyTracks extends LaserinneSketch {
 		
 		ArrayList<Skier> mySkiers = tracking().skiersConfident();
 		
-		_track1.updateSkier(_skier1);
-		_track2.updateSkier(_skier2);
+		_rail1.updateSkier(_skier1);
+		_rail2.updateSkier(_skier2);
 	}
 
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
-		g.pushMatrix();
-		g.translate(-0.35f, 0f);
-		_track1.draw(g);
-		g.popMatrix();
-		
-		g.pushMatrix();
-		g.translate(0.35f, 0f);
-		_track2.draw(g);
-		g.popMatrix();
+		_rail1.draw(g);
+		_rail2.draw(g);
 	}
 
 	@Override
 	protected void drawOnScreen() {
-		g.pushMatrix();
-		g.translate(-0.35f, 0f);
-		_track1.drawDebug(g);
-		g.popMatrix();
-		
-		g.pushMatrix();
-		g.translate(0.35f, 0f);
-		_track2.drawDebug(g);
-		g.popMatrix();
+		_rail1.drawDebug(g);
+		_rail2.drawDebug(g);
 		
 		for(Skier mySkier:tracking().skiers()) {
 			mySkier.drawDebug(g);
