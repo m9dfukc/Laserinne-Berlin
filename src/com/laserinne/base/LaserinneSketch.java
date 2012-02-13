@@ -30,7 +30,6 @@ import controlP5.ControlWindow;
 import de.looksgood.ani.Ani;
 import laserschein.Laser3D;
 import laserschein.Laserschein;
-import laserschein.Logger;
 import processing.core.PApplet;
 import processing.opengl.PGraphicsOpenGL;
 
