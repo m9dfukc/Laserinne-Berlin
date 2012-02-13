@@ -1,13 +1,10 @@
 package com.laserinne.bouncytrack;
 
-import java.util.ArrayList;
-
 import laserschein.Laser3D;
 import laserschein.Logger;
 import laserschein.Logger.LogLevel;
 import processing.core.PApplet;
 import toxi.geom.Rect;
-import toxi.geom.Vec2D;
 import toxi.physics2d.VerletPhysics2D;
 
 import com.laserinne.base.LaserinneSketch;
@@ -59,9 +56,7 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	@Override
 	protected void update(final float theDelta) {
 		_physics.update();
-		
-		ArrayList<Skier> mySkiers = tracking().skiersConfident();
-		
+				
 		_rail1.updateSkier(_skier1);
 		_rail2.updateSkier(_skier2);
 	}

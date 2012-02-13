@@ -16,7 +16,10 @@ public class AnimatedSkierEdge extends Decorator {
 	
 	private float _myProgress = 0;
 	
-	private static float DURATION = 0.45f;
+	private static float DURATION_IN = 0.8f;
+	private static float DURATION_OUT = 0.3f;
+
+	
 	private static float SPARE_BORDER = 0.05f;
 		
 	private Ani _myAnimation;
@@ -27,7 +30,7 @@ public class AnimatedSkierEdge extends Decorator {
 		_mySkierB = theSkierB;
 		this.state(State.GENESIS);
 		
-		_myAnimation = new Ani(this, DURATION, "_myProgress", 1, Ani.EXPO_IN_OUT);
+		_myAnimation = new Ani(this, DURATION_IN, "_myProgress", 1, Ani.EXPO_IN_OUT);
 		_myAnimation.start();
 	}
 	
@@ -40,7 +43,6 @@ public class AnimatedSkierEdge extends Decorator {
 	public Skier skierB() {
 		return _mySkierB;
 	}
-	
 	
 	
 	@Override
@@ -61,6 +63,7 @@ public class AnimatedSkierEdge extends Decorator {
 			this.state(State.APOCALYPSE);
 			_myAnimation.setBegin(_myProgress);
 			_myAnimation.setEnd(0);
+			_myAnimation.setDuration(DURATION_OUT);
 			_myAnimation.start();
 		}
 	}
@@ -71,6 +74,7 @@ public class AnimatedSkierEdge extends Decorator {
 			this.state(State.GENESIS);
 			_myAnimation.setBegin(_myProgress);
 			_myAnimation.setEnd(1);
+			_myAnimation.setDuration(DURATION_IN);
 			_myAnimation.start();
 		}		
 	}
