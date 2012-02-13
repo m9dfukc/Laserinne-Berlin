@@ -11,7 +11,6 @@ import com.laserinne.base.Skier;
 import com.laserinne.decoration.DecoratorManager;
 import com.laserinne.decoration.SkierCircleDecorator;
 
-import de.looksgood.ani.Ani;
 
 @SuppressWarnings("serial")
 public class SketchTronTrails extends LaserinneSketch {
