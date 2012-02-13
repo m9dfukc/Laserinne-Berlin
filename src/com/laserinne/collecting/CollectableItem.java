@@ -43,15 +43,12 @@ public class CollectableItem extends Decorator {
 		theG.scale(_myProgress);
 		Shapes.circle(theG, 0, 0, _myRadius, 12);
 
-
 		if(_myIsCollected && state() == State.APOCALYPSE) {
 			//theG.rotate( (1 - _myProgress) * 3);
 
 			theG.rectMode(PGraphics.CENTER);
 			theG.rect(0, 0, _myRadius * 2, _myRadius * 2);
 		}
-
-		
 
 		theG.popMatrix();
 	}
