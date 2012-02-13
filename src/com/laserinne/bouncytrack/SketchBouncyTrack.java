@@ -91,6 +91,10 @@ public class SketchBouncyTrack extends LaserinneSketch {
 	protected void drawOnScreen() {
 		rail1.drawOnScreen(g);
 		rail2.drawOnScreen(g);
+		
+		for(Skier mySkier:tracking().skiers()) {
+			mySkier.drawDebug(g);
+		}
 	}
 
 	@Override
