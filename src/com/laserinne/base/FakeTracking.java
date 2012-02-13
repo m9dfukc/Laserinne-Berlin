@@ -5,8 +5,10 @@ import java.util.ArrayList;
 public class FakeTracking {
 	private Tracking _myTracking;
 	private ArrayList<FakeSkier> _mySkiers;
+	private MouseSkier _mouseSkier;
 	private long _myStartTime;
 	private int _myIdPointer = 0;
+	private boolean bMouse = false;
 	
 	public FakeTracking(final Tracking theTracking) {
 		_mySkiers = new ArrayList<FakeSkier>();
@@ -39,5 +41,23 @@ public class FakeTracking {
 		}
 		
 		_mySkiers = myNewSkiers;
+	}
+	
+	public void mousePressed() {
+		bMouse = true;
+		_myIdPointer++;
+		_mouseSkier = new MouseSkier(_myIdPointer);
+	}
+	
+	public void mouseUpdate(float x, float y) {
+		if( bMouse ) {
+			float myTimestamp = (System.currentTimeMillis() - _myStartTime) / 1000.0f;
+			_mouseSkier.update(x, y);
+			_myTracking.trackingMessage(_mouseSkier.id(), _mouseSkier.position().x, _mouseSkier.position().y, 0.03f, 0.04f, 0, 0, _mouseSkier.age(), myTimestamp);
+		}
+	}
+	
+	public void mouseReleased() {
+		bMouse = false;
 	}
 }

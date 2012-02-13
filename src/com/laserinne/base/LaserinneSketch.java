@@ -28,6 +28,7 @@ import controlP5.ControlWindow;
 import de.looksgood.ani.Ani;
 import laserschein.Laser3D;
 import laserschein.Laserschein;
+import laserschein.Logger;
 import processing.core.PApplet;
 
 
@@ -149,6 +150,7 @@ public abstract class LaserinneSketch extends PApplet {
 		
 		if(doFakeTracking) {
 			_myFake.update();
+			_myFake.mouseUpdate(mX, mY);
 		}
 		
 		_myTracking.update();
@@ -273,7 +275,14 @@ public abstract class LaserinneSketch extends PApplet {
 	}
 	
 	
+	public void mousePressed() {
+		if(doFakeTracking) _myFake.mousePressed();
+	}
 	
+	public void mouseReleased() {
+		if(doFakeTracking) _myFake.mouseReleased();
+	}
+		
 	public void keyPressed() {
 		if (key == 's') {
 			// Toggle control window
