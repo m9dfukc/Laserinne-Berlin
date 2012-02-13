@@ -2,6 +2,7 @@ package com.laserinne.util;
 
 import processing.core.PApplet;
 import processing.core.PVector;
+import toxi.geom.Vec2D;
 
 public class Geometry {
 		
@@ -82,7 +83,7 @@ public class Geometry {
 		return _x*_x * (3f-2f*_x);
 	}
 	
-	/**
+	/** ARG, TODO: please refactor this as Generic
 	 * Calculates the a outline point on a given vector
 	 * @param x0
 	 * @param y0
@@ -95,6 +96,19 @@ public class Geometry {
 	    float y1 = y0 + PApplet.sin(PApplet.radians(angle)) * distance;
 	    return new PVector(x1, y1); 
 	}
+
+	/**
+	 * Calculates the angle between two vectors
+	 * @param x0
+	 * @param y0
+	 * @param distance
+	 * @param angle (in degrees!)
+	 * @return 
+	 */
+	public static float angle(final PVector p1, final PVector p2) {
+		float a = PApplet.degrees( PApplet.atan2(p2.y-p1.y, p2.x-p1.x) );
+		return a;
+	}
 	
 	/**
 	 * Calculates the angle between two vectors
@@ -104,12 +118,9 @@ public class Geometry {
 	 * @param angle (in degrees!)
 	 * @return 
 	 */
-	public static float angle(PVector p1, PVector p2) {
-		float a = PApplet.degrees( PApplet.atan2(p2.y-p1.y, p2.x-p1.x) );
-		return a;
+	public static float angle(final Vec2D p1, final Vec2D p2) {
+		return p1.angleBetween(p2);
 	}
-	
-	
 	
 	/**
 	 * Interpolates between two vectors
@@ -119,7 +130,7 @@ public class Geometry {
 	 * @param theA
 	 * @param theB
 	 * @param theProgress
-	 * @return
+	 * @return PVector
 	 */
 	public static PVector lerp(final PVector theA, final PVector theB, float theProgress) {
 		final PVector myResult = new PVector();
@@ -128,6 +139,20 @@ public class Geometry {
 		myResult.y = theA.y + (theB.y - theA.y) * theProgress;
 				
 		return myResult;
+	}
+	
+	/**
+	 * Interpolates between two vectors
+	 * 
+	 * A progress of 0 is fully the first vector. 1 means the other.
+	 * 
+	 * @param theA
+	 * @param theB
+	 * @param theProgress
+	 * @return Vec2D
+	 */
+	public static Vec2D lerp(final Vec2D theA, final Vec2D theB, float theProgress) {
+		return theA.interpolateTo(theB, theProgress);
 	}
 	
 

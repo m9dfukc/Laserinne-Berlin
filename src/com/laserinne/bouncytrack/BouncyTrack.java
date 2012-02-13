@@ -2,14 +2,13 @@ package com.laserinne.bouncytrack;
 
 import java.util.ArrayList;
 
-import netP5.Logger;
-
+import com.laserinne.base.Skier;
 import com.laserinne.util.Geometry;
+import com.laserinne.util.ToxiUtil;
 
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PVector;
 import toxi.geom.Vec2D;
 import toxi.physics2d.ParticleString2D;
 import toxi.physics2d.VerletParticle2D;
@@ -17,14 +16,10 @@ import toxi.physics2d.VerletPhysics2D;
 import toxi.physics2d.VerletConstrainedSpring2D;
 import toxi.physics2d.behaviors.AttractionBehavior;
 
-class RailPhysics {
+class BouncyTrack extends Track {
 
 	float strength;
 	int railLength;
-	
-	VerletPhysics2D physics;
-	AttractionBehavior skierAttractor;
-	Vec2D skier;
 	
 	ParticleString2D stringCenter;
 	ParticleString2D stringLeft;
@@ -36,36 +31,43 @@ class RailPhysics {
 	ArrayList<VerletParticle2D> particlesBoundingLeft = new ArrayList<VerletParticle2D>();
 	ArrayList<VerletParticle2D> particlesBoundingRight = new ArrayList<VerletParticle2D>();
 	
-	ArrayList<PVector> pointsCenter = new ArrayList<PVector>();
-	ArrayList<PVector> pointsLeft = new ArrayList<PVector>();
-	ArrayList<PVector> pointsRight = new ArrayList<PVector>();
-	ArrayList<PVector> pointsBoundingLeft = new ArrayList<PVector>();
-	ArrayList<PVector> pointsBoundingRight = new ArrayList<PVector>();
-
-	private boolean mouseDown;
+	ArrayList<Vec2D> pointsCenter;
+	ArrayList<Vec2D> pointsLeft;
+	ArrayList<Vec2D> pointsRight;
+	ArrayList<Vec2D> pointsBoundingLeft = new ArrayList<Vec2D>();
+	ArrayList<Vec2D> pointsBoundingRight = new ArrayList<Vec2D>();
 	
-	public RailPhysics(VerletPhysics2D physics, ArrayList<PVector> center, ArrayList<PVector> left, ArrayList<PVector> right, float s) {
-
-		this.physics = physics;
-		pointsCenter = center;
-		pointsLeft = left;
-		pointsRight = right;
-
-		strength = s;
+	private VerletPhysics2D _physics;
+	private AttractionBehavior _skierAttractor;
+	
+	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth) {
+		this(physics, xPos, trackWidth, 0.004f);
+	}
+	
+	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth, float spring) {
+		this(physics, xPos, trackWidth, spring, 200);
+	}
+			
+	BouncyTrack(VerletPhysics2D physics, float xPos, float trackWidth, float spring, int pathResolution) {
+		super(trackWidth, pathResolution);
+		_physics = physics;
 		
-		mouseDown = false;
-		
+		pointsCenter = super.points;
+		pointsLeft = super.pointsLeft;
+		pointsRight = super.pointsRight;
+
+		strength = spring;
 		railLength = 20;
 		
 		generateBoundingOutlines(0.13f);
 		
-		for (int i = 0; i < center.size(); i++) {
+		for (int i = 0; i < pointsCenter.size(); i++) {
 			
-			VerletParticle2D particleCenter = new VerletParticle2D(pointsCenter.get(i).x, pointsCenter.get(i).y);
-			VerletParticle2D particleLeft = new VerletParticle2D(pointsLeft.get(i).x, pointsLeft.get(i).y);
-			VerletParticle2D particleRight = new VerletParticle2D(pointsRight.get(i).x, pointsRight.get(i).y);
-			VerletParticle2D particleBoundingLeft = new VerletParticle2D(pointsBoundingLeft.get(i).x, pointsBoundingLeft.get(i).y);
-			VerletParticle2D particleBoundingRight = new VerletParticle2D(pointsBoundingRight.get(i).x, pointsBoundingRight.get(i).y);
+			VerletParticle2D particleCenter = new VerletParticle2D(pointsCenter.get(i));
+			VerletParticle2D particleLeft = new VerletParticle2D(pointsLeft.get(i));
+			VerletParticle2D particleRight = new VerletParticle2D(pointsRight.get(i));
+			VerletParticle2D particleBoundingLeft = new VerletParticle2D(pointsBoundingLeft.get(i));
+			VerletParticle2D particleBoundingRight = new VerletParticle2D(pointsBoundingRight.get(i));
 		
 			particleCenter.lock();
 			particleBoundingLeft.lock();
@@ -85,25 +87,25 @@ class RailPhysics {
 				);
 			VerletConstrainedSpring2D springCenterRight = 
 				new VerletConstrainedSpring2D (
-						particleCenter, 
-						particleRight, 
-						PApplet.dist(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y), 
-						0.0004f 
-					);
+					particleCenter, 
+					particleRight, 
+					PApplet.dist(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y), 
+					0.0004f 
+				);
 			VerletConstrainedSpring2D springBoundingLeft = 
-					new VerletConstrainedSpring2D (
-						particleLeft, 
-						particleBoundingLeft, 
-						PApplet.dist(particleBoundingLeft.x, particleBoundingLeft.y, particleLeft.x, particleLeft.y), 
-						0.0004f
-					);
+				new VerletConstrainedSpring2D (
+					particleLeft, 
+					particleBoundingLeft, 
+					PApplet.dist(particleBoundingLeft.x, particleBoundingLeft.y, particleLeft.x, particleLeft.y), 
+					0.0004f
+				);
 			VerletConstrainedSpring2D springBoundingRight = 
 				new VerletConstrainedSpring2D (
-						particleRight, 
-						particleBoundingRight,
-						PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y), 
-						0.0004f
-					);
+					particleRight, 
+					particleBoundingRight,
+					PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y), 
+					0.0004f
+				);
 			springCenterLeft.lockA(true);
 			springCenterRight.lockA(true);
 			
@@ -117,7 +119,6 @@ class RailPhysics {
 			physics.addSpring(springCenterRight);
 			physics.addSpring(springBoundingLeft);
 			physics.addSpring(springBoundingRight);
-
 		}
 		stringCenter = new ParticleString2D(physics, particlesCenter, strength);
 		stringLeft = new ParticleString2D(physics, particlesLeft, strength);
@@ -128,28 +129,21 @@ class RailPhysics {
 		stringRight.getHead().lock();
 		stringRight.getTail().lock();
 		
+		_skierAttractor = new AttractionBehavior(stringCenter.getHead(), 0.03f, -.011f);
+		physics.addBehavior(_skierAttractor);
 	}
 
-	void updateSkier(Vec2D skier) {
-		this.skier = skier;	
-		if( mouseDown ) {
-			skierAttractor = new AttractionBehavior(skier, 0.03f, -.011f);
-			physics.addBehavior(skierAttractor);
-			physics.update();
-			physics.removeBehavior(skierAttractor);
+	void updateSkier(Skier skier) {
+		if( skier != null ) {
+			Vec2D skierPosition = ToxiUtil.toVec2D(skier.base());
+			_skierAttractor.setAttractor(skierPosition);
+		} else {
+			_skierAttractor.setAttractor(stringCenter.getHead());
 		}
+		_physics.update();
 	}
 
-	void onNewSkier(Vec2D skier) {
-		mouseDown = true;
-	}
-	
-	void onDeadSkier() {
-		mouseDown = false;
-	}
-
-	// Draw the chain
-	void drawOnScreen(final PGraphics theG) {
+	void drawDebug(final PGraphics theG) {
 		
 		theG.noFill();
 		theG.stroke(255);
@@ -198,9 +192,9 @@ class RailPhysics {
 		
 	}
 	
-	void drawWithLaser(final PGraphics theG) {
-		if( skierAttractor == null ) return;
-		Vec2D pos = skierAttractor.getAttractor();
+	void draw(final PGraphics theG) {
+		if( _skierAttractor == null ) return;
+		Vec2D pos = _skierAttractor.getAttractor();
 		
 		theG.stroke(0,255,0);
 		
@@ -238,7 +232,6 @@ class RailPhysics {
 			}
 		}
 		theG.endShape();
-		
 	}
 	
 	private void generateBoundingOutlines(float distance) {
@@ -253,8 +246,8 @@ class RailPhysics {
 				angleLeft = Geometry.angle(pointsLeft.get(i), pointsLeft.get(i-1)) - 180f;
 				angleRight = Geometry.angle(pointsRight.get(i), pointsRight.get(i-1)) - 180f;
 			}
-			PVector pointLeft  = Geometry.coordinates(pointsLeft.get(i).x, pointsLeft.get(i).y, distance, angleLeft + 90f);
-			PVector pointRight = Geometry.coordinates(pointsRight.get(i).x, pointsRight.get(i).y, distance, angleRight - 90f);
+			Vec2D pointLeft  = ToxiUtil.toVec2D(Geometry.coordinates(pointsLeft.get(i).x, pointsLeft.get(i).y, distance, angleLeft + 90f));
+			Vec2D pointRight = ToxiUtil.toVec2D(Geometry.coordinates(pointsRight.get(i).x, pointsRight.get(i).y, distance, angleRight - 90f));
 			pointsBoundingLeft.add(pointLeft);
 			pointsBoundingRight.add(pointRight);
 		}
