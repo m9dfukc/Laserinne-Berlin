@@ -32,15 +32,20 @@ import toxi.math.noise.PerlinNoise;
 import java.util.ArrayList;
 
 public class Path {
+	public boolean bMirrored;
+	
 	int _resolution;
+	float _xPos;
 	ArrayList<PVector> _points = new ArrayList<PVector>();
 	
-	public Path() {
-		this(10);
+	
+	public Path(float _xPos) {
+		this(_xPos, 100);
 	}
 	
-	public Path(int resolution) {
+	public Path(float xPos, int resolution) {
 		_resolution = resolution;
+		_xPos = xPos;
 		generatePoints();
 	}
 	
@@ -73,25 +78,19 @@ public class Path {
 	
 	public void generatePoints() {
 		PerlinNoise generator = new PerlinNoise();
-		long seed = System.currentTimeMillis();
+		long seed = System.currentTimeMillis() + (int)(Math.random() * 1000f);
 		_points.clear();
+		bMirrored = (seed%3 == 0);
 		generator.noiseSeed(seed);
 		float stepY = 1.75f /  (_resolution * 1f);
+		float sinFactor = 20f * PApplet.map((float)Math.random(), 0.0f, 1.0f, 0.60f, 1.0f);
 		for(int i=0; i<_resolution; i++) {
-			float tmpX = generator.noise(stepY*i*2) * ((float)i / _resolution) + PApplet.sin((float)i / _resolution * 15 + PApplet.PI/2) * 0.25f;
+			float spreadFactor1 = PApplet.sin((float)i / _resolution * sinFactor + PApplet.PI/2f) * 0.65f;
+			float spreadFactor2 = PApplet.sin((float)i / _resolution * PApplet.PI/1.5f);
+			float mirrorFactor = bMirrored ? -1.0f : 1.0f;
+			float tmpX = generator.noise(stepY*i*2) * ((float)i / _resolution) * spreadFactor1 * spreadFactor2 * mirrorFactor + _xPos;
 			float tmpY = stepY*i - 0.8f;
 			_points.add(new PVector(tmpX, tmpY));
 		}
-		
-		
-		/*
-		float stepWidth = .5f / (_resolution * 1f); 
-		float stepHeight = 2.5f / (_resolution * 1f);
-		for(int i=0; i<_resolution; i++) {
-			float tmpX = (float) PApplet.map((float) generator.nextDouble(), 0f, 1f, -1f * stepWidth, stepWidth) * (i + 2) / 2 ;  
-			float tmpY = (float) (i * stepHeight) - 1f + PApplet.map((float)generator.nextDouble(), 0f, 1f, -1f*stepHeight/4, stepHeight/4); //  (float)(generator.nextDouble() * stepHeight / 10.f);
-			_points.add(new PVector(tmpX, tmpY));
-		}
-		*/
 	}
 }

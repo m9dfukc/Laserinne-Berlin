@@ -2,6 +2,8 @@ package com.laserinne.bouncytrack;
 
 import java.util.ArrayList;
 
+import netP5.Logger;
+
 import com.laserinne.util.Geometry;
 
 
@@ -18,7 +20,7 @@ import toxi.physics2d.behaviors.AttractionBehavior;
 class RailPhysics {
 
 	float strength;
-	float radius;
+	int railLength;
 	
 	VerletPhysics2D physics;
 	AttractionBehavior skierAttractor;
@@ -50,9 +52,10 @@ class RailPhysics {
 		pointsRight = right;
 
 		strength = s;
-		radius = 0.09f;
 		
 		mouseDown = false;
+		
+		railLength = 10;
 		
 		generateBoundingOutlines(0.2f);
 		
@@ -68,35 +71,38 @@ class RailPhysics {
 			particleBoundingLeft.lock();
 			particleBoundingRight.lock();
 			
+			if( i < railLength ) {
+				particleLeft.lock();
+				particleRight.lock();
+			}
+			
 			VerletConstrainedSpring2D springCenterLeft = 
 				new VerletConstrainedSpring2D (
 					particleCenter, 
 					particleLeft, 
 					PApplet.dist(particleCenter.x, particleCenter.y, particleLeft.x, particleLeft.y), 
-					0.0001f
+					0.0004f
 				);
 			VerletConstrainedSpring2D springCenterRight = 
 				new VerletConstrainedSpring2D (
 						particleCenter, 
 						particleRight, 
 						PApplet.dist(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y), 
-						0.0001f 
+						0.0004f 
 					);
 			VerletConstrainedSpring2D springBoundingLeft = 
 					new VerletConstrainedSpring2D (
 						particleLeft, 
 						particleBoundingLeft, 
 						PApplet.dist(particleBoundingLeft.x, particleBoundingLeft.y, particleLeft.x, particleLeft.y), 
-						0.08f,
-						PApplet.dist(particleBoundingLeft.x, particleBoundingLeft.y, particleLeft.x, particleLeft.y) * 1.15f
+						0.0004f
 					);
 			VerletConstrainedSpring2D springBoundingRight = 
 				new VerletConstrainedSpring2D (
 						particleRight, 
 						particleBoundingRight,
 						PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y), 
-						0.08f,
-						PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y) * 1.15f
+						0.0004f
 					);
 			springCenterLeft.lockA(true);
 			springCenterRight.lockA(true);
@@ -121,13 +127,13 @@ class RailPhysics {
 		stringLeft.getTail().lock();
 		stringRight.getHead().lock();
 		stringRight.getTail().lock();
-
+		
 	}
 
 	void updateSkier(Vec2D skier) {
 		this.skier = skier;	
 		if( mouseDown ) {
-			skierAttractor = new AttractionBehavior(skier, 0.08f, -.009f);
+			skierAttractor = new AttractionBehavior(skier, 0.03f, -.011f);
 			physics.addBehavior(skierAttractor);
 			physics.update();
 			physics.removeBehavior(skierAttractor);
@@ -150,7 +156,7 @@ class RailPhysics {
 		
 		theG.beginShape();
 		theG.vertex(particlesLeft.get(0).x, particlesLeft.get(0).y);
-		for(int i = 1; i < particlesLeft.size(); i++) {
+		for(int i = 0; i < particlesLeft.size(); i++) {
 			VerletParticle2D particle = particlesLeft.get(i);
 			theG.curveVertex(particle.x, particle.y);
 		}
@@ -158,7 +164,7 @@ class RailPhysics {
 		
 		theG.beginShape();
 		theG.vertex(particlesRight.get(0).x, particlesRight.get(0).y);
-		for(int i = 1; i < particlesRight.size(); i++) {
+		for(int i = 0; i < particlesRight.size(); i++) {
 			VerletParticle2D particle = particlesRight.get(i);
 			theG.curveVertex(particle.x, particle.y);
 		}
@@ -186,10 +192,48 @@ class RailPhysics {
 			theG.line(particleCenter.x, particleCenter.y, particleLeft.x, particleLeft.y);
 		}
 		
-		if( mouseDown ) {
-			theG.stroke(125,125,255);
-			//theG.ellipse(skierAttractor.getAttractor().x, skierAttractor.getAttractor().y, skierAttractor.getRadius(), skierAttractor.getRadius());
+	}
+	
+	void drawWithLaser(final PGraphics theG) {
+		if( skierAttractor == null ) return;
+		Vec2D pos = skierAttractor.getAttractor();
+		
+		theG.stroke(0,255,0);
+		
+		theG.beginShape();
+		for(int i = 0; i < particlesCenter.size(); i++) {
+			if( particlesLeft.get(i).x <= pos.x && 
+				particlesRight.get(i).x >= pos.x &&
+				particlesCenter.get(i).y + 0.1 >= pos.y &&
+				particlesCenter.get(i).y - 0.1 <= pos.y 
+			) {
+				VerletParticle2D particleLeft = particlesLeft.get(i);
+				theG.vertex(particleLeft.x, particleLeft.y);
+				for (int j = i+1; j < i+railLength && j < particlesCenter.size(); j++) {
+					theG.curveVertex(particlesLeft.get(j).x, particlesLeft.get(j).y);
+				}
+				break;
+			}
 		}
+		theG.endShape();
+		
+		theG.beginShape();
+		for(int i = 0; i < particlesCenter.size(); i++) {
+			if( particlesLeft.get(i).x <= pos.x && 
+				particlesRight.get(i).x >= pos.x &&
+				particlesCenter.get(i).y + 0.1 >= pos.y &&
+				particlesCenter.get(i).y - 0.1 <= pos.y 
+				
+			) {
+				VerletParticle2D particleRight = particlesRight.get(i);
+				theG.vertex(particleRight.x, particleRight.y);
+				for (int j = i+1; j < i+railLength && j < particlesCenter.size(); j++) {
+					theG.curveVertex(particlesRight.get(j).x, particlesRight.get(j).y);
+				}
+				break;
+			}
+		}
+		theG.endShape();
 		
 	}
 	
@@ -200,8 +244,9 @@ class RailPhysics {
 			float angleLeft = 0f, angleRight = 0f;
 			if( i < pointsCenter.size() - 1) {
 				angleLeft = Geometry.angle(pointsLeft.get(i), pointsLeft.get(i+1));
-				
+				angleRight = Geometry.angle(pointsRight.get(i), pointsRight.get(i+1));
 			} else {
+				angleLeft = Geometry.angle(pointsLeft.get(i), pointsLeft.get(i-1)) - 180f;
 				angleRight = Geometry.angle(pointsRight.get(i), pointsRight.get(i-1)) - 180f;
 			}
 			PVector pointLeft  = Geometry.coordinates(pointsLeft.get(i).x, pointsLeft.get(i).y, distance, angleLeft + 90f);
