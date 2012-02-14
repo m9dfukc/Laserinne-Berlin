@@ -3,8 +3,6 @@ package com.laserinne.bouncytrack;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.sound.midi.ControllerEventListener;
-
 import laserschein.Laser3D;
 import laserschein.Logger;
 import laserschein.Logger.LogLevel;
