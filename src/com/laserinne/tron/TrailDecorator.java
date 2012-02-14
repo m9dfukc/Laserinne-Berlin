@@ -1,13 +1,13 @@
 package com.laserinne.tron;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import laserschein.Laser3D;
 
 import processing.core.PGraphics;
 import processing.core.PVector;
 
 import com.laserinne.decoration.Decorator;
-import com.laserinne.util.Geometry;
 
 import de.looksgood.ani.Ani;
 
@@ -16,43 +16,48 @@ public class TrailDecorator extends Decorator{
 	final SkierTrail _myTrail;
 
 	private Ani _myConstructAnimation;
+	private Ani _myBoomAnimation;
+	
+	
+	private float _myBoomProgress = 0;
+
+	
 	private float _myProgress = 0;
 
 	public TrailDecorator(SkierTrail theTrail) {
 		this.state(State.GENESIS);
 		_myTrail = theTrail;
 		_myConstructAnimation = new Ani(this, 1.5f, "_myProgress", 1);
+		_myBoomAnimation = new Ani(this, 1.5f, "_myBoomProgress", (float)Math.PI);
+
 	}
 
 	@Override
-	public void draw(PGraphics theG) {
+	public void draw(PGraphics theG, Laser3D theLaser) {
 
+		theLaser.smooth();
 		theG.beginShape();
+		
+		
+		float myDistort = (float) Math.sin(_myBoomProgress);
+		float myDistortAmount = 0.2f;
+		
 		List<PVector> mySegments = _myTrail.segments();
-		theG.curveVertex(_myTrail.skier().base().x , _myTrail.skier().base().y );
-		theG.curveVertex(_myTrail.skier().base().x , _myTrail.skier().base().y );
-
-		int myMax = (int) Math.min(mySegments.size() - 1, SkierTrail.MAX_NUMBER - 1);
+		
+		int myMax = Math.round(mySegments.size() * _myProgress);
 		
 		for(int i = 0; i < myMax; i++) {
 			PVector mySegment = mySegments.get(i);
-			theG.curveVertex(mySegment.x, mySegment.y);	
-		}
-		
-		if(mySegments.size() > myMax && mySegments.size() > 1) {
-			PVector myPrevSegment = mySegments.get(myMax - 1);
-
-			PVector mySegment = mySegments.get(myMax);
 			
-			PVector myTail = Geometry.lerp(myPrevSegment, mySegment, 1-_myTrail.nextSegmentProgress());
-			theG.curveVertex(myTail.x, myTail.y);
-
-			theG.curveVertex(myTail.x, myTail.y);
-
+			float myRandom = (float) (((Math.random() - 0.5) * myDistort) * myDistortAmount);
+			
+			theG.vertex(mySegment.x + myRandom, mySegment.y);
 		}
 	
 
 		theG.endShape();
+
+		theLaser.noSmooth();
 
 	}
 
@@ -61,12 +66,13 @@ public class TrailDecorator extends Decorator{
 	@Override
 	public void update() {
 		if(_myTrail.isDead() && (!state().equals(State.FINISHED) )){
-			this.state(State.APOCALYPSE);
 
 			if(!state().equals(State.APOCALYPSE)) {
 				_myConstructAnimation.setBegin(_myProgress);
 				_myConstructAnimation.setEnd(0);
 				_myConstructAnimation.start();
+				this.state(State.APOCALYPSE);
+
 			}
 
 
@@ -78,8 +84,10 @@ public class TrailDecorator extends Decorator{
 		}
 
 
-		if(_myTrail.collides()) {
-
+		if(_myTrail.collides() && !_myBoomAnimation.isPlaying()) {
+			_myBoomAnimation.setBegin(0);
+			_myBoomAnimation.setEnd((float)Math.PI);
+			_myBoomAnimation.start();
 		}
 	}
 

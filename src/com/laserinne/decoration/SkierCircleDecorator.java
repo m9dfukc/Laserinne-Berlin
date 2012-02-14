@@ -1,5 +1,7 @@
 package com.laserinne.decoration;
 
+import laserschein.Laser3D;
+
 import com.laserinne.base.Skier;
 import com.laserinne.util.Shapes;
 
@@ -21,7 +23,7 @@ public class SkierCircleDecorator extends SimpleDecoratorBase {
 
 
 	@Override
-	public void draw(PGraphics theG) {
+	public void draw(PGraphics theG, Laser3D theLaser) {
 		final PVector myBase = _mySkier.base();
 		
 		float myRadius = this.progress() * _myRadius;

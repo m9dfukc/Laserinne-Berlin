@@ -25,7 +25,7 @@ import com.laserinne.util.SkierYComparator;
 public class SketchNearestNeighborLasso extends LaserinneSketch {
 	
 	private Edge<Skier> _myEdge;
-	private float _myConnectArea = -0.3f;   // upper third is the are where things can connect
+	private float _myConnectArea = 0f;   // upper half is the are where things can connect
 	private VerletPhysics2D _physics;
 	private LassoPhysics _lasso;
 	

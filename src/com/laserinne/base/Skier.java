@@ -64,17 +64,17 @@ public class Skier implements Decoratable {
 
 	public static final float DIRECTION_LEARNING_RATE = 0.001f;
 	public static final float SIZE_LEARNING_RATE = 0.1f;
+	public static final float POSITION_LEARNING_RATE = 0.5f;
 
 
 
 	public Skier( int theId, float theX, float theY, float theWidth, float theHeight, float theDeltaX, float theDeltaY, float theAge, float theTimestamp  ) {
 
 		_myHistoryList = new ArrayList<PVector>();
-		_myPosition = new PVector();
-
-		_myPreviousPosition = new PVector(theX, theY);
 		
 		_myPosition = new PVector(theX, theY);
+		_myPreviousPosition = new PVector(theX, theY);
+		
 		_myDirection = new PVector(0, 0);
 		
 		_myId = theId;
@@ -101,8 +101,8 @@ public class Skier implements Decoratable {
 			_myHistoryPointer = 0;
 		}
 
-		_myPosition.x = theX;
-		_myPosition.y = theY;
+		_myPosition.x = ((1-POSITION_LEARNING_RATE) * _myPosition.x) + ( POSITION_LEARNING_RATE * theX);
+		_myPosition.y = ((1-POSITION_LEARNING_RATE) * _myPosition.y) + ( POSITION_LEARNING_RATE * theY);
 
 		_myDeltaX = theDeltaX;
 		_myDeltaY = theDeltaY;

@@ -23,7 +23,7 @@ import controlP5.Slider;
 public class SketchCollect extends LaserinneSketch{
 
 	private DecoratorManager _myDecoratorManager;
-	private HashMap<Skier, WavePersonDecorator> _mySkierDecorators;
+	//private HashMap<Skier, WavePersonDecorator> _mySkierDecorators;
 	private LinkedList<CollectableItem> _myItems;
 	private ControlP5 _myControlP5;
 	private ControlWindow _myControlWindow;
@@ -34,7 +34,7 @@ public class SketchCollect extends LaserinneSketch{
 	@Override
 	protected void postSetup() {
 		_myDecoratorManager = new DecoratorManager();
-		_mySkierDecorators = new HashMap<Skier, WavePersonDecorator>();
+		//_mySkierDecorators = new HashMap<Skier, WavePersonDecorator>();
 		_myItems = new LinkedList<CollectableItem>();
 
 		initGui();
@@ -52,11 +52,11 @@ public class SketchCollect extends LaserinneSketch{
 		_myControlP5 = new ControlP5(this);
 		_myControlP5.setAutoDraw(false);
 		_myControlWindow = _myControlP5.addControlWindow("controlP5window", 100, 100, 240, 80);
-		_myItemLifetime = _myControlP5.addSlider("Lifetime", 1f, 60f, 16f, 10, 10, 140, 15);
+		_myItemLifetime = _myControlP5.addSlider("Lifetime", 1f, 60f, 19f, 10, 10, 140, 15);
 		_myItemLifetime.setDecimalPrecision(4);
 		_myItemLifetime.moveTo(_myControlWindow);
 
-		_myItemTargetCount = _myControlP5.addSlider("Amount", 1, 30, 4, 10, 40, 140, 15);
+		_myItemTargetCount = _myControlP5.addSlider("Amount", 1, 30, 6, 10, 40, 140, 15);
 		_myItemTargetCount.setDecimalPrecision(5);
 		_myItemTargetCount.moveTo(_myControlWindow);
 
@@ -81,12 +81,20 @@ public class SketchCollect extends LaserinneSketch{
 
 		while(myIterator.hasNext()){
 			CollectableItem myItem = myIterator.next();
+			
+			if(myItem.age() > _myItemLifetime.value() * 0.9) {
+				myItem.blink();
+			}
+
+			
 			if(myItem.age() > _myItemLifetime.value()){
 				myIterator.remove();
 				myItem.die();
 			} else if(myItem.hasBeenCollected()) {
 				myIterator.remove();
 			}
+			
+			
 		}
 
 	}
@@ -100,6 +108,7 @@ public class SketchCollect extends LaserinneSketch{
 		for(int i = 0; i < myCount; i++) {
 			float myX = random(-0.9f, 0.9f);
 			float myY = random(-0.9f, 0.9f);
+			
 			float myRadius = 0.03f; 	//TODO: radius
 			
 			CollectableItem myItem = new CollectableItem(new PVector(myX, myY), myRadius);
@@ -123,15 +132,10 @@ public class SketchCollect extends LaserinneSketch{
 
 	private void checkCollisions(ArrayList<Skier> mySkiers) {
 		for(final Skier mySkier:mySkiers) {
-			WavePersonDecorator mySkierDecorator = _mySkierDecorators.get(mySkier);
-
-			mySkierDecorator.collides(false);
-			
-
+		
 			for(final CollectableItem myItem:_myItems) {
 				if(!myItem.hasBeenCollected() && myItem.collidesWith(mySkier)) {
 					mySkier.increaseScore();
-					mySkierDecorator.collides(true);
 					myItem.collect();
 					Logger.printDebug("Collision");
 				} 
@@ -144,7 +148,7 @@ public class SketchCollect extends LaserinneSketch{
 		theLaser.smooth();
 		theLaser.noSmooth();
 
-		_myDecoratorManager.draw(g);
+		_myDecoratorManager.draw(g, theLaser);
 	}
 
 	@Override
@@ -152,22 +156,16 @@ public class SketchCollect extends LaserinneSketch{
 		for(final Skier mySkier:tracking().skiers()) {
 			mySkier.drawDebug(g);
 		}
-
 	}
 
 	@Override
 	protected void onNewSkier(Skier theSkier) {
-		WavePersonDecorator myDecorator = new WavePersonDecorator(theSkier);
-		_mySkierDecorators.put(theSkier, myDecorator);
+		SkierVDecorator myDecorator = new SkierVDecorator(theSkier);
 		_myDecoratorManager.add(myDecorator);
-
 	}
 
 	@Override
 	protected void onDeadSkier(Skier theSkier) {
-		_mySkierDecorators.remove(theSkier);
-
-		// TODO: display score
 	}
 
 

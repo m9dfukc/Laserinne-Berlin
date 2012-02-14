@@ -52,7 +52,7 @@ public class SketchWave extends LaserinneSketch{
 		_myString.draw(g);
 		theLaser.noSmooth();	
 		
-		_myDecoratorManager.draw(g);
+		_myDecoratorManager.draw(g, theLaser);
 	}
 
 	@Override

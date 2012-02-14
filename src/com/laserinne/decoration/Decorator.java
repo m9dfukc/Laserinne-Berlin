@@ -1,5 +1,6 @@
 package com.laserinne.decoration;
 
+import laserschein.Laser3D;
 import processing.core.PGraphics;
 
 public abstract class Decorator {
@@ -22,7 +23,7 @@ public abstract class Decorator {
 		return _myState.equals(State.FINISHED);
 	}
 	
-	public abstract void draw(PGraphics theG);
+	public abstract void draw(PGraphics theG, Laser3D theLaser);
 
 	public abstract void update();
 

@@ -38,6 +38,7 @@ public class Tracking {
 	private OscP5 _myOscP5;
 
 	private HashMap<Integer, Skier> _mySkierTable;
+	
 	protected ArrayList<Skier> _mySkiers;
 	protected ArrayList<Skier> _myNewlyTrackedSkiers;
 	protected ArrayList<Skier> _myNewSkiers;
