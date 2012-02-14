@@ -161,7 +161,9 @@ public class SketchBouncyTracks extends LaserinneSketch {
 
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
-		float animation = PApplet.map((float)Math.sin(frameCount/25d), 0f, PApplet.PI*2f, 0.2f, 0.95f);
+		float animation = PApplet.map((float)Math.sin(frameCount/25d), 0f, PApplet.PI*2f, 0.22f, 0.98f);
+		
+		g.stroke(255);
 		
 		g.pushMatrix();
 		g.translate(_track1Translate.x, _track1Translate.y);

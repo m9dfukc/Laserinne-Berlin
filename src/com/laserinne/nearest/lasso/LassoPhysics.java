@@ -84,7 +84,7 @@ public class LassoPhysics {
 	public void draw(final PGraphics theG) {
 		if( bAlive ) {
 			theG.noFill();
-			theG.stroke(0, 255, 0);
+			theG.stroke(255);
 			theG.beginShape();
 			theG.vertex(physics.particles.get(0).x, physics.particles.get(0).y);
 			for(int i = 1; i < physics.particles.size(); i++) {

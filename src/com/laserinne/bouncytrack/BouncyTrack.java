@@ -150,7 +150,7 @@ class BouncyTrack extends Track {
 
 	void drawDebug(final PGraphics theG) {
 		theG.noFill();
-		theG.stroke(255);
+		theG.stroke(120,120,0);
 		
 		theG.beginShape();
 		theG.vertex(particlesLeft.get(0).x, particlesLeft.get(0).y);
@@ -167,17 +167,7 @@ class BouncyTrack extends Track {
 			theG.curveVertex(particle.x, particle.y);
 		}
 		theG.endShape();
-		/*
-		theG.stroke(90);
-		for(int i = 0; i < particlesCenter.size(); i++) {
-			VerletParticle2D particleLeft = particlesLeft.get(i);
-			VerletParticle2D particleRight = particlesRight.get(i);
-			VerletParticle2D particleBoundingLeft = particlesBoundingLeft.get(i);
-			VerletParticle2D particleBoundingRight = particlesBoundingRight.get(i);
-			theG.line(particleLeft.x, particleLeft.y, particleBoundingLeft.x, particleBoundingLeft.y);
-			theG.line(particleRight.x, particleRight.y, particleBoundingRight.x, particleBoundingRight.y);
-		}
-		*/
+		
 		theG.stroke(0,0,255);
 		for(int i = 0; i < particlesCenter.size(); i++) {
 			VerletParticle2D particleLeft = particlesLeft.get(i);
@@ -200,7 +190,7 @@ class BouncyTrack extends Track {
 		if( _skierAttractor == null ) return;
 		Vec2D pos = _skierAttractor.getAttractor();
 		
-		theG.stroke(0,255,0);
+		theG.stroke(255);
 		
 		theG.beginShape();
 		for(int i = 0; i < particlesCenter.size(); i++) {
