@@ -1,7 +1,5 @@
 package com.laserinne.collecting;
 
-import laserschein.Logger;
-
 import com.laserinne.base.Skier;
 import com.laserinne.decoration.Decorator;
 import com.laserinne.util.Geometry;

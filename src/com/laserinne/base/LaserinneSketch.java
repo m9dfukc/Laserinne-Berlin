@@ -23,13 +23,15 @@
 
 package com.laserinne.base;
 
+import javax.media.opengl.GL;
+
 import controlP5.ControlP5;
 import controlP5.ControlWindow;
 import de.looksgood.ani.Ani;
 import laserschein.Laser3D;
 import laserschein.Laserschein;
-import laserschein.Logger;
 import processing.core.PApplet;
+import processing.opengl.PGraphicsOpenGL;
 
 
 /**
@@ -45,17 +47,17 @@ import processing.core.PApplet;
  */
 @SuppressWarnings("serial")
 public abstract class LaserinneSketch extends PApplet {
-	
+
 	/**
 	 * Holds an instance of ControlP5.
 	 */
 	public ControlP5 _controlP5;
-	
+
 	/**
 	 * Holds an instance of seperate ControlP5 window.
 	 */
 	public ControlWindow _controlWindow;
-	
+
 	/**
 	 * Holds an instance of Laserschein.
 	 */
@@ -81,12 +83,12 @@ public abstract class LaserinneSketch extends PApplet {
 	 * Scaled mouseX.
 	 */
 	public float mX;
-	
+
 	/**
 	 * Scaled mouseY.
 	 */
 	public float mY;
-	
+
 	/**
 	 * Time in millis/1000 since last Frame.
 	 */
@@ -96,19 +98,21 @@ public abstract class LaserinneSketch extends PApplet {
 	 * If additional stuff should be drawn on screen. Or is it just the stuff for the laser.
 	 */
 	public boolean drawOnScreen = true;
-	
-	
+
+
 	public boolean doFakeTracking = false;
 	FakeTracking _myFake;
 
-	private boolean _myDoDrawRect = false;
-	
+	private boolean doDrawRect = false;
+
+	private boolean doDrawLine = false;
+
 
 	@Override
 	public void setup() {
 		size(WIDTH, HEIGHT, OPENGL);
 		frameRate(-1); // Use maximum frame rate.
-		
+
 		_myLaser = new Laserschein(this, Laserschein.EASYLASEUSB2);
 		_myLaser.output().setScanSpeed(50000);
 
@@ -117,25 +121,49 @@ public abstract class LaserinneSketch extends PApplet {
 		colorMode(RGB);
 		stroke(255,0,0);
 		noFill();
-		
-		
+
+
 
 		_myTracking = new Tracking("239.0.0.1", 9999);
 		_myFake = new FakeTracking(_myTracking);
-		
+
 		_controlP5 = new ControlP5(this);
 		_controlWindow = _controlP5.addControlWindow("controlP5window", 10, 10, 300, 160);
-		
+
 		Ani.init(this);
+
+		vsync(false);
+
 		
 		/* HOOK */
 		postSetup(); 
-		
+
 		_myLastMillis = millis(); // Goes last, so there is no jump
 	}
 
 
-	
+
+	/**
+	 * Enable or disable vsync
+	 * 
+	 * @param theFlag
+	 */
+	private void vsync(boolean theFlag) {
+		PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; 
+		GL gl = pgl.beginGL(); 
+		
+		if(theFlag) {
+			gl.setSwapInterval(1); 
+		} else {
+			gl.setSwapInterval(0); 
+		}
+		
+		pgl.endGL();
+		
+	}
+
+
+
 	/* (non-Javadoc)
 	 * @see processing.core.PApplet#draw()
 	 * 
@@ -146,46 +174,46 @@ public abstract class LaserinneSketch extends PApplet {
 	public void draw() {
 		mX = map(mouseX, 0, width, -1.f, 1.f);
 		mY = map(mouseY, 0, height, -1.f, 1.f);
-		
-		
+
+
 		long myCurrentMillis = millis();
 		delta = (myCurrentMillis - _myLastMillis) / 1000.0f;
 		_myLastMillis = myCurrentMillis;
-		
-		
+
+
 		if(doFakeTracking) {
 			_myFake.update();
 			_myFake.mouseUpdate(mX, mY);
 		}
-		
+
 		_myTracking.update();
-		
+
 		fireEvents();
-		
-		
+
+
 		/* HOOK */
 		update(delta);
-		
+
 
 		background(60, 57, 55);
-		
+
 		fill(255);
 		stroke(255);
 		textSize(12);
 		text(frameRate, 20, 30);
 		text("Skiers: " + tracking().skiers().size(), 100, 30);
-		
+
 		if(!drawOnScreen) {
 			text("Not drawing on screen.", 330, 30);
 		}
-		
+
 		if(doFakeTracking) {
 			text("Fake tracking enabled.", 330, 60);
 		}
-		
+
 		noFill();
-		
-		
+
+
 		/* Init [-1, 1] coordinate system */
 		translate(width * 0.5f, height * 0.5f);
 		scale(width * 0.5f);
@@ -193,28 +221,34 @@ public abstract class LaserinneSketch extends PApplet {
 		stroke(50);
 		line(-1, 0, 1, 0);
 		line(0, 0.5f, 0, -1);
-		
 
-		
-		
-		
+
+
+
+
 		/* HOOK */
 		if(drawOnScreen) {
 			pushMatrix();
 			drawOnScreen();	
 			popMatrix();	
 		}
-		
-		
+
+
 		/* HOOK */
 		final Laser3D myLaserRenderer = _myLaser.renderer();
 		beginRaw(_myLaser.renderer());
 		stroke(255);
-		
-		if(_myDoDrawRect ) {
+
+		if(doDrawRect ) {
 			rectMode(CORNER);
 			rect(-1,-1,2,2);
 		}
+
+		if(doDrawLine ) {
+			rectMode(CORNER);
+			line(-1,-1,1,-1);
+		}
+
 		noFill();
 		curveDetail(3);
 		drawWithLaser(myLaserRenderer); // Hook!
@@ -229,7 +263,7 @@ public abstract class LaserinneSketch extends PApplet {
 		for(final Skier mySkier:_myTracking.newSkiers()) {
 			onNewSkier(mySkier);
 		}
-		
+
 		for(final Skier mySkier:_myTracking.deadSkiers()) {
 			onDeadSkier(mySkier);
 		}		
@@ -260,23 +294,23 @@ public abstract class LaserinneSketch extends PApplet {
 	 */
 	protected abstract void drawOnScreen();
 
-	
+
 	/**
 	 * This fires when a new skier is detected.
 	 * 
 	 * @param theSkier
 	 */
 	protected abstract void onNewSkier(final Skier theSkier);
-	
-	
-	
+
+
+
 	/**
 	 * This fires when a skier dies
 	 *  
 	 * @param theSkier
 	 */
 	protected abstract void onDeadSkier(final Skier theSkier);
-	
+
 
 	/**
 	 * Get a reference to the tracker. Get your freshly tracked skiers there.
@@ -305,7 +339,7 @@ public abstract class LaserinneSketch extends PApplet {
 				_myLaser.showControlWindow();
 			}
 		}
-		
+
 		if (key == 'c') {
 			if (_controlP5.window("controlP5window").isVisible()) {
 				_controlP5.window("controlP5window").hide();
@@ -313,16 +347,20 @@ public abstract class LaserinneSketch extends PApplet {
 				_controlP5.window("controlP5window").show();
 			}
 		}
-		
+
 		if(key == 'f') {
 			doFakeTracking = !doFakeTracking;
 		}
-	
-		if(key == 'c') {
-			_myDoDrawRect = !_myDoDrawRect;
+
+		if(key == 'n') {
+			doDrawRect = !doDrawRect;
 		}
-		
-		
+
+		if(key == 'm') {
+			doDrawLine = !doDrawLine;
+		}
+
+
 		if(key == 'd') {
 			drawOnScreen  = !drawOnScreen;
 		}

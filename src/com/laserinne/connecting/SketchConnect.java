@@ -15,7 +15,6 @@ import toxi.geom.mesh2d.Voronoi;
 import com.laserinne.base.LaserinneSketch;
 import com.laserinne.base.Skier;
 import com.laserinne.decoration.DecoratorManager;
-import com.laserinne.decoration.SkierCircleDecorator;
 import com.laserinne.util.Edge;
 import com.laserinne.util.ToxiUtil;
 
@@ -25,6 +24,7 @@ public class SketchConnect extends LaserinneSketch {
 
 	private static final int DELAUNAY_ROOT_SIZE = 4000;
 	private static final float ALMOST = 1/4000.0f;
+	private static final float DELAUNAY_SCALE = 1000;
 
 	private ArrayList<AnimatedSkierEdge> _mySkierEdges;
 	private DecoratorManager _myDecoratorManager;
@@ -54,8 +54,8 @@ public class SketchConnect extends LaserinneSketch {
 
 		for(final Skier mySkier:mySkiers) {
 			final Vec2D myPosition = ToxiUtil.toVec2D(mySkier.base());
-			myPosition.x = map(myPosition.x, -1, 1, 0, 1000);
-			myPosition.y = map(myPosition.y, -1, 1, 0, 1000);
+			myPosition.x = map(myPosition.x, -1, 1, 0, DELAUNAY_SCALE);
+			myPosition.y = map(myPosition.y, -1, 1, 0, DELAUNAY_SCALE);
 
 			myVoronoi.addPoint(myPosition);
 		}
@@ -205,8 +205,6 @@ public class SketchConnect extends LaserinneSketch {
 
 	@Override
 	protected void onDeadSkier(Skier theSkier) {
-		// TODO Auto-generated method stub
-
 	}
 	
 	
@@ -249,12 +247,11 @@ public class SketchConnect extends LaserinneSketch {
 		
 		/* Transform them all back */
 		for(final Edge<Vec2D> myEdge: myEdges) {
-			myEdge.a.x = map(myEdge.a.x, 0, 1000, -1, 1);
-			myEdge.a.y = map(myEdge.a.y, 0, 1000, -1, 1);
-			myEdge.b.x = map(myEdge.b.x, 0, 1000, -1, 1);
-			myEdge.b.y = map(myEdge.b.y, 0, 1000, -1, 1);
+			myEdge.a.x = map(myEdge.a.x, 0, DELAUNAY_SCALE, -1, 1);
+			myEdge.a.y = map(myEdge.a.y, 0, DELAUNAY_SCALE, -1, 1);
+			myEdge.b.x = map(myEdge.b.x, 0, DELAUNAY_SCALE, -1, 1);
+			myEdge.b.y = map(myEdge.b.y, 0, DELAUNAY_SCALE, -1, 1);
 		}
-		
 		
 		return myEdges;
 	}

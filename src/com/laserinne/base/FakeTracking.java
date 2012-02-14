@@ -10,6 +10,8 @@ public class FakeTracking {
 	private int _myIdPointer = 0;
 	private boolean bMouse = false;
 	
+	private int TARGET_COUNT = 10;
+	
 	public FakeTracking(final Tracking theTracking) {
 		_mySkiers = new ArrayList<FakeSkier>();
 		
@@ -24,7 +26,7 @@ public class FakeTracking {
 
 		float myTimestamp = (System.currentTimeMillis() - _myStartTime) / 1000.0f;
 		
-		if(Math.random() > 0.998f) {
+		if(Math.random() > 0.998f && _mySkiers.size() < TARGET_COUNT) {
 			_myIdPointer++;
 			FakeSkier myNewSkier = new FakeSkier(_myIdPointer);
 			myNewSkiers.add(myNewSkier);
