@@ -38,7 +38,7 @@ class BouncyTrack extends Track {
 	private AttractionBehavior _skierAttractor;
 	
 	BouncyTrack(float trackWidth) {
-		this(trackWidth, 0.004f);
+		this(trackWidth, 0.0004f);
 	}
 	
 	BouncyTrack(float trackWidth, float spring) {
@@ -78,28 +78,28 @@ class BouncyTrack extends Track {
 					particleCenter, 
 					particleLeft, 
 					PApplet.dist(particleCenter.x, particleCenter.y, particleLeft.x, particleLeft.y), 
-					0.0004f
+					strength
 				);
 			VerletConstrainedSpring2D springCenterRight = 
 				new VerletConstrainedSpring2D (
 					particleCenter, 
 					particleRight, 
 					PApplet.dist(particleCenter.x, particleCenter.y, particleRight.x, particleRight.y), 
-					0.0004f 
+					strength 
 				);
 			VerletConstrainedSpring2D springBoundingLeft = 
 				new VerletConstrainedSpring2D (
 					particleLeft, 
 					particleBoundingLeft, 
 					PApplet.dist(particleBoundingLeft.x, particleBoundingLeft.y, particleLeft.x, particleLeft.y), 
-					0.0004f
+					strength
 				);
 			VerletConstrainedSpring2D springBoundingRight = 
 				new VerletConstrainedSpring2D (
 					particleRight, 
 					particleBoundingRight,
 					PApplet.dist(particleBoundingRight.x, particleBoundingRight.y, particleRight.x, particleRight.y), 
-					0.0004f
+					strength
 				);
 			springCenterLeft.lockA(true);
 			springCenterRight.lockA(true);
@@ -134,6 +134,10 @@ class BouncyTrack extends Track {
 		} else {
 			_skierAttractor.setAttractor(stringCenter.getHead());
 		}
+	}
+	
+	void updateSpring(float value) {
+		_skierAttractor.setStrength(value*-1.0f);
 	}
 	
 	void update() {

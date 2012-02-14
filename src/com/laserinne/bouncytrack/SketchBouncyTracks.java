@@ -3,6 +3,8 @@ package com.laserinne.bouncytrack;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.sound.midi.ControllerEventListener;
+
 import laserschein.Laser3D;
 import laserschein.Logger;
 import laserschein.Logger.LogLevel;
@@ -13,6 +15,8 @@ import com.laserinne.base.LaserinneSketch;
 import com.laserinne.base.Skier;
 import com.laserinne.util.Edge;
 import com.laserinne.util.SkierYComparator;
+
+import controlP5.Controller;
 
 @SuppressWarnings("serial")
 public class SketchBouncyTracks extends LaserinneSketch {
@@ -28,6 +32,11 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	private PVector _track1Translate;
 	private PVector _track2Translate;
 	
+	private Controller _trackWithCtrl;
+	private Controller _labelCtrl;
+	private Controller _spring1Ctrl;
+	private Controller _spring2Ctrl;
+	
 	private float _trackWidth;
 	
     public static void main(String args[]) {
@@ -36,13 +45,41 @@ public class SketchBouncyTracks extends LaserinneSketch {
 
 	@Override
 	protected void postSetup() {
-		_trackWidth = 0.07f;
+		_labelCtrl = _controlP5.addTextlabel("restart", "use r to resart", 10, 10);
+        _labelCtrl.moveTo(_controlWindow);
+        _trackWithCtrl = _controlP5.addSlider("trackWith", 0.001f, 0.1f, 0.07f, 10, 30, 140, 15);
+        _trackWithCtrl.setDecimalPrecision(4);
+        _trackWithCtrl.moveTo(_controlWindow);
+        _spring1Ctrl = _controlP5.addSlider("spring track1", 0.001f, 0.1f, 0.02f, 10, 50, 140, 15);
+        _spring1Ctrl.setDecimalPrecision(4);
+        _spring1Ctrl.moveTo(_controlWindow);
+        _spring2Ctrl = _controlP5.addSlider("spring track2", 0.001f, 0.1f, 0.02f, 10, 70, 140, 15);
+        _spring2Ctrl.setDecimalPrecision(4);
+        _spring2Ctrl.moveTo(_controlWindow);
+        
+		_trackWidth = _trackWithCtrl.value();
 		
+        generateTrack();	
+	}
+	
+	@Override 
+	public void keyPressed() {
+		if( key == 'r' ) {
+			generateTrack();
+		}	
+		
+		super.keyPressed();
+	}
+	
+	public void generateTrack() {
 		_myEdge = null;
 		_skier1 = _skier2 = null;
 
         _track1 = new BouncyTrack(_trackWidth);
         _track2 = new BouncyTrack(_trackWidth);
+        
+        _track1.clear();
+		_track2.clear();
         
         _track1Translate = new PVector(-0.35f, 0.1f);
         _track2Translate = new PVector( 0.35f, 0.1f);
@@ -51,25 +88,21 @@ public class SketchBouncyTracks extends LaserinneSketch {
         Logger.set(LogLevel.DEBUG, false);
 	}
 	
-	@Override 
-	public void keyPressed() {
-		if( key == 'g' ) {
-			_track1.clear();
-			_track2.clear();
-	        _track1 = new BouncyTrack(_trackWidth);
-	        _track2 = new BouncyTrack(_trackWidth);
-		}	
-		
-		super.keyPressed();
-	}
-	
 	@Override
 	protected void update(final float theDelta) {
+		/* I know I know, this is some dirty shit - but works for now! */
+		if( _trackWithCtrl.value() != _trackWidth ) {
+			_trackWidth = _trackWithCtrl.value();
+			generateTrack();
+		}
+		//_track1.updateSpring(_spring1Ctrl.value());
+		//_track2.updateSpring(_spring2Ctrl.value());
+		
 		ArrayList<Skier> mySkiers = tracking().skiersConfident();
 		Collections.sort(mySkiers, new SkierYComparator()); 	// Sort by their y positions
 		
 		/* Check if edge is still valid */
-		if( _myEdge != null && (_myEdge.a.isDead() || _myEdge.b.isDead() ) ) {
+		if( _myEdge != null && (_myEdge.a.isDead() && _myEdge.b.isDead() ) ) {
 			Logger.printInfo("Destroyed edge between Skier " + _myEdge.a.id() + " and " + _myEdge.a.id());
 			_myEdge = null; 
 			_skier1 = null; 
@@ -152,13 +185,14 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	@Override
 	protected void onNewSkier(Skier theSkier) {
 		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	protected void onDeadSkier(Skier theSkier) {
 		// TODO Auto-generated method stub
+		
 	}
-	
 	
 
 }
