@@ -34,6 +34,8 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	private Controller _labelCtrl;
 	private Controller _spring1Ctrl;
 	private Controller _spring2Ctrl;
+	private Controller _length1Ctrl;
+	private Controller _length2Ctrl;
 	
 	private float _trackWidth;
 	private float _startLineCorrection = -0.015f;
@@ -46,15 +48,26 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	protected void postSetup() {
 		_labelCtrl = _controlP5.addTextlabel("restart", "use r to resart", 10, 10);
         _labelCtrl.moveTo(_controlWindow);
+        
         _trackWithCtrl = _controlP5.addSlider("trackWith", 0.001f, 0.1f, 0.07f, 10, 30, 140, 15);
         _trackWithCtrl.setDecimalPrecision(4);
         _trackWithCtrl.moveTo(_controlWindow);
-        _spring1Ctrl = _controlP5.addSlider("spring track1", 0.005f, 0.025f, 0.019f, 10, 50, 140, 15);
+        
+        _spring1Ctrl = _controlP5.addSlider("spring track1", 0.005f, 0.03f, 0.021f, 10, 60, 140, 15);
         _spring1Ctrl.setDecimalPrecision(4);
         _spring1Ctrl.moveTo(_controlWindow);
-        _spring2Ctrl = _controlP5.addSlider("spring track2", 0.005f, 0.025f, 0.019f, 10, 70, 140, 15);
+        
+        _spring2Ctrl = _controlP5.addSlider("spring track2", 0.005f, 0.03f, 0.021f, 10, 80, 140, 15);
         _spring2Ctrl.setDecimalPrecision(4);
         _spring2Ctrl.moveTo(_controlWindow);
+        
+        _length1Ctrl = _controlP5.addSlider("length track1", 0.05f, 1f, 0.11f, 10, 110, 140, 15);
+        _length1Ctrl.setDecimalPrecision(4);
+        _length1Ctrl.moveTo(_controlWindow);
+        
+        _length2Ctrl = _controlP5.addSlider("length track2", 0.05f, 1f, 0.11f, 10, 130, 140, 15);
+        _length2Ctrl.setDecimalPrecision(4);
+        _length2Ctrl.moveTo(_controlWindow);
         
 		_trackWidth = _trackWithCtrl.value();
 		
@@ -96,8 +109,8 @@ public class SketchBouncyTracks extends LaserinneSketch {
 			_trackWidth = _trackWithCtrl.value();
 			generateTrack();
 		}
-		_track1.updateSpring(_spring1Ctrl.value());
-		_track2.updateSpring(_spring2Ctrl.value());
+		_track1.updateParameters(_spring1Ctrl.value(), _length1Ctrl.value());
+		_track2.updateParameters(_spring2Ctrl.value(), _length2Ctrl.value());
 		
 		ArrayList<Skier> mySkiers = tracking().skiersConfident();
 		Collections.sort(mySkiers, new SkierYComparator()); 	// Sort by their y positions
