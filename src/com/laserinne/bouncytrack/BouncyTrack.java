@@ -124,7 +124,7 @@ class BouncyTrack extends Track {
 		stringRight.getHead().lock();
 		stringRight.getTail().lock();
 		
-		_skierAttractor = new AttractionBehavior(stringCenter.getHead(), 0.03f, -.011f);
+		_skierAttractor = new AttractionBehavior(stringCenter.getHead(), 0.04f, -.011f);
 		_physics.addBehavior(_skierAttractor);
 	}
 	
