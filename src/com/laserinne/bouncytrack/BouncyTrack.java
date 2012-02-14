@@ -34,6 +34,7 @@ class BouncyTrack extends Track {
 	ArrayList<Vec2D> pointsBoundingLeft = new ArrayList<Vec2D>();
 	ArrayList<Vec2D> pointsBoundingRight = new ArrayList<Vec2D>();
 	
+	private float _railLength;
 	private VerletPhysics2D _physics;
 	private AttractionBehavior _skierAttractor;
 	
@@ -52,7 +53,7 @@ class BouncyTrack extends Track {
         _physics.setWorldBounds(new Rect(-1f,-1f,2f,2f));
 		
 		strength = spring;
-		railLength = 20;
+		_railLength = 0.11f;
 		
 		generateBoundingOutlines(0.13f);
 		
@@ -68,7 +69,7 @@ class BouncyTrack extends Track {
 			particleBoundingLeft.lock();
 			particleBoundingRight.lock();
 			
-			if( i < railLength ) {
+			if( i < (int)(_railLength * pointsCenter.size()) ) {
 				particleLeft.lock();
 				particleRight.lock();
 			}
@@ -124,7 +125,7 @@ class BouncyTrack extends Track {
 		stringRight.getHead().lock();
 		stringRight.getTail().lock();
 		
-		_skierAttractor = new AttractionBehavior(stringCenter.getHead(), 0.04f, -.011f);
+		_skierAttractor = new AttractionBehavior(stringCenter.getHead(), 0.03f, -.011f);
 		_physics.addBehavior(_skierAttractor);
 	}
 	
@@ -136,8 +137,9 @@ class BouncyTrack extends Track {
 		}
 	}
 	
-	void updateSpring(float value) {
-		_skierAttractor.setStrength(value*-1.0f);
+	void updateParameters(float spring, float railLength) {
+		_skierAttractor.setStrength(spring*-1.0f);
+		_railLength = railLength;
 	}
 	
 	void update() {
@@ -201,7 +203,7 @@ class BouncyTrack extends Track {
 			) {
 				VerletParticle2D particleLeft = particlesLeft.get(i);
 				theG.vertex(particleLeft.x, particleLeft.y);
-				for (int j = i+1; j < i+railLength && j < particlesCenter.size(); j++) {
+				for (int j = i+1; j < i+(int)(_railLength * particlesCenter.size()) && j < particlesCenter.size(); j++) {
 					theG.curveVertex(particlesLeft.get(j).x, particlesLeft.get(j).y);
 				}
 				break;
@@ -219,7 +221,7 @@ class BouncyTrack extends Track {
 			) {
 				VerletParticle2D particleRight = particlesRight.get(i);
 				theG.vertex(particleRight.x, particleRight.y);
-				for (int j = i+1; j < i+railLength && j < particlesCenter.size(); j++) {
+				for (int j = i+1; j < i+(int)(_railLength * particlesCenter.size()) && j < particlesCenter.size(); j++) {
 					theG.curveVertex(particlesRight.get(j).x, particlesRight.get(j).y);
 				}
 				break;
