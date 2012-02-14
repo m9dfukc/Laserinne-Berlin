@@ -2,10 +2,8 @@ package com.laserinne.bouncytrack;
 
 import java.util.ArrayList;
 
-import com.laserinne.base.Skier;
 import com.laserinne.util.Geometry;
 import com.laserinne.util.ToxiUtil;
-
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
