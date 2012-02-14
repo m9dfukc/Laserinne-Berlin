@@ -9,6 +9,8 @@ import com.laserinne.util.ToxiUtil;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PVector;
+import toxi.geom.Rect;
 import toxi.geom.Vec2D;
 import toxi.physics2d.ParticleString2D;
 import toxi.physics2d.VerletParticle2D;
@@ -37,17 +39,19 @@ class BouncyTrack extends Track {
 	private VerletPhysics2D _physics;
 	private AttractionBehavior _skierAttractor;
 	
-	BouncyTrack(VerletPhysics2D physics, float trackWidth) {
-		this(physics, trackWidth, 0.004f);
+	BouncyTrack(float trackWidth) {
+		this(trackWidth, 0.004f);
 	}
 	
-	BouncyTrack(VerletPhysics2D physics, float trackWidth, float spring) {
-		this(physics, trackWidth, spring, 200);
+	BouncyTrack(float trackWidth, float spring) {
+		this(trackWidth, spring, 200);
 	}
 			
-	BouncyTrack(VerletPhysics2D physics, float trackWidth, float spring, int pathResolution) {
+	BouncyTrack(float trackWidth, float spring, int pathResolution) {
 		super(trackWidth, pathResolution);
-		_physics = physics;
+		
+		_physics = new VerletPhysics2D();
+        _physics.setWorldBounds(new Rect(-1f,-1f,2f,2f));
 		
 		strength = spring;
 		railLength = 20;
@@ -108,14 +112,14 @@ class BouncyTrack extends Track {
 			particlesBoundingLeft.add(particleBoundingLeft);
 			particlesBoundingRight.add(particleBoundingRight);
 			
-			physics.addSpring(springCenterLeft);
-			physics.addSpring(springCenterRight);
-			physics.addSpring(springBoundingLeft);
-			physics.addSpring(springBoundingRight);
+			_physics.addSpring(springCenterLeft);
+			_physics.addSpring(springCenterRight);
+			_physics.addSpring(springBoundingLeft);
+			_physics.addSpring(springBoundingRight);
 		}
-		stringCenter = new ParticleString2D(physics, particlesCenter, strength);
-		stringLeft = new ParticleString2D(physics, particlesLeft, strength);
-		stringRight = new ParticleString2D(physics, particlesRight, strength);
+		stringCenter = new ParticleString2D(_physics, particlesCenter, strength);
+		stringLeft = new ParticleString2D(_physics, particlesLeft, strength);
+		stringRight = new ParticleString2D(_physics, particlesRight, strength);
 		
 		stringLeft.getHead().lock();
 		stringLeft.getTail().lock();
@@ -123,22 +127,26 @@ class BouncyTrack extends Track {
 		stringRight.getTail().lock();
 		
 		_skierAttractor = new AttractionBehavior(stringCenter.getHead(), 0.03f, -.011f);
-		physics.addBehavior(_skierAttractor);
+		_physics.addBehavior(_skierAttractor);
 	}
-
-	void updateSkier(Skier skier) {
-		if( skier != null ) {
-			Vec2D skierPosition = ToxiUtil.toVec2D(skier.base());
-			_skierAttractor.setAttractor(skierPosition);
+	
+	void updateSkier(PVector skierPosition) {
+		if( skierPosition != null ) {
+			_skierAttractor.setAttractor(ToxiUtil.toVec2D(skierPosition));
 		} else {
 			_skierAttractor.setAttractor(stringCenter.getHead());
 		}
+	}
+	
+	void update() {
 		_physics.update();
+	}
+	
+	void clear() {
+		_physics.clear();
 	}
 
 	void drawDebug(final PGraphics theG) {
-		super.draw(theG);
-		
 		theG.noFill();
 		theG.stroke(255);
 		

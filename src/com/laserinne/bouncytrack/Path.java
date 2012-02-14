@@ -71,14 +71,14 @@ public class Path {
 		long seed = System.currentTimeMillis() + (int)(Math.random() * 1000f);
 		boolean bMirrored = (seed%3 == 0);
 		generator.noiseSeed(seed);
-		float stepY = 1.75f /  (resolution * 1f);
+		float stepY = 1.8f /  (resolution * 1f);
 		float sinFactor = 20f * PApplet.map((float)Math.random(), 0.0f, 1.0f, 0.60f, 1.0f);
 		for(int i=0; i<resolution; i++) {
 			float spreadFactor1 = PApplet.sin((float)i / resolution * sinFactor + PApplet.PI/2f) * 0.65f;
 			float spreadFactor2 = PApplet.sin((float)i / resolution * PApplet.PI/1.5f);
 			float mirrorFactor = bMirrored ? -1.0f : 1.0f;
 			float tmpX = generator.noise(stepY*i*2) * ((float)i / resolution) * spreadFactor1 * spreadFactor2 * mirrorFactor;
-			float tmpY = stepY*i - 0.8f;
+			float tmpY = stepY*i - 1f;
 			pointsCenter.add(new Vec2D(tmpX, tmpY));
 		}
 	}
