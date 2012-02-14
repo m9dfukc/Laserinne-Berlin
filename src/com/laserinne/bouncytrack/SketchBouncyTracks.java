@@ -11,15 +11,12 @@ import processing.core.PVector;
 
 import com.laserinne.base.LaserinneSketch;
 import com.laserinne.base.Skier;
-import com.laserinne.util.Edge;
 import com.laserinne.util.SkierYComparator;
 
 import controlP5.Controller;
 
 @SuppressWarnings("serial")
 public class SketchBouncyTracks extends LaserinneSketch {
-     
-	private Edge<Skier> _myEdge;
 	
 	private Skier _skier1;
 	private Skier _skier2;
@@ -86,7 +83,6 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	}
 	
 	public void generateTrack() {
-		_myEdge = null;
 		_skier1 = _skier2 = null;
 		
         if(_track1 != null) _track1.clear();
