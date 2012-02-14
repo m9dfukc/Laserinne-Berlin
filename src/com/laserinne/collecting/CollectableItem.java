@@ -1,5 +1,7 @@
 package com.laserinne.collecting;
 
+import java.util.List;
+
 import laserschein.Laser3D;
 
 import com.laserinne.base.Skier;
@@ -22,6 +24,9 @@ public class CollectableItem extends Decorator {
 	private float _myProgress = 0;
 
 	private Ani _myProgressAnimation;
+	private float _myBlink = 0;
+	private Ani _myBlinkAnimation;
+
 
 	public CollectableItem(final PVector thePosition, float theRadius) {
 		_myPosition = thePosition.get();
@@ -29,8 +34,11 @@ public class CollectableItem extends Decorator {
 
 		_myCreatedMillis = System.currentTimeMillis();
 		
-		_myProgressAnimation = new Ani(this, 0.8f, "_myProgress", 1,  Ani.EXPO_IN_OUT);
+		_myProgressAnimation = new Ani(this, 1f, "_myProgress", 1,  Ani.EXPO_IN_OUT);
 		_myProgressAnimation.start();
+		
+		_myBlinkAnimation = new Ani(this, 0.3f, "_myBlink", 1);
+		_myBlinkAnimation.pause();
 	}
 
 
@@ -41,14 +49,30 @@ public class CollectableItem extends Decorator {
 		theG.translate(_myPosition.x, _myPosition.y);
 
 		theG.scale(_myProgress);
-		Shapes.circle(theG, 0, 0, _myRadius, 12);
-
+		
+		theLaser.smooth();
+		
+		
+		theG.stroke((int)(255 * (1-_myBlink)));
+		
 		if(_myIsCollected && state() == State.APOCALYPSE) {
-			//theG.rotate( (1 - _myProgress) * 3);
+			_myBlinkAnimation.pause();
+			_myBlink = 0;
+			
+			float myDistort = _myProgress;
+			
+				
+			//float myRandom = (float) (((Math.random() - 0.5) * myDistort) * myDistortAmount);
+			Shapes.circleFuzzed(theG, 0, 0, _myRadius * 2, myDistort,  12);
 
-			theG.rectMode(PGraphics.CENTER);
-			theG.rect(0, 0, _myRadius * 2, _myRadius * 2);
+		} else {
+			Shapes.circle(theG, 0, 0, _myRadius,  12);
+
 		}
+
+		theLaser.noSmooth();
+
+		
 
 		theG.popMatrix();
 	}
@@ -76,7 +100,7 @@ public class CollectableItem extends Decorator {
 		_myProgressAnimation.setBegin(_myProgress);
 		_myProgressAnimation.setDuration(3f);
 		_myProgressAnimation.setEnd(0);
-		_myProgressAnimation.pause();
+		_myProgressAnimation.start();
 	}
 
 
@@ -105,9 +129,18 @@ public class CollectableItem extends Decorator {
 	public void die() {
 		state(State.APOCALYPSE);
 		_myProgressAnimation.setBegin(_myProgress);
+		_myProgressAnimation.setDelay(0.5f);
 		_myProgressAnimation.setEnd(0);
 		_myProgressAnimation.start();
 
+	}
+	
+	
+	public void blink() {
+		if(!_myBlinkAnimation.isPlaying()) {
+			_myBlinkAnimation.start();
+			_myBlinkAnimation.repeat();
+		}
 	}
 
 

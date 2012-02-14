@@ -148,7 +148,7 @@ public abstract class LaserinneSketch extends PApplet {
 	 * 
 	 * @param theFlag
 	 */
-	private void vsync(boolean theFlag) {
+	public void vsync(boolean theFlag) {
 		PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; 
 		GL gl = pgl.beginGL(); 
 		

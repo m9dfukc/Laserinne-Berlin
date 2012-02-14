@@ -32,8 +32,8 @@ class SpringyString {
 
 		for (int i = 0; i < theCount; i++) {
 
-			float myX =  (float)i / (theCount - 1) * 2 - 1;
-			final Particle myParticle = _myPhysics.makeParticle( 50.0f, myX, 0, 0 );
+			float myY =  (float)i / (theCount - 1) * 2 - 1;
+			final Particle myParticle = _myPhysics.makeParticle( 50.0f, 0, myY, 0 );
 			_myParticles.add(myParticle);
 
 			if (myPrev != null) {
@@ -56,9 +56,9 @@ class SpringyString {
 
 		double myNoiseTime = System.currentTimeMillis()  * 0.0002;
 		float myVal = (float) Math.sin(myNoiseTime);
-		float myY = PApplet.map(myVal, -1, 1, -0.5f, 0.5f); 
+		float myX = PApplet.map(myVal, -1, 1, -0.5f, 0.5f); 
 
-		mover.position().setY( myY);
+		mover.position().setX( myX);
 		
 		_myPhysics.tick(60 * theDelta * 0.5f);
 	}

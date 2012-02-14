@@ -7,6 +7,7 @@ import java.util.HashMap;
 import processing.core.PApplet;
 
 import laserschein.Laser3D;
+import laserschein.Logger;
 
 import com.laserinne.base.LaserinneSketch;
 import com.laserinne.base.Skier;
@@ -30,6 +31,8 @@ public class SketchTronTrails extends LaserinneSketch {
 		_myDecoratorManager = new DecoratorManager();
 		_myTrails = new HashMap<Skier, SkierTrail>();
 		
+		this.vsync(true);
+		
 		//Logger.setAll(true);
 	}
 
@@ -41,22 +44,30 @@ public class SketchTronTrails extends LaserinneSketch {
 		
 		Collection<SkierTrail> myTrails = _myTrails.values();
 		
+		
 		for(SkierTrail myTrail:myTrails) {
-			
 			myTrail.update();
 			
-			//myTrail.collides(false);
-			
+			myTrail.collides(false);
+		}
+		
+		
+		/* Collide */
+		for(SkierTrail myTrail:myTrails) {
+
 			for(Skier mySkier:mySkiers) {
 				if(myTrail.skier() != mySkier){
-				//	if(myTrail.collidesWith(mySkier)) {
-				//		myTrail.collides(true);
-				//	}
+					if(myTrail.collidesWith(mySkier)) {
+						
+						if(_myTrails.containsKey(mySkier)) {
+							_myTrails.get(mySkier).collides(true);
+							Logger.printInfo("Collides");
+
+						}
+					}
 				}	
 			}
 			
-			// TODO: check for collisions
-			// TODO: notify decorators on collision
 		}
 
 		
@@ -76,6 +87,8 @@ public class SketchTronTrails extends LaserinneSketch {
 		for(SkierTrail myTrail:myTrails) {
 			myTrail.drawDebug(g);
 			myTrail.skier().drawDebug(g);
+			
+
 		}
 		
 		

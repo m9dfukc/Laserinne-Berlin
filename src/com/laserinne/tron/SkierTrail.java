@@ -1,10 +1,10 @@
 package com.laserinne.tron;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import laserschein.Logger;
 
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -16,7 +16,7 @@ import com.laserinne.util.Geometry;
 public class SkierTrail implements Decoratable {
 	private Skier _mySkier;
 	private LinkedList<PVector> _mySegments;
-	private boolean _myHasCollision;
+	private boolean _myHasCollision = false;
 	
 	public static float CREATE_THRESHOLD = 0.01f;
 	public static float MAX_NUMBER = 50;
@@ -35,12 +35,11 @@ public class SkierTrail implements Decoratable {
 	
 	
 	public void update() {
-		PVector myHead = _mySegments.getFirst();
-		float myThresholdSq = CREATE_THRESHOLD * CREATE_THRESHOLD;
+		//PVector myHead = _mySegments.getFirst();
+		//float myThresholdSq = CREATE_THRESHOLD * CREATE_THRESHOLD;
 		
 		if(	nextSegmentProgress() > 1) {
 			_mySegments.addFirst(_mySkier.base().get());     // copy, of course
-
 		}
 
 		
@@ -102,22 +101,24 @@ public class SkierTrail implements Decoratable {
 
 
 	boolean collidesWith(Skier theSkier) {
-		Iterator<PVector> myI = _mySegments.iterator();
+		ArrayList<PVector> mySegments = new ArrayList<PVector>();
+		mySegments.addAll(_mySegments);
 		
-		PVector myPrevious = null;
-		
-		while(myI.hasNext()) {
+		int STEP = 3;
+		for(int i = 0; i < mySegments.size() - STEP; i += STEP) {
+			PVector myPoint = mySegments.get(i + STEP);
+
+			PVector myNext = mySegments.get(i + STEP);
 			
-			PVector myPoint = myI.next();
 			
-			if(myPrevious != null) {
-				float myDistance = Geometry.distanceSegmentPoint(myPrevious, myPoint, theSkier.base());
-				
-				if(myDistance <= theSkier.radius() ) {
-					return true;
-				} 
-			}	 
+			float myDistance = Geometry.distanceSegmentPoint(myPoint, myNext, theSkier.base());
+			
+			if(myDistance <= theSkier.radius() ) {
+				return true;
+			} 
 		}
+		
+	
 
 		return false; 
 	}
@@ -126,4 +127,7 @@ public class SkierTrail implements Decoratable {
 	public PVector tail() {
 		return _mySegments.getLast();
 	}
+
+
+	
 }
