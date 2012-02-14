@@ -59,6 +59,9 @@ public class SketchBouncyTracks extends LaserinneSketch {
         
 		_trackWidth = _trackWithCtrl.value();
 		
+		_track1 = null;
+		_track2 = null;
+		
         generateTrack();	
 	}
 	
@@ -74,12 +77,12 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	public void generateTrack() {
 		_myEdge = null;
 		_skier1 = _skier2 = null;
+		
+        if(_track1 != null) _track1.clear();
+		if(_track2 != null) _track2.clear();
 
         _track1 = new BouncyTrack(_trackWidth);
         _track2 = new BouncyTrack(_trackWidth);
-        
-        _track1.clear();
-		_track2.clear();
         
         _track1Translate = new PVector(-0.35f, 0.1f);
         _track2Translate = new PVector( 0.35f, 0.1f);
@@ -95,8 +98,8 @@ public class SketchBouncyTracks extends LaserinneSketch {
 			_trackWidth = _trackWithCtrl.value();
 			generateTrack();
 		}
-		//_track1.updateSpring(_spring1Ctrl.value());
-		//_track2.updateSpring(_spring2Ctrl.value());
+		_track1.updateSpring(_spring1Ctrl.value());
+		_track2.updateSpring(_spring2Ctrl.value());
 		
 		ArrayList<Skier> mySkiers = tracking().skiersConfident();
 		Collections.sort(mySkiers, new SkierYComparator()); 	// Sort by their y positions
