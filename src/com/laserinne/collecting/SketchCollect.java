@@ -144,7 +144,7 @@ public class SketchCollect extends LaserinneSketch{
 		theLaser.smooth();
 		theLaser.noSmooth();
 
-		_myDecoratorManager.draw(g);
+		_myDecoratorManager.draw(g, theLaser);
 	}
 
 	@Override
@@ -152,7 +152,6 @@ public class SketchCollect extends LaserinneSketch{
 		for(final Skier mySkier:tracking().skiers()) {
 			mySkier.drawDebug(g);
 		}
-
 	}
 
 	@Override
@@ -160,7 +159,6 @@ public class SketchCollect extends LaserinneSketch{
 		WavePersonDecorator myDecorator = new WavePersonDecorator(theSkier);
 		_mySkierDecorators.put(theSkier, myDecorator);
 		_myDecoratorManager.add(myDecorator);
-
 	}
 
 	@Override

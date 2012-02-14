@@ -7,12 +7,10 @@ import java.util.HashMap;
 import processing.core.PApplet;
 
 import laserschein.Laser3D;
-import laserschein.Logger;
 
 import com.laserinne.base.LaserinneSketch;
 import com.laserinne.base.Skier;
 import com.laserinne.decoration.DecoratorManager;
-import com.laserinne.decoration.SkierCircleDecorator;
 
 
 @SuppressWarnings("serial")
@@ -21,9 +19,11 @@ public class SketchTronTrails extends LaserinneSketch {
 	private DecoratorManager _myDecoratorManager;
 	private HashMap<Skier, SkierTrail> _myTrails;
 	
+	
 	public static void main(String[] args) {
 		PApplet.main(new String[]{SketchTronTrails.class.getCanonicalName()});
 	}
+	
 	
 	@Override
 	protected void postSetup() {
@@ -45,15 +45,14 @@ public class SketchTronTrails extends LaserinneSketch {
 			
 			myTrail.update();
 			
-			myTrail.collides(false);
+			//myTrail.collides(false);
 			
 			for(Skier mySkier:mySkiers) {
 				if(myTrail.skier() != mySkier){
-					if(myTrail.collidesWith(mySkier)) {
-						myTrail.collides(true);
-					}
-				}
-				
+				//	if(myTrail.collidesWith(mySkier)) {
+				//		myTrail.collides(true);
+				//	}
+				}	
 			}
 			
 			// TODO: check for collisions
@@ -66,7 +65,7 @@ public class SketchTronTrails extends LaserinneSketch {
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
 		
-		_myDecoratorManager.draw(g);
+		_myDecoratorManager.draw(g, theLaser);
 	}
 
 	@Override
@@ -83,6 +82,7 @@ public class SketchTronTrails extends LaserinneSketch {
 		
 	}
 
+	
 	@Override
 	protected void onNewSkier(Skier theSkier) {
 		SkierTrail myTrail = new SkierTrail(theSkier);

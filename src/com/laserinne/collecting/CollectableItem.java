@@ -1,5 +1,7 @@
 package com.laserinne.collecting;
 
+import laserschein.Laser3D;
+
 import com.laserinne.base.Skier;
 import com.laserinne.decoration.Decorator;
 import com.laserinne.util.Geometry;
@@ -32,7 +34,7 @@ public class CollectableItem extends Decorator {
 	}
 
 
-	public void draw(final PGraphics theG) {
+	public void draw(final PGraphics theG, Laser3D theLaser) {
 
 		theG.pushMatrix();
 
@@ -112,5 +114,7 @@ public class CollectableItem extends Decorator {
 	public boolean hasBeenCollected() {
 		return _myIsCollected;
 	}
+
+
 
 }

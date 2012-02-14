@@ -18,8 +18,8 @@ public class SkierTrail implements Decoratable {
 	private LinkedList<PVector> _mySegments;
 	private boolean _myHasCollision;
 	
-	public static float CREATE_THRESHOLD = 0.04f;
-	public static float MAX_NUMBER = 10;
+	public static float CREATE_THRESHOLD = 0.01f;
+	public static float MAX_NUMBER = 50;
 	
 	public SkierTrail(Skier theSkier ){
 		_mySkier = theSkier;

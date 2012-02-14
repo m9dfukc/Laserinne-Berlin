@@ -1,5 +1,6 @@
 package com.laserinne.wave;
 
+import laserschein.Laser3D;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -36,7 +37,7 @@ public class WavePersonDecorator extends SimpleDecoratorBase{
 	}
 
 	@Override
-	public void draw(PGraphics theG) {
+	public void draw(PGraphics theG, Laser3D theLaser) {
 		
 		
 		_myRadius = (_myRadius * 0.9f) + (_mySkier.radius() * 0.1f);

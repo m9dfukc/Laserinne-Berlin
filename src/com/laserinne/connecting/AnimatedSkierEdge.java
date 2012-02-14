@@ -1,5 +1,6 @@
 package com.laserinne.connecting;
 
+import laserschein.Laser3D;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
@@ -80,7 +81,7 @@ public class AnimatedSkierEdge extends Decorator {
 	}
 
 	
-	public void draw(PGraphics theG) {
+	public void draw(PGraphics theG, Laser3D theLaser) {
 		
 		final PVector myA = _mySkierA.base();
 		final PVector myB = _mySkierB.base();

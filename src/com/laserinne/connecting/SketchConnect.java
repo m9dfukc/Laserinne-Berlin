@@ -185,7 +185,7 @@ public class SketchConnect extends LaserinneSketch {
 
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
-		_myDecoratorManager.draw(g);
+		_myDecoratorManager.draw(g, theLaser);
 	}
 
 	
