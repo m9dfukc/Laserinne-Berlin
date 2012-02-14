@@ -195,8 +195,9 @@ public abstract class LaserinneSketch extends PApplet {
 		update(delta);
 
 
-		background(60, 57, 55);
-
+		//background(60, 57, 55);
+		background(0);
+		
 		fill(255);
 		stroke(255);
 		textSize(12);

@@ -48,7 +48,7 @@ public class Track extends Path {
 	}
 	
 	void draw(final PGraphics theG) {
-		theG.stroke(0, 255, 0);
+		theG.stroke(255);
 		_draw(theG);
 	}
 	
