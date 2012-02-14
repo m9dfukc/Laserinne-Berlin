@@ -16,14 +16,14 @@ public class Shapes {
 	public static void circle(PGraphics theG, float theX, float theY, float theRadius, int theSegments) {
 		theG.beginShape();
 		
-		for(int i = 0; i < theSegments; i++) {
+		for(int i = 0; i < theSegments + Math.round(theSegments * 0.3); i++) {
 			double myRad = (i / (double) theSegments) * Math.PI * 2.0;
 			float myX = (float) (Math.sin(myRad) * theRadius + theX);
 			float myY = (float) (Math.cos(myRad) * theRadius + theY);
 			theG.vertex(myX, myY);
 		}
 		
-		theG.endShape(PGraphics.CLOSE);
+		theG.endShape();
 	}
 	
 	

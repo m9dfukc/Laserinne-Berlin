@@ -51,7 +51,7 @@ public class WavePersonDecorator extends SimpleDecoratorBase{
 		
 		theG.pushMatrix();
 		theG.translate(myBase.x, myBase.y);
-		theG.rotate(-(float) ((Math.PI * 2) - myAngle) * 0.5f);
+		//theG.rotate(-(float) ((Math.PI * 2) - myAngle) * 0.5f);
 
 		Shapes.arc(theG, 0, 0, myRadius, myAngle, 10);
 		theG.popMatrix();

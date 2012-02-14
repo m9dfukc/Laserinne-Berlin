@@ -31,7 +31,7 @@ public class SketchTronTrails extends LaserinneSketch {
 		_myDecoratorManager = new DecoratorManager();
 		_myTrails = new HashMap<Skier, SkierTrail>();
 		
-		this.vsync(true);
+		//this.vsync(true);
 		
 		//Logger.setAll(true);
 	}
@@ -60,7 +60,8 @@ public class SketchTronTrails extends LaserinneSketch {
 					if(myTrail.collidesWith(mySkier)) {
 						
 						if(_myTrails.containsKey(mySkier)) {
-							_myTrails.get(mySkier).collides(true);
+							//_myTrails.get(mySkier).collides(true);
+							myTrail.collides(true);
 							Logger.printInfo("Collides");
 
 						}

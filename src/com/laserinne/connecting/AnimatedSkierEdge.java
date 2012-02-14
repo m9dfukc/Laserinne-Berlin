@@ -92,9 +92,9 @@ public class AnimatedSkierEdge extends Decorator {
 		myA.add(mySpare);
 		myB.sub(mySpare);
 		
-		final PVector myInbetween = Geometry.lerp(myA, myB, _myProgress);
+		final PVector myInbetween = Geometry.lerp(myB, myA, _myProgress);
 		
-		theG.line(myA.x, myA.y, myInbetween.x, myInbetween.y);
+		theG.line(myB.x, myB.y, myInbetween.x, myInbetween.y);
 	}
 	
 	

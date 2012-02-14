@@ -29,6 +29,7 @@ public class TrailDecorator extends Decorator{
 		_myTrail = theTrail;
 		_myConstructAnimation = new Ani(this, 1.5f, "_myProgress", 1);
 		_myBoomAnimation = new Ani(this, 1.5f, "_myBoomProgress", (float)Math.PI);
+		_myBoomAnimation.pause();
 
 	}
 
@@ -40,7 +41,7 @@ public class TrailDecorator extends Decorator{
 		
 		
 		float myDistort = (float) Math.sin(_myBoomProgress);
-		float myDistortAmount = 0.2f;
+		float myDistortAmount = 0.3f;
 		
 		List<PVector> mySegments = _myTrail.segments();
 		
@@ -55,7 +56,7 @@ public class TrailDecorator extends Decorator{
 		}
 	
 
-		theG.endShape();
+		theG.endShape(PGraphics.OPEN);
 
 		theLaser.noSmooth();
 

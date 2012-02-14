@@ -49,7 +49,7 @@ public class Tracking {
 	
 	public static final int SKIER_DEATH_TIMEOUT = 100;
 
-	private static final int AGE_OF_CONFIDENCE = 10;
+	private static final int AGE_OF_CONFIDENCE = 12;
 
 	
 	
@@ -206,6 +206,9 @@ public class Tracking {
 
 		synchronized( _mySkierTable ) {
 			int myId = Math.round(theId);
+			
+			
+			if(theAge > AGE_OF_CONFIDENCE) {
 
 			/* We know this guy already */
 			if(_mySkierTable.containsKey(myId)) {
@@ -227,6 +230,7 @@ public class Tracking {
 					_myNewlyTrackedSkiers.add(myNewSkier);
 				}
 			}
+		}
 		}
 	}
 	

@@ -246,8 +246,9 @@ public abstract class LaserinneSketch extends PApplet {
 		}
 
 		if(doDrawLine ) {
-			rectMode(CORNER);
-			line(-1,-1,1,-1);
+			line(-1,-1,-0.8f,-1);
+			line(1,-1,0.8f,-1);
+
 		}
 
 		noFill();

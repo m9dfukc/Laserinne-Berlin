@@ -37,9 +37,13 @@ public class SketchWave extends LaserinneSketch{
 			WavePersonDecorator myDecorator = _myPeopleDecorators.get(mySkier);
 			
 			if(_myString.collidesWith(mySkier)) {
+				
+				if(myDecorator != null) 
 				myDecorator.collides(true);
 				Logger.printInfo("Collision");
 			} else {
+				if(myDecorator != null) 
+
 				myDecorator.collides(false);
 			}
 		}

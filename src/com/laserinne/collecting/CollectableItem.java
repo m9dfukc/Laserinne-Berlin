@@ -53,7 +53,7 @@ public class CollectableItem extends Decorator {
 		theLaser.smooth();
 		
 		
-		theG.stroke((int)(255 * (1-_myBlink)));
+		theG.stroke(Math.max((int)(255 * (1-_myBlink)), 10));
 		
 		if(_myIsCollected && state() == State.APOCALYPSE) {
 			_myBlinkAnimation.pause();
@@ -107,7 +107,7 @@ public class CollectableItem extends Decorator {
 
 	public boolean collidesWith(Skier theSkier) {
 		final float myDistanceSquared = Geometry.distanceSquared(theSkier.base(), _myPosition);
-		final float myDistance = _myRadius + theSkier.radius();
+		final float myDistance = (_myRadius + theSkier.radius() * 1.5f);
 
 		return myDistanceSquared < myDistance * myDistance;
 	}
