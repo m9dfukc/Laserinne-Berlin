@@ -38,6 +38,7 @@ public class SketchBouncyTracks extends LaserinneSketch {
 	private Controller _spring2Ctrl;
 	
 	private float _trackWidth;
+	private float _startLineCorrection = -0.015f;
 	
     public static void main(String args[]) {
         PApplet.main(new String[] { SketchBouncyTracks.class.getCanonicalName() });
@@ -115,10 +116,10 @@ public class SketchBouncyTracks extends LaserinneSketch {
 		
 		if( _skier1 == null && mySkiers.size() > 0) {    // We need two to party
 			for(int i=0; i < mySkiers.size(); i++) {
-				if( _track1Translate.x - _trackWidth / 2f < mySkiers.get(i).base().x && 
-					_track1Translate.x + _trackWidth / 2f > mySkiers.get(i).base().x &&
-					_track1Translate.y - 1f - _trackWidth / 2f < mySkiers.get(i).base().y &&
-					_track1Translate.y - 1f + _trackWidth / 2f > mySkiers.get(i).base().y
+				if( _track1Translate.x - _trackWidth * 2f < mySkiers.get(i).base().x && 
+					_track1Translate.x + _trackWidth * 2f > mySkiers.get(i).base().x &&
+					_track1Translate.y - 1f + _startLineCorrection < mySkiers.get(i).base().y &&
+					_track1Translate.y - 1f + _trackWidth * 2f > mySkiers.get(i).base().y
 				) {
 					Logger.printInfo("Skier 1 with id " + mySkiers.get(i).id() + " at Left Start Position" );
 					_skier1 = mySkiers.get(i);
@@ -128,10 +129,10 @@ public class SketchBouncyTracks extends LaserinneSketch {
 		}
 		if( _skier2 == null && mySkiers.size() > 0) {
 			for(int i=0; i < mySkiers.size(); i++) {
-				if( _track2Translate.x - _trackWidth / 2f < mySkiers.get(i).base().x && 
-					_track2Translate.x + _trackWidth / 2f > mySkiers.get(i).base().x &&
-					_track2Translate.y - 1f - _trackWidth / 2f < mySkiers.get(i).base().y &&
-					_track2Translate.y - 1f + _trackWidth / 2f > mySkiers.get(i).base().y
+				if( _track2Translate.x - _trackWidth * 2f < mySkiers.get(i).base().x && 
+					_track2Translate.x + _trackWidth * 2f > mySkiers.get(i).base().x &&
+					_track2Translate.y - 1f + _startLineCorrection < mySkiers.get(i).base().y &&
+					_track2Translate.y - 1f + _trackWidth * 2f > mySkiers.get(i).base().y
 				) {
 					Logger.printInfo("Skier 2 with id " + mySkiers.get(i).id() + " at Right Start Position" );
 					_skier2 = mySkiers.get(i);
@@ -160,13 +161,25 @@ public class SketchBouncyTracks extends LaserinneSketch {
 
 	@Override
 	protected void drawWithLaser(final Laser3D theLaser) {
+		float animation = PApplet.map((float)Math.sin(frameCount/25d), 0f, PApplet.PI*2f, 0.2f, 0.95f);
+		
 		g.pushMatrix();
 		g.translate(_track1Translate.x, _track1Translate.y);
+		if( _skier1 == null) {
+			float t1left = (-1f*_trackWidth*2f) * animation;
+			float t1right = (_trackWidth*2f) * animation;
+			g.line(t1left, -1f, t1right, -1f);
+		}
 		_track1.draw(g);
 		g.popMatrix();
 		
 		g.pushMatrix();
 		g.translate(_track2Translate.x, _track2Translate.y);
+		if( _skier2 == null) {
+			float t2left = (-1f*_trackWidth*2f) * animation;
+			float t2right = (_trackWidth*2f) * animation;
+			g.line(t2left, -1f, t2right, -1f);
+		}
 		_track2.draw(g);
 		g.popMatrix();
 	}
